@@ -94,7 +94,7 @@ class ApiRequest {
     return Uri(
       scheme: config.api['scheme'],
       host: config.api['host'],
-      path: '/api/v1/$path',
+      path: '/api/$path',
       queryParameters: queryParameters,
     );
   }
