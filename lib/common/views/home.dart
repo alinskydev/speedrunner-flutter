@@ -27,6 +27,8 @@ class Home extends StatelessWidget {
     return value['body']['data'];
   });
 
+  Home({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,7 +42,7 @@ class Home extends StatelessWidget {
             FutureBuilder(
               future: blocksFuture,
               builder: (context, snapshot) {
-                if (snapshot.data == null) return Container();
+                if (snapshot.data == null) return SizedBox.shrink();
 
                 Map blocks = snapshot.data as Map;
 
@@ -82,7 +84,7 @@ class Home extends StatelessWidget {
             FutureBuilder(
               future: blogsFuture,
               builder: (context, snapshot) {
-                if (snapshot.data == null) return Container();
+                if (snapshot.data == null) return SizedBox.shrink();
 
                 List records = snapshot.data as List;
 
@@ -95,7 +97,7 @@ class Home extends StatelessWidget {
                   ),
                   itemCount: records.length,
                   itemBuilder: (context, index) {
-                    models.Blog blog = models.Blog.fromMap(records[index]);
+                    models.Blog blog = models.Blog(records[index]);
 
                     return Container(
                       padding: EdgeInsets.symmetric(vertical: 10),
@@ -136,7 +138,7 @@ class Home extends StatelessWidget {
             FutureBuilder(
               future: blocksFuture,
               builder: (context, snapshot) {
-                if (snapshot.data == null) return Container();
+                if (snapshot.data == null) return SizedBox.shrink();
 
                 Map blocks = snapshot.data as Map;
 
@@ -158,7 +160,9 @@ class Home extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: widgets.Scaffold.bottomNavigationBar(context, 0),
+      bottomNavigationBar: widgets.NavBottom(
+        currentName: 'home',
+      ),
     );
   }
 }

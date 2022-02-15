@@ -7,8 +7,6 @@ import '/libraries/extensions.dart';
 import '/libraries/services.dart' as services;
 import '/libraries/widgets.dart' as widgets;
 
-import '/base/config.dart' as config;
-
 class LiveSearchSelect extends StatelessWidget {
   String valuePath;
   String textPath;

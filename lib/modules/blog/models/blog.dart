@@ -24,7 +24,7 @@ class Blog extends Model {
 
   models.BlogCategory? category;
 
-  Blog.fromMap(Map<String, dynamic> map) : super.fromMap(map) {
-    if (fields['category'] != null) category = models.BlogCategory.fromMap(fields['category']);
+  Blog([Map<String, dynamic> map = const {}]) : super(map) {
+    if (fields['category'] != null) category = models.BlogCategory(fields['category']);
   }
 }

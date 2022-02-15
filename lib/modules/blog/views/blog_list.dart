@@ -4,24 +4,36 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '/libraries/bloc.dart' as bloc;
 import '/libraries/models.dart' as models;
 import '/libraries/services.dart' as services;
+import '/libraries/views.dart' as views;
 import '/libraries/widgets.dart' as widgets;
 
 class BlogList extends StatelessWidget {
-  const BlogList({Key? key}) : super(key: key);
+  BlogList({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (context) => widgets.LazyLoadCubit()),
-        BlocProvider(create: (context) => bloc.BlogActionButtonsAnimationCubit()),
-      ],
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('Blogs'),
-          centerTitle: true,
-        ),
-        body: widgets.LazyLoad(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Blogs'),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => views.BlogCreate()),
+              );
+            },
+            icon: Icon(Icons.add),
+          ),
+        ],
+      ),
+      body: MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (context) => widgets.LazyLoadCubit()),
+          BlocProvider(create: (context) => bloc.BlogActionButtonsAnimationCubit()),
+        ],
+        child: widgets.LazyLoad(
           apiRequest: services.ApiRequest(
             path: 'blog',
             queryParameters: {
@@ -40,58 +52,68 @@ class BlogList extends StatelessWidget {
           ),
           builder: (context, records) {
             return records.map((e) {
-              models.Blog blog = models.Blog.fromMap(e);
+              models.Blog blog = models.Blog(e);
 
               return GestureDetector(
                 onTap: () {
                   context.read<bloc.BlogActionButtonsAnimationCubit>().process(blog.fields['id']);
                 },
-                child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  child: Card(
-                    clipBehavior: Clip.hardEdge,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Stack(
+                child: widgets.Replacer(
+                  builder: (context, replacerState) {
+                    return Container(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      child: Card(
+                        clipBehavior: Clip.hardEdge,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Hero(
-                              tag: 'hero-blog-${blog.fields['id']}',
-                              child: services.Image.renderNetwork(
-                                url: blog.fields['image'],
-                                width: MediaQuery.of(context).size.width,
-                                height: MediaQuery.of(context).size.width,
+                            Stack(
+                              children: [
+                                Hero(
+                                  tag: 'hero-blog-${blog.fields['id']}',
+                                  child: services.Image.renderNetwork(
+                                    url: blog.fields['image'],
+                                    width: MediaQuery.of(context).size.width,
+                                    height: MediaQuery.of(context).size.width,
+                                  ),
+                                ),
+                                widgets.BlogActionButtons(
+                                  model: blog,
+                                  replacerState: replacerState,
+                                ),
+                              ],
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(10),
+                              child: Text(
+                                '${blog.localizedFields['name']}',
+                                style: Theme.of(context).textTheme.headline4,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
                               ),
                             ),
-                            widgets.BlogActionButtons(model: blog),
+                            Container(
+                              padding: EdgeInsets.all(10),
+                              child: Text(
+                                '${blog.fields['slug']}',
+                                style: Theme.of(context).textTheme.headline6,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              ),
+                            ),
                           ],
                         ),
-                        Container(
-                          padding: EdgeInsets.all(10),
-                          child: Text(
-                            '${blog.localizedFields['name']}',
-                            style: Theme.of(context).textTheme.headline4,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(10),
-                          child: Text(
-                            '${blog.localizedFields['short_description']}',
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                      ),
+                    );
+                  },
                 ),
               );
             }).toList();
           },
         ),
-        bottomNavigationBar: widgets.Scaffold.bottomNavigationBar(context, 1),
+      ),
+      bottomNavigationBar: widgets.NavBottom(
+        currentName: 'blog',
       ),
     );
   }

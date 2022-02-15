@@ -6,9 +6,27 @@ import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 import '/libraries/bloc.dart' as bloc;
 import '/libraries/models.dart' as models;
 import '/libraries/services.dart' as services;
+import '/libraries/views.dart' as views;
 import '/libraries/widgets.dart' as widgets;
 
-import '/base/config.dart' as config;
+import '/libraries/base.dart' as base;
+
+class BlogCreate extends StatelessWidget {
+  models.Blog model = models.Blog();
+
+  BlogCreate({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return _BlogForm(
+      title: 'Create',
+      model: model,
+      apiRequest: services.ApiRequest(
+        path: 'blog/create',
+      ),
+    );
+  }
+}
 
 class BlogUpdate extends StatelessWidget {
   models.Blog model;
@@ -20,27 +38,58 @@ class BlogUpdate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (context) => widgets.LiveSearchSelectCubit()),
-      ],
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(model.localizedFields['name']),
-          centerTitle: true,
-        ),
-        body: SingleChildScrollView(
+    return _BlogForm(
+      title: 'Update: ${model.localizedFields['name']}',
+      model: model,
+      apiRequest: services.ApiRequest(
+        path: 'blog/update/${model.fields['id']}',
+      ),
+    );
+  }
+}
+
+class _BlogForm extends StatelessWidget {
+  String title;
+  models.Blog model;
+  services.ApiRequest apiRequest;
+
+  late List<String> images;
+
+  _BlogForm({
+    Key? key,
+    required this.title,
+    required this.model,
+    required this.apiRequest,
+  }) : super(key: key) {
+    images = model.fields['images'] != null ? List<String>.from(model.fields['images']) : [];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(title),
+        centerTitle: true,
+      ),
+      body: MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (context) => widgets.LiveSearchSelectCubit()),
+        ],
+        child: SingleChildScrollView(
           child: Container(
             padding: EdgeInsets.all(15),
             child: widgets.ApiForm(
               model: model,
-              apiRequest: services.ApiRequest(
-                path: 'blog/update/${model.fields['id']}',
-              ),
+              apiRequest: apiRequest,
+              successMessage: Text('Successfully saved'),
+              onSuccess: (context, response) {
+                Navigator.pop(context);
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => views.BlogList()),
+                );
+              },
               builder: (context, formState) {
-                print(model.fields['images']);
-                List images = model.fields['images'] ?? [];
-
                 return Column(
                   children: [
                     FormBuilderTextField(
@@ -63,7 +112,7 @@ class BlogUpdate extends StatelessWidget {
                         hintText: DateTime.now().toString(),
                         prefixIcon: Icon(Icons.calendar_today),
                       ),
-                      format: config.dateFormat,
+                      format: base.Config.dateFormat,
                       alwaysUse24HourFormat: true,
                       inputType: InputType.both,
                     ),
@@ -109,8 +158,8 @@ class BlogUpdate extends StatelessWidget {
                         scrollDirection: Axis.horizontal,
                         child: Row(
                           children: images.map((element) {
-                            return widgets.DeletableBox(
-                              builder: (context, state) {
+                            return widgets.Replacer(
+                              builder: (context, replacerState) {
                                 return Row(
                                   children: [
                                     Stack(
@@ -128,7 +177,18 @@ class BlogUpdate extends StatelessWidget {
                                             color: Colors.red,
                                             child: MaterialButton(
                                               padding: EdgeInsets.zero,
-                                              onPressed: () => state.delete(),
+                                              onPressed: () async {
+                                                await services.ApiRequest(
+                                                  path: 'blog/file-delete/${model.fields['id']}',
+                                                  queryParameters: {
+                                                    'attr': 'iamges',
+                                                  },
+                                                ).sendJson({
+                                                  'key': services.Image.trimApiUrl(url: element),
+                                                });
+
+                                                replacerState.process();
+                                              },
                                               child: Icon(
                                                 Icons.close,
                                                 size: 25,
@@ -185,7 +245,9 @@ class BlogUpdate extends StatelessWidget {
             ),
           ),
         ),
-        bottomNavigationBar: widgets.Scaffold.bottomNavigationBar(context, 1),
+      ),
+      bottomNavigationBar: widgets.NavBottom(
+        currentName: 'blog',
       ),
     );
   }

@@ -8,19 +8,23 @@ import '/libraries/models.dart' as models;
 import '/libraries/services.dart' as services;
 import '/libraries/widgets.dart' as widgets;
 
-import '/base/config.dart' as config;
+import '/libraries/base.dart' as base;
 
 class ApiForm extends StatefulWidget {
   Model model;
   services.ApiRequest apiRequest;
+  Widget? successMessage;
 
-  Widget Function(BuildContext context, _ApiFormState formStates) builder;
+  Widget Function(BuildContext context, _ApiFormState formState) builder;
+  void Function(BuildContext context, Map<String, dynamic> response)? onSuccess;
 
   ApiForm({
     Key? key,
     required this.model,
     required this.apiRequest,
     required this.builder,
+    this.successMessage,
+    this.onSuccess,
   }) : super(key: key);
 
   @override
@@ -30,6 +34,7 @@ class ApiForm extends StatefulWidget {
 class _ApiFormState extends State<ApiForm> {
   final GlobalKey<FormBuilderState> formKey = GlobalKey();
 
+  @override
   void initState() {
     super.initState();
 
@@ -42,7 +47,7 @@ class _ApiFormState extends State<ApiForm> {
 
           switch (value.widget.runtimeType) {
             case FormBuilderDateTimePicker:
-              initialValue = config.dateFormat.parse(initialValue);
+              initialValue = initialValue != null ? base.Config.dateFormat.parse(initialValue) : null;
               break;
             case FormBuilderFilePicker:
               initialValue = List<PlatformFile>.from([]);
@@ -72,9 +77,15 @@ class _ApiFormState extends State<ApiForm> {
       if (initialValue != null) {
         switch (value.widget.runtimeType) {
           case FormBuilderDateTimePicker:
-            initialValue = config.dateFormat.format(initialValue);
+            initialValue = base.Config.dateFormat.format(initialValue);
             break;
-          default:
+          case FormBuilderFilePicker:
+            FormBuilderFilePicker filePicker = value.widget as FormBuilderFilePicker;
+
+            if (!filePicker.allowMultiple && initialValue.isNotEmpty) {
+              initialValue = initialValue[0];
+            }
+
             break;
         }
       }
@@ -82,31 +93,38 @@ class _ApiFormState extends State<ApiForm> {
       return MapEntry(key, initialValue);
     });
 
-    Map<String, String> fieldsErrors = await widget.apiRequest.sendFormData(formData).then((value) {
-      if (value['statusCode'] == 422) {
-        return Map.from(value['body']['message']).map((key, value) {
+    Map<String, dynamic> response = await widget.apiRequest.sendFormData(formData);
+    Map<String, String> fieldsErrors = {};
+
+    switch (response['statusCode']) {
+      case 422:
+        fieldsErrors = Map.from(response['body']['message']).map((key, value) {
           return MapEntry(key, value[0]);
         });
-      }
-
-      return {};
-    });
+        break;
+    }
 
     formKey.currentState!.validate();
     fieldsErrors.forEach((key, value) {
       formKey.currentState!.fields[key]?.invalidate(value);
     });
 
-    if (formKey.currentState!.isValid) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          padding: EdgeInsets.all(15),
-          backgroundColor: Colors.green,
-          content: Container(
-            child: Text('Successfully saved'),
+    if (fieldsErrors.isEmpty) {
+      if (widget.successMessage != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            padding: EdgeInsets.all(15),
+            backgroundColor: Colors.green,
+            content: Container(
+              child: widget.successMessage,
+            ),
           ),
-        ),
-      );
+        );
+      }
+
+      if (widget.onSuccess != null) {
+        widget.onSuccess!(context, response);
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

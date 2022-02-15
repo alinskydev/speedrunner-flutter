@@ -43,7 +43,9 @@ class BlogView extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: widgets.Scaffold.bottomNavigationBar(context, 1),
+      bottomNavigationBar: widgets.NavBottom(
+        currentName: 'blog',
+      ),
     );
   }
 }

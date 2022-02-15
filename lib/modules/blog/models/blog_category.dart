@@ -13,5 +13,5 @@ class BlogCategory extends Model {
     ],
   };
 
-  BlogCategory.fromMap(Map<String, dynamic> map) : super.fromMap(map);
+  BlogCategory([Map<String, dynamic> map = const {}]) : super(map);
 }

@@ -1,34 +1,48 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 
-import '/base/config.dart' as config;
+import '/libraries/base.dart' as base;
+import '/libraries/views.dart' as views;
 
 class ApiRequest {
   String path;
   Map<String, dynamic>? queryParameters;
+  Map<String, String> headers = {};
 
   ApiRequest({
     required this.path,
     this.queryParameters,
-  });
+  }) {
+    if (base.User.authToken != null) {
+      headers = {
+        'Authorization': base.User.authToken!,
+      };
+    }
+  }
 
   Future<Map<String, dynamic>> getData() async {
-    Future<http.Response> responseFuture = Future.delayed(Duration(seconds: 1), () {
-      return http.get(_prepareUri());
+    Future<http.Response> responseFuture = Future.delayed(Duration(seconds: 0), () {
+      return http.get(
+        _prepareUri(),
+        headers: headers,
+      );
     });
 
     return await _prepareResponse(responseFuture);
   }
 
   Future<Map<String, dynamic>> sendJson([Map body = const {}]) async {
-    Future<http.Response> responseFuture = Future.delayed(Duration(seconds: 1), () {
+    Future<http.Response> responseFuture = Future.delayed(Duration(seconds: 0), () {
+      headers.addAll({
+        'Content-Type': 'application/json',
+      });
+
       return http.post(
         _prepareUri(),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: headers,
         body: jsonEncode(body),
       );
     });
@@ -38,6 +52,10 @@ class ApiRequest {
 
   Future<Map<String, dynamic>> sendFormData([Map<String, dynamic> fields = const {}]) async {
     http.MultipartRequest request = http.MultipartRequest('POST', _prepareUri());
+
+    headers.forEach((key, value) {
+      request.headers[key] = value;
+    });
 
     fields.forEach((key, value) async {
       if (value is List) {
@@ -84,23 +102,33 @@ class ApiRequest {
             'body': json.decode(body),
             'statusCode': response.statusCode,
           };
+        case 401:
+          await base.Config.navigatorKey.currentState?.pushAndRemoveUntil(
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) => views.AuthLogin(),
+              transitionDuration: Duration.zero,
+            ),
+            (value) => false,
+          );
+
+          break;
         default:
           throw 'An error occurred';
       }
+
+      return {};
     });
   }
 
   Uri _prepareUri() {
-    return Uri(
-      scheme: config.api['scheme'],
-      host: config.api['host'],
+    return Uri.parse(base.Config.api['url']).replace(
       path: '/api/$path',
       queryParameters: queryParameters,
     );
   }
 
   Future<Map<String, dynamic>> _prepareResponse(Future<http.Response> responseFuture) {
-    return responseFuture.then((response) {
+    return responseFuture.then((response) async {
       switch (response.statusCode) {
         case 200:
         case 422:
@@ -109,9 +137,21 @@ class ApiRequest {
             'body': json.decode(response.body),
             'statusCode': response.statusCode,
           };
+        case 401:
+          await base.Config.navigatorKey.currentState?.pushAndRemoveUntil(
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) => views.AuthLogin(),
+              transitionDuration: Duration.zero,
+            ),
+            (value) => false,
+          );
+
+          break;
         default:
           throw 'An error occurred';
       }
+
+      return {};
     });
   }
 }

@@ -7,29 +7,29 @@ import '/libraries/extensions.dart';
 import '/libraries/services.dart' as services;
 import '/libraries/widgets.dart' as widgets;
 
-import '/base/config.dart' as config;
+class Replacer extends StatefulWidget {
+  Widget Function(BuildContext context, _ReplacerState replacerState) builder;
 
-class DeletableBox extends StatefulWidget {
-  Widget Function(BuildContext context, _DeletableBoxState state) builder;
-
-  DeletableBox({
+  Replacer({
     Key? key,
     required this.builder,
   }) : super(key: key);
 
   @override
-  State<DeletableBox> createState() => _DeletableBoxState();
+  State<Replacer> createState() => _ReplacerState();
 }
 
-class _DeletableBoxState extends State<DeletableBox> {
-  bool _is_deleted = false;
+class _ReplacerState extends State<Replacer> {
+  Widget? deletedWidget;
 
   @override
   Widget build(BuildContext context) {
-    return _is_deleted ? SizedBox.shrink() : widget.builder(context, this);
+    return deletedWidget ?? widget.builder(context, this);
   }
 
-  void delete() {
-    setState(() => _is_deleted = true);
+  void process({
+    Widget replacer = const SizedBox.shrink(),
+  }) async {
+    setState(() => deletedWidget = replacer);
   }
 }

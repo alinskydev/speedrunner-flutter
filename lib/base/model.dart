@@ -4,11 +4,7 @@ abstract class Model {
   Map<String, dynamic> fields = {};
   Map<String, dynamic> localizedFields = {};
 
-  Model() {
-    prepare();
-  }
-
-  Model.fromMap(Map<String, dynamic> map) {
+  Model(Map<String, dynamic> map) {
     prepare();
 
     fields = fields.map((key, value) {

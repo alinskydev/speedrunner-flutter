@@ -3,14 +3,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '/libraries/bloc.dart' as bloc;
 import '/libraries/models.dart' as models;
+import '/libraries/services.dart' as services;
 import '/libraries/views.dart' as views;
+import '/libraries/widgets.dart' as widgets;
 
 class BlogActionButtons extends StatefulWidget {
   models.Blog model;
+  var replacerState;
 
   BlogActionButtons({
     Key? key,
     required this.model,
+    required this.replacerState,
   }) : super(key: key);
 
   @override
@@ -56,7 +60,7 @@ class _BlogActionButtonsState extends State<BlogActionButtons> with SingleTicker
               child: Align(
                 alignment: Alignment.topRight,
                 child: Container(
-                  width: 100,
+                  width: 150,
                   decoration: BoxDecoration(
                     border: Border(
                       bottom: BorderSide(color: Colors.black, width: 1),
@@ -91,6 +95,17 @@ class _BlogActionButtonsState extends State<BlogActionButtons> with SingleTicker
                           );
                         },
                         icon: Icon(Icons.edit),
+                      ),
+                      IconButton(
+                        color: Colors.red,
+                        onPressed: () async {
+                          // await services.ApiRequest(
+                          //   path: 'blog/delete/${widget.model.fields['id']}',
+                          // ).sendJson();
+
+                          widget.replacerState.process();
+                        },
+                        icon: Icon(Icons.close),
                       ),
                     ],
                   ),

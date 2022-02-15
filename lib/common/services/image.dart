@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/image.dart' as material_image;
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:mime/mime.dart' as mime;
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '/base/config.dart' as config;
+import '/libraries/base.dart' as base;
 
 class Image {
   static Widget renderNetwork({
@@ -13,23 +14,27 @@ class Image {
     double? height,
     BoxFit fit = BoxFit.cover,
   }) {
+    Widget placeholder = Placeholder(
+      fallbackWidth: width ?? 400,
+      fallbackHeight: height ?? 400,
+    );
+
     if (url == null) {
-      return Placeholder(
-        fallbackWidth: width ?? double.infinity,
-        fallbackHeight: height ?? double.infinity,
-      );
+      return placeholder;
     }
 
-    url = isAbsolute ? url : '${config.api['scheme']}://${config.api['host']}/$url';
+    url = isAbsolute ? url : '${base.Config.api['url']}/$url';
 
     switch (mime.lookupMimeType(url)) {
       case 'image/jpg':
       case 'image/png':
-        return material_image.Image.network(
-          url,
+        return CachedNetworkImage(
+          fadeInDuration: Duration(microseconds: 0),
+          imageUrl: url,
           width: width,
           height: height,
           fit: fit,
+          errorWidget: (context, url, error) => placeholder,
         );
       case 'image/svg+xml':
         return SvgPicture.network(
@@ -39,10 +44,13 @@ class Image {
           fit: fit,
         );
       default:
-        return Placeholder(
-          fallbackWidth: width ?? double.infinity,
-          fallbackHeight: height ?? double.infinity,
-        );
+        return placeholder;
     }
+  }
+
+  static String trimApiUrl({
+    required String url,
+  }) {
+    return url.replaceFirst(base.Config.api['url'], '');
   }
 }

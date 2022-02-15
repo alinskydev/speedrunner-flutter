@@ -1,8 +1,14 @@
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-const Map api = {
-  'scheme': 'http',
-  'host': '10.0.2.2',
-};
+class Config {
+  static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-DateFormat dateFormat = DateFormat('dd.MM.yyyy HH:mm');
+  static DateFormat dateFormat = DateFormat('dd.MM.yyyy HH:mm');
+
+  static Map api = {
+    'url': 'http://10.0.2.2',
+    'scheme': 'http',
+    'host': '10.0.2.2',
+  };
+}
