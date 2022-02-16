@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return child!;
       },
-      home: views.Home(),
+      home: views.AppHome(),
     );
   }
 }

@@ -41,6 +41,7 @@ class BlogList extends StatelessWidget {
               'per-page': '2',
             },
           ),
+          type: widgets.LazyLoadType.gridView,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 1,
             childAspectRatio: 0.7,

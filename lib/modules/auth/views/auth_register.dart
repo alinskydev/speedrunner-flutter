@@ -40,7 +40,7 @@ class _AuthRegisterState extends State<AuthRegister> {
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (context) => views.ProfileView()),
-                (value) => false,
+                (route) => false,
               );
             },
             builder: (context, formState) {

@@ -38,8 +38,8 @@ class ProfileView extends StatelessWidget {
 
               Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (context) => views.Home()),
-                (value) => false,
+                MaterialPageRoute(builder: (context) => views.AppHome()),
+                (route) => false,
               );
             },
             icon: Icon(Icons.logout),
@@ -48,71 +48,72 @@ class ProfileView extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: FutureBuilder(
-            future: profileFuture,
-            builder: (context, snapshot) {
-              if (snapshot.data == null) return SizedBox.shrink();
+          future: profileFuture,
+          builder: (context, snapshot) {
+            if (snapshot.data == null) return SizedBox.shrink();
 
-              Map<String, dynamic> profile = snapshot.data as Map<String, dynamic>;
+            Map<String, dynamic> profile = snapshot.data as Map<String, dynamic>;
 
-              return Container(
-                padding: EdgeInsets.all(15),
-                child: Column(
-                  children: [
-                    services.Image.renderNetwork(
-                      url: profile['image'],
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.width,
-                    ),
-                    SizedBox(height: 30),
-                    Table(
-                      border: TableBorder.all(),
-                      children: [
-                        TableRow(
-                          children: [
-                            TableCell(
-                              child: Text('Username'),
-                            ),
-                            TableCell(
-                              child: Text(profile['username'] ?? ''),
-                            ),
-                          ],
-                        ),
-                        TableRow(
-                          children: [
-                            TableCell(
-                              child: Text('Full name'),
-                            ),
-                            TableCell(
-                              child: Text(profile['full_name'] ?? ''),
-                            ),
-                          ],
-                        ),
-                        TableRow(
-                          children: [
-                            TableCell(
-                              child: Text('Phone'),
-                            ),
-                            TableCell(
-                              child: Text(profile['phone'] ?? ''),
-                            ),
-                          ],
-                        ),
-                        TableRow(
-                          children: [
-                            TableCell(
-                              child: Text('Address'),
-                            ),
-                            TableCell(
-                              child: Text(profile['address'] ?? ''),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              );
-            }),
+            return Container(
+              padding: EdgeInsets.all(15),
+              child: Column(
+                children: [
+                  services.Image.renderNetwork(
+                    url: profile['image'],
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.width,
+                  ),
+                  SizedBox(height: 30),
+                  Table(
+                    border: TableBorder.all(),
+                    children: [
+                      TableRow(
+                        children: [
+                          TableCell(
+                            child: Text('Username'),
+                          ),
+                          TableCell(
+                            child: Text(profile['username'] ?? ''),
+                          ),
+                        ],
+                      ),
+                      TableRow(
+                        children: [
+                          TableCell(
+                            child: Text('Full name'),
+                          ),
+                          TableCell(
+                            child: Text(profile['full_name'] ?? ''),
+                          ),
+                        ],
+                      ),
+                      TableRow(
+                        children: [
+                          TableCell(
+                            child: Text('Phone'),
+                          ),
+                          TableCell(
+                            child: Text(profile['phone'] ?? ''),
+                          ),
+                        ],
+                      ),
+                      TableRow(
+                        children: [
+                          TableCell(
+                            child: Text('Address'),
+                          ),
+                          TableCell(
+                            child: Text(profile['address'] ?? ''),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
       bottomNavigationBar: widgets.NavBottom(
         currentName: 'profile',

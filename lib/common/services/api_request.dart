@@ -17,21 +17,18 @@ class ApiRequest {
     this.queryParameters,
   }) {
     if (base.User.authToken != null) {
-      headers = {
-        'Authorization': base.User.authToken!,
-      };
+      headers['Authorization'] = base.User.authToken!;
     }
   }
 
   Future<Map<String, dynamic>> getData() async {
-    Future<http.Response> responseFuture = Future.delayed(Duration(seconds: 0), () {
-      return http.get(
-        _prepareUri(),
-        headers: headers,
-      );
-    });
+    Future<http.Response> responseFuture = http.get(
+      _prepareUri(),
+      headers: headers,
+    );
 
-    return await _prepareResponse(responseFuture);
+    http.Response response = await _checkConnection(responseFuture) as http.Response;
+    return await _prepareResponse(response);
   }
 
   Future<Map<String, dynamic>> sendJson([Map body = const {}]) async {
@@ -47,7 +44,8 @@ class ApiRequest {
       );
     });
 
-    return await _prepareResponse(responseFuture);
+    http.Response response = await _checkConnection(responseFuture) as http.Response;
+    return await _prepareResponse(response);
   }
 
   Future<Map<String, dynamic>> sendFormData([Map<String, dynamic> fields = const {}]) async {
@@ -91,33 +89,8 @@ class ApiRequest {
       }
     });
 
-    return await request.send().then((response) async {
-      switch (response.statusCode) {
-        case 200:
-        case 422:
-          String body = await response.stream.bytesToString();
-
-          return {
-            'headers': response.headers,
-            'body': json.decode(body),
-            'statusCode': response.statusCode,
-          };
-        case 401:
-          await base.Config.navigatorKey.currentState?.pushAndRemoveUntil(
-            PageRouteBuilder(
-              pageBuilder: (context, animation, secondaryAnimation) => views.AuthLogin(),
-              transitionDuration: Duration.zero,
-            ),
-            (value) => false,
-          );
-
-          break;
-        default:
-          throw 'An error occurred';
-      }
-
-      return {};
-    });
+    http.StreamedResponse response = await _checkConnection(request.send()) as http.StreamedResponse;
+    return await _prepareResponse(response);
   }
 
   Uri _prepareUri() {
@@ -127,31 +100,57 @@ class ApiRequest {
     );
   }
 
-  Future<Map<String, dynamic>> _prepareResponse(Future<http.Response> responseFuture) {
-    return responseFuture.then((response) async {
-      switch (response.statusCode) {
-        case 200:
-        case 422:
-          return {
-            'headers': response.headers,
-            'body': json.decode(response.body),
-            'statusCode': response.statusCode,
-          };
-        case 401:
-          await base.Config.navigatorKey.currentState?.pushAndRemoveUntil(
-            PageRouteBuilder(
-              pageBuilder: (context, animation, secondaryAnimation) => views.AuthLogin(),
-              transitionDuration: Duration.zero,
-            ),
-            (value) => false,
-          );
+  Future<http.BaseResponse> _checkConnection(Future<http.BaseResponse> responseFuture) async {
+    try {
+      return await responseFuture;
+    } catch (e) {
+      await base.Config.navigatorKey.currentState?.push(
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) {
+            return views.AppErrorConnection();
+          },
+          transitionDuration: Duration.zero,
+        ),
+      );
 
-          break;
-        default:
-          throw 'An error occurred';
-      }
+      return _checkConnection(responseFuture);
+    }
+  }
 
-      return {};
-    });
+  Future<Map<String, dynamic>> _prepareResponse(http.BaseResponse response) async {
+    switch (response.statusCode) {
+      case 200:
+      case 422:
+        String body = '';
+
+        switch (response.runtimeType) {
+          case http.Response:
+            body = (response as http.Response).body;
+            break;
+          case http.StreamedResponse:
+            body = await (response as http.StreamedResponse).stream.bytesToString();
+            break;
+        }
+
+        return {
+          'headers': response.headers,
+          'body': json.decode(body),
+          'statusCode': response.statusCode,
+        };
+      case 401:
+        await base.Config.navigatorKey.currentState?.pushAndRemoveUntil(
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) => views.AuthLogin(),
+            transitionDuration: Duration.zero,
+          ),
+          (value) => false,
+        );
+
+        break;
+      default:
+        throw 'An error occurred';
+    }
+
+    return {};
   }
 }

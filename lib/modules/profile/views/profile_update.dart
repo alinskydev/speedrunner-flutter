@@ -54,7 +54,7 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(builder: (context) => views.ProfileView()),
-                      (value) => false,
+                      (route) => false,
                     );
                   },
                   builder: (context, formState) {

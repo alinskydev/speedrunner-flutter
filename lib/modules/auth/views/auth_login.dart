@@ -38,7 +38,7 @@ class _AuthLoginState extends State<AuthLogin> {
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (context) => views.ProfileView()),
-                (value) => false,
+                (route) => false,
               );
             },
             builder: (context, formState) {

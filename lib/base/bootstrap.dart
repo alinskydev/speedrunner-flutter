@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '/libraries/base.dart' as base;
@@ -9,4 +11,8 @@ class Bootstrap {
     base.User.authToken = storage['authToken'];
     base.User.isAuthorized = base.User.authToken != null;
   }
+}
+
+class SomeClass {
+  static StreamController<String> changeController = StreamController<String>.broadcast();
 }

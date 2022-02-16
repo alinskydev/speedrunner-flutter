@@ -1,13 +1,16 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
+import '/libraries/base.dart' as base;
 import '/libraries/bloc.dart' as bloc;
 import '/libraries/models.dart' as models;
 import '/libraries/services.dart' as services;
 import '/libraries/widgets.dart' as widgets;
 
-class Home extends StatelessWidget {
+class AppHome extends StatelessWidget {
   Future<Map> blocksFuture = services.ApiRequest(
     path: 'staticpage/home',
   ).getData().then((value) {
@@ -27,10 +30,15 @@ class Home extends StatelessWidget {
     return value['body']['data'];
   });
 
-  Home({Key? key}) : super(key: key);
+  AppHome({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    print(base.SomeClass.changeController.stream.hashCode);
+    base.SomeClass.changeController.stream.last.then((value) {
+      // print(value);
+    });
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Home'),
@@ -39,6 +47,29 @@ class Home extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            StreamBuilder(
+              stream: base.SomeClass.changeController.stream,
+              initialData: base.Config.zzz,
+              builder: (context, snapshot) {
+                if (snapshot.data == null || snapshot.data is Future) return SizedBox.shrink();
+
+                return Text(snapshot.data as String);
+              },
+            ),
+            ElevatedButton(
+              onPressed: () {
+                base.SomeClass.changeController.add('One');
+                base.Config.zzz = 'One';
+              },
+              child: Text('One'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                base.SomeClass.changeController.add('Two');
+                base.Config.zzz = 'Two';
+              },
+              child: Text('Two'),
+            ),
             FutureBuilder(
               future: blocksFuture,
               builder: (context, snapshot) {

@@ -77,7 +77,7 @@ class NavBottom extends StatelessWidget {
 
         switch (nav.keys.toList()[value]) {
           case 'home':
-            view = views.Home();
+            view = views.AppHome();
             break;
           case 'blog':
             view = views.BlogList();

@@ -1,6 +1,7 @@
 library app_views;
 
-export '/common/views/home.dart';
+export '/modules/app/views/app_home.dart';
+export '/modules/app/views/app_error_connection.dart';
 
 export '/modules/auth/views/auth_login.dart';
 export '/modules/auth/views/auth_register.dart';

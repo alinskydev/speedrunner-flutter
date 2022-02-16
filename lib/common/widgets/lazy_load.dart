@@ -9,7 +9,8 @@ import '/libraries/widgets.dart' as widgets;
 
 class LazyLoad extends StatefulWidget {
   Widget? prepend;
-  SliverGridDelegate gridDelegate;
+  LazyLoadType type;
+  SliverGridDelegate? gridDelegate;
   List<Widget> Function(BuildContext context, List records) builder;
   services.ApiRequest apiRequest;
   int page;
@@ -17,11 +18,16 @@ class LazyLoad extends StatefulWidget {
   LazyLoad({
     Key? key,
     this.prepend,
-    required this.gridDelegate,
+    required this.type,
+    this.gridDelegate,
     required this.builder,
     required this.apiRequest,
     this.page = 1,
-  }) : super(key: key);
+  }) : super(key: key) {
+    if (type == LazyLoadType.gridView && gridDelegate == null) {
+      throw '"gridDelegate" is required for this type';
+    }
+  }
 
   @override
   _LazyLoadState createState() => _LazyLoadState();
@@ -73,21 +79,35 @@ class _LazyLoadState extends State<LazyLoad> {
           hasMore = false;
         }
 
+        late Widget list;
+
+        switch (widget.type) {
+          case LazyLoadType.listView:
+            list = SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (BuildContext context, int index) => children[index],
+                childCount: children.length,
+              ),
+            );
+            break;
+          case LazyLoadType.gridView:
+            list = SliverGrid(
+              gridDelegate: widget.gridDelegate!,
+              delegate: SliverChildBuilderDelegate(
+                (BuildContext context, int index) => children[index],
+                childCount: children.length,
+              ),
+            );
+            break;
+        }
+
         return CustomScrollView(
           controller: scrollController,
           slivers: <Widget>[
             SliverToBoxAdapter(
               child: widget.prepend,
             ),
-            SliverGrid(
-              gridDelegate: widget.gridDelegate,
-              delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
-                  return children[index];
-                },
-                childCount: children.length,
-              ),
-            ),
+            list,
             SliverToBoxAdapter(
               child: state['preloader'],
             ),
@@ -134,3 +154,5 @@ class LazyLoadCubit extends Cubit<Map<String, dynamic>> {
     }
   }
 }
+
+enum LazyLoadType { gridView, listView }
