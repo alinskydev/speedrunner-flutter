@@ -12,7 +12,3 @@ class Bootstrap {
     base.User.isAuthorized = base.User.authToken != null;
   }
 }
-
-class SomeClass {
-  static StreamController<String> changeController = StreamController<String>.broadcast();
-}

@@ -11,6 +11,4 @@ class Config {
     'scheme': 'http',
     'host': '10.0.2.2',
   };
-
-  static String zzz = '';
 }

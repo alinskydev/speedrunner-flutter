@@ -34,11 +34,6 @@ class AppHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(base.SomeClass.changeController.stream.hashCode);
-    base.SomeClass.changeController.stream.last.then((value) {
-      // print(value);
-    });
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Home'),
@@ -47,29 +42,6 @@ class AppHome extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            StreamBuilder(
-              stream: base.SomeClass.changeController.stream,
-              initialData: base.Config.zzz,
-              builder: (context, snapshot) {
-                if (snapshot.data == null || snapshot.data is Future) return SizedBox.shrink();
-
-                return Text(snapshot.data as String);
-              },
-            ),
-            ElevatedButton(
-              onPressed: () {
-                base.SomeClass.changeController.add('One');
-                base.Config.zzz = 'One';
-              },
-              child: Text('One'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                base.SomeClass.changeController.add('Two');
-                base.Config.zzz = 'Two';
-              },
-              child: Text('Two'),
-            ),
             FutureBuilder(
               future: blocksFuture,
               builder: (context, snapshot) {
