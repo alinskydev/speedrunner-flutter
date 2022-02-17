@@ -16,15 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       navigatorKey: base.Config.navigatorKey,
-      theme: ThemeData(
-        buttonTheme: ButtonThemeData(),
-        textTheme: TextTheme(
-          bodyText1: TextStyle(),
-          bodyText2: TextStyle(),
-        ).apply(
-          bodyColor: Colors.blue,
-        ),
-      ),
+      theme: base.Theme.data,
       builder: (context, child) {
         return child!;
       },

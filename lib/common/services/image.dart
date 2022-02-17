@@ -7,18 +7,29 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '/libraries/base.dart' as base;
 
 class Image {
-  static Widget renderNetwork({
+  double? width;
+  double? height;
+  BoxFit fit;
+
+  late Widget placeholder;
+
+  Image({
+    this.width,
+    this.height,
+    this.fit = BoxFit.cover,
+  }) {
+    placeholder = material_image.Image.asset(
+      'assets/images/placeholder.png',
+      width: width,
+      height: height,
+      fit: fit,
+    );
+  }
+
+  Widget renderNetwork({
     required String? url,
     bool isAbsolute = true,
-    double? width,
-    double? height,
-    BoxFit fit = BoxFit.cover,
   }) {
-    Widget placeholder = Placeholder(
-      fallbackWidth: width ?? 400,
-      fallbackHeight: height ?? 400,
-    );
-
     if (url == null) {
       return placeholder;
     }
@@ -26,15 +37,15 @@ class Image {
     url = isAbsolute ? url : '${base.Config.api['url']}/$url';
 
     switch (mime.lookupMimeType(url)) {
-      case 'image/jpg':
+      case 'image/jpeg':
       case 'image/png':
-        return CachedNetworkImage(
-          fadeInDuration: Duration(microseconds: 0),
-          imageUrl: url,
+      case 'image/webp':
+        return material_image.Image.network(
+          url,
           width: width,
           height: height,
           fit: fit,
-          errorWidget: (context, url, error) => placeholder,
+          errorBuilder: (context, error, stackTrace) => placeholder,
         );
       case 'image/svg+xml':
         return SvgPicture.network(
@@ -42,6 +53,7 @@ class Image {
           width: width,
           height: height,
           fit: fit,
+          placeholderBuilder: (context) => placeholder,
         );
       default:
         return placeholder;

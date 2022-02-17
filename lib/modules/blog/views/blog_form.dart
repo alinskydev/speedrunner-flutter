@@ -164,9 +164,10 @@ class _BlogForm extends StatelessWidget {
                                   children: [
                                     Stack(
                                       children: [
-                                        services.Image.renderNetwork(
-                                          url: element,
+                                        services.Image(
                                           height: 200,
+                                        ).renderNetwork(
+                                          url: element,
                                         ),
                                         Positioned(
                                           top: 10,
@@ -246,7 +247,7 @@ class _BlogForm extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: widgets.NavBottom(
+      bottomNavigationBar: widgets.AppNavBottom(
         currentName: 'blog',
       ),
     );

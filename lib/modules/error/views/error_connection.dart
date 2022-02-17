@@ -7,8 +7,8 @@ import '/libraries/services.dart' as services;
 import '/libraries/views.dart' as views;
 import '/libraries/widgets.dart' as widgets;
 
-class AppErrorConnection extends StatelessWidget {
-  AppErrorConnection({Key? key}) : super(key: key);
+class ErrorConnection extends StatelessWidget {
+  ErrorConnection({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

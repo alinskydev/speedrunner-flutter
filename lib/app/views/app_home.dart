@@ -64,10 +64,11 @@ class AppHome extends StatelessWidget {
                             builder: (BuildContext context) {
                               return Container(
                                 padding: EdgeInsets.symmetric(horizontal: 5.0),
-                                child: services.Image.renderNetwork(
+                                child: services.Image(
+                                  width: MediaQuery.of(context).size.width,
+                                ).renderNetwork(
                                   url: e['image'],
                                   isAbsolute: false,
-                                  width: MediaQuery.of(context).size.width,
                                 ),
                               );
                             },
@@ -96,7 +97,7 @@ class AppHome extends StatelessWidget {
                   shrinkWrap: true,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    childAspectRatio: 0.6,
+                    childAspectRatio: 0.58,
                   ),
                   itemCount: records.length,
                   itemBuilder: (context, index) {
@@ -109,15 +110,16 @@ class AppHome extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            services.Image.renderNetwork(
-                              url: blog.fields['image'],
+                            services.Image(
                               width: MediaQuery.of(context).size.width / 2,
                               height: MediaQuery.of(context).size.width / 2,
+                            ).renderNetwork(
+                              url: blog.fields['image'],
                             ),
                             Container(
                               padding: EdgeInsets.all(10),
                               child: Text(
-                                '${blog.localizedFields['name']}',
+                                blog.localizedFields['name'] ?? '',
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
                               ),
@@ -125,7 +127,7 @@ class AppHome extends StatelessWidget {
                             Container(
                               padding: EdgeInsets.all(10),
                               child: Text(
-                                '${blog.localizedFields['short_description']}',
+                                blog.localizedFields['short_description'] ?? '',
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 2,
                               ),
@@ -151,9 +153,10 @@ class AppHome extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Divider(height: 30, color: Colors.black),
-                      services.Image.renderNetwork(
-                        url: blocks['banner'],
+                      services.Image(
                         width: MediaQuery.of(context).size.width,
+                      ).renderNetwork(
+                        url: blocks['banner'],
                       ),
                     ],
                   ),
@@ -163,7 +166,7 @@ class AppHome extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: widgets.NavBottom(
+      bottomNavigationBar: widgets.AppNavBottom(
         currentName: 'home',
       ),
     );

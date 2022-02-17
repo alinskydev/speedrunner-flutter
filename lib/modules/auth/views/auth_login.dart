@@ -78,7 +78,7 @@ class _AuthLoginState extends State<AuthLogin> {
           ),
         ),
       ),
-      bottomNavigationBar: widgets.NavBottom(
+      bottomNavigationBar: widgets.AppNavBottom(
         currentName: 'login',
       ),
     );

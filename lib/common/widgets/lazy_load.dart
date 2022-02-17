@@ -129,10 +129,7 @@ class LazyLoadCubit extends Cubit<Map<String, dynamic>> {
   }) async {
     emit({
       'records': null,
-      'preloader': SizedBox(
-        height: 70,
-        child: Center(child: CircularProgressIndicator()),
-      ),
+      'preloader': widgets.AppPreloader(),
     });
 
     apiRequest.queryParameters ??= {};
@@ -147,7 +144,7 @@ class LazyLoadCubit extends Cubit<Map<String, dynamic>> {
 
       emit({
         'records': builder(context, records),
-        'preloader': SizedBox(height: 70),
+        'preloader': SizedBox(height: 30),
       });
     } else {
       emit({});

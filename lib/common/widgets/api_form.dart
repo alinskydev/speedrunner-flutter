@@ -111,14 +111,8 @@ class _ApiFormState extends State<ApiForm> {
 
     if (fieldsErrors.isEmpty) {
       if (widget.successMessage != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            padding: EdgeInsets.all(15),
-            backgroundColor: Colors.green,
-            content: Container(
-              child: widget.successMessage,
-            ),
-          ),
+        services.Notificator(context).sendMessage(
+          message: widget.successMessage!,
         );
       }
 
@@ -126,12 +120,9 @@ class _ApiFormState extends State<ApiForm> {
         widget.onSuccess!(context, response);
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          padding: EdgeInsets.all(15),
-          backgroundColor: Colors.red,
-          content: Text(fieldsErrors.values.join('\n')),
-        ),
+      services.Notificator(context).sendMessage(
+        message: Text(fieldsErrors.values.join('\n')),
+        backgroundColor: Theme.of(context).colorScheme.error,
       );
     }
   }

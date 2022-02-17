@@ -30,9 +30,10 @@ class BlogView extends StatelessWidget {
               children: [
                 Hero(
                   tag: 'hero-blog-${model.fields['id']}',
-                  child: services.Image.renderNetwork(
-                    url: model.fields['image'],
+                  child: services.Image(
                     width: MediaQuery.of(context).size.width / 2,
+                  ).renderNetwork(
+                    url: model.fields['image'],
                   ),
                 ),
                 Text(model.localizedFields['name'], style: Theme.of(context).textTheme.headline4),
@@ -43,7 +44,7 @@ class BlogView extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: widgets.NavBottom(
+      bottomNavigationBar: widgets.AppNavBottom(
         currentName: 'blog',
       ),
     );

@@ -117,7 +117,7 @@ class _AuthRegisterState extends State<AuthRegister> {
           ),
         ),
       ),
-      bottomNavigationBar: widgets.NavBottom(
+      bottomNavigationBar: widgets.AppNavBottom(
         currentName: 'register',
       ),
     );

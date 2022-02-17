@@ -107,7 +107,7 @@ class ApiRequest {
       await base.Config.navigatorKey.currentState?.push(
         PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) {
-            return views.AppErrorConnection();
+            return views.ErrorConnection();
           },
           transitionDuration: Duration.zero,
         ),
@@ -138,6 +138,7 @@ class ApiRequest {
           'statusCode': response.statusCode,
         };
       case 401:
+        await base.User.logout();
         await base.Config.navigatorKey.currentState?.pushAndRemoveUntil(
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) => views.AuthLogin(),

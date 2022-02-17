@@ -58,7 +58,7 @@ class _AuthResetPasswordRequestState extends State<AuthResetPasswordRequest> {
           ),
         ),
       ),
-      bottomNavigationBar: widgets.NavBottom(
+      bottomNavigationBar: widgets.AppNavBottom(
         currentName: 'reset_password_request',
       ),
     );

@@ -72,10 +72,11 @@ class BlogList extends StatelessWidget {
                               children: [
                                 Hero(
                                   tag: 'hero-blog-${blog.fields['id']}',
-                                  child: services.Image.renderNetwork(
-                                    url: blog.fields['image'],
+                                  child: services.Image(
                                     width: MediaQuery.of(context).size.width,
                                     height: MediaQuery.of(context).size.width,
+                                  ).renderNetwork(
+                                    url: blog.fields['image'],
                                   ),
                                 ),
                                 widgets.BlogActionButtons(
@@ -87,7 +88,7 @@ class BlogList extends StatelessWidget {
                             Container(
                               padding: EdgeInsets.all(10),
                               child: Text(
-                                '${blog.localizedFields['name']}',
+                                blog.localizedFields['name'] ?? '',
                                 style: Theme.of(context).textTheme.headline4,
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
@@ -96,7 +97,7 @@ class BlogList extends StatelessWidget {
                             Container(
                               padding: EdgeInsets.all(10),
                               child: Text(
-                                '${blog.fields['slug']}',
+                                blog.fields['slug'] ?? '',
                                 style: Theme.of(context).textTheme.headline6,
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
@@ -113,7 +114,7 @@ class BlogList extends StatelessWidget {
           },
         ),
       ),
-      bottomNavigationBar: widgets.NavBottom(
+      bottomNavigationBar: widgets.AppNavBottom(
         currentName: 'blog',
       ),
     );

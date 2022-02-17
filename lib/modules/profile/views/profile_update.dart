@@ -92,9 +92,10 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
                                       Stack(
                                         children: [
                                           SizedBox(
-                                            child: services.Image.renderNetwork(
-                                              url: model.fields['image'],
+                                            child: services.Image(
                                               width: MediaQuery.of(context).size.width,
+                                            ).renderNetwork(
+                                              url: model.fields['image'],
                                             ),
                                           ),
                                           Positioned(
@@ -200,7 +201,7 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
               );
             }),
       ),
-      bottomNavigationBar: widgets.NavBottom(
+      bottomNavigationBar: widgets.AppNavBottom(
         currentName: 'profile',
       ),
     );

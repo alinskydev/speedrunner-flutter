@@ -53,15 +53,17 @@ class ProfileView extends StatelessWidget {
             if (snapshot.data == null) return SizedBox.shrink();
 
             Map<String, dynamic> profile = snapshot.data as Map<String, dynamic>;
+            var zzz = null;
 
             return Container(
               padding: EdgeInsets.all(15),
               child: Column(
                 children: [
-                  services.Image.renderNetwork(
-                    url: profile['image'],
+                  services.Image(
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.width,
+                  ).renderNetwork(
+                    url: profile['image'],
                   ),
                   SizedBox(height: 30),
                   Table(
@@ -115,7 +117,7 @@ class ProfileView extends StatelessWidget {
           },
         ),
       ),
-      bottomNavigationBar: widgets.NavBottom(
+      bottomNavigationBar: widgets.AppNavBottom(
         currentName: 'profile',
       ),
     );

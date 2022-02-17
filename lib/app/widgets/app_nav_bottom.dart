@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import '/libraries/base.dart' as base;
 import '/libraries/views.dart' as views;
 
-class NavBottom extends StatelessWidget {
+class AppNavBottom extends StatelessWidget {
   String currentName;
   late final int currentIndex;
 
   Map<String, Map<_NavKeys, dynamic>> nav = {};
 
-  NavBottom({
+  AppNavBottom({
     Key? key,
     required this.currentName,
   }) : super(key: key) {
@@ -63,7 +63,6 @@ class NavBottom extends StatelessWidget {
       showSelectedLabels: true,
       showUnselectedLabels: true,
       currentIndex: currentIndex,
-      selectedItemColor: Colors.blue,
       items: nav.values.map((e) {
         return BottomNavigationBarItem(
           label: e[_NavKeys.label],
