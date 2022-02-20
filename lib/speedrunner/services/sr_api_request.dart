@@ -7,12 +7,12 @@ import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 import '/libraries/base.dart' as base;
 import '/libraries/views.dart' as views;
 
-class ApiRequest {
+class SRApiRequest {
   String path;
   Map<String, dynamic>? queryParameters;
   Map<String, String> headers = {};
 
-  ApiRequest({
+  SRApiRequest({
     required this.path,
     this.queryParameters,
   }) {
@@ -32,17 +32,15 @@ class ApiRequest {
   }
 
   Future<Map<String, dynamic>> sendJson([Map body = const {}]) async {
-    Future<http.Response> responseFuture = Future.delayed(Duration(seconds: 0), () {
-      headers.addAll({
-        'Content-Type': 'application/json',
-      });
-
-      return http.post(
-        _prepareUri(),
-        headers: headers,
-        body: jsonEncode(body),
-      );
+    headers.addAll({
+      'Content-Type': 'application/json',
     });
+
+    Future<http.Response> responseFuture = http.post(
+      _prepareUri(),
+      headers: headers,
+      body: jsonEncode(body),
+    );
 
     http.Response response = await _checkConnection(responseFuture) as http.Response;
     return await _prepareResponse(response);
@@ -106,9 +104,9 @@ class ApiRequest {
     } catch (e) {
       await base.Config.navigatorKey.currentState?.push(
         PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) {
-            return views.ErrorConnection();
-          },
+          pageBuilder: (context, animation, secondaryAnimation) => views.AppError(
+            code: -1,
+          ),
           transitionDuration: Duration.zero,
         ),
       );
@@ -137,19 +135,39 @@ class ApiRequest {
           'body': json.decode(body),
           'statusCode': response.statusCode,
         };
+
       case 401:
         await base.User.logout();
         await base.Config.navigatorKey.currentState?.pushAndRemoveUntil(
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) => views.AuthLogin(),
-            transitionDuration: Duration.zero,
           ),
           (value) => false,
         );
 
         break;
+
+      case 403:
+        await base.Config.navigatorKey.currentState?.push(
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) => views.AppError(
+              code: 403,
+            ),
+            transitionDuration: Duration.zero,
+          ),
+        );
+
+        break;
+
       default:
-        throw 'An error occurred';
+        await base.Config.navigatorKey.currentState?.push(
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) => views.AppError(
+              code: 500,
+            ),
+            transitionDuration: Duration.zero,
+          ),
+        );
     }
 
     return {};

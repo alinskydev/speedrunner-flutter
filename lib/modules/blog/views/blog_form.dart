@@ -21,7 +21,7 @@ class BlogCreate extends StatelessWidget {
     return _BlogForm(
       title: 'Create',
       model: model,
-      apiRequest: services.ApiRequest(
+      apiRequest: services.SRApiRequest(
         path: 'blog/create',
       ),
     );
@@ -39,10 +39,10 @@ class BlogUpdate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _BlogForm(
-      title: 'Update: ${model.localizedFields['name']}',
+      title: 'Update: ${model.getValue('name')}',
       model: model,
-      apiRequest: services.ApiRequest(
-        path: 'blog/update/${model.fields['id']}',
+      apiRequest: services.SRApiRequest(
+        path: 'blog/update/${model.getValue('id')}',
       ),
     );
   }
@@ -51,7 +51,7 @@ class BlogUpdate extends StatelessWidget {
 class _BlogForm extends StatelessWidget {
   String title;
   models.Blog model;
-  services.ApiRequest apiRequest;
+  services.SRApiRequest apiRequest;
 
   late List<String> images;
 
@@ -61,7 +61,7 @@ class _BlogForm extends StatelessWidget {
     required this.model,
     required this.apiRequest,
   }) : super(key: key) {
-    images = model.fields['images'] != null ? List<String>.from(model.fields['images']) : [];
+    images = model.getStrictValue('images') != null ? List<String>.from(model.getStrictValue('images')) : [];
   }
 
   @override
@@ -73,12 +73,12 @@ class _BlogForm extends StatelessWidget {
       ),
       body: MultiBlocProvider(
         providers: [
-          BlocProvider(create: (context) => widgets.LiveSearchSelectCubit()),
+          BlocProvider(create: (context) => widgets.SRLiveSearchSelectCubit()),
         ],
         child: SingleChildScrollView(
           child: Container(
             padding: EdgeInsets.all(15),
-            child: widgets.ApiForm(
+            child: widgets.SRApiForm(
               model: model,
               apiRequest: apiRequest,
               successMessage: Text('Successfully saved'),
@@ -86,7 +86,9 @@ class _BlogForm extends StatelessWidget {
                 Navigator.pop(context);
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => views.BlogList()),
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation, secondaryAnimation) => views.BlogList(),
+                  ),
                 );
               },
               builder: (context, formState) {
@@ -118,20 +120,20 @@ class _BlogForm extends StatelessWidget {
                     ),
                     SizedBox(height: 30),
                     TextFormField(
-                      initialValue: model.category?.localizedFields['name'],
+                      initialValue: model.category?.getValue('name'),
                       decoration: InputDecoration(
                         labelText: 'Category',
                         hintText: 'Search',
                         prefixIcon: Icon(Icons.search),
                       ),
                       onTap: () {
-                        context.read<widgets.LiveSearchSelectCubit>().process(
-                              apiRequest: services.ApiRequest(path: 'blog-category'),
+                        context.read<widgets.SRLiveSearchSelectCubit>().process(
+                              apiRequest: services.SRApiRequest(path: 'blog-category'),
                             );
                       },
                       onChanged: (value) {
-                        context.read<widgets.LiveSearchSelectCubit>().process(
-                              apiRequest: services.ApiRequest(
+                        context.read<widgets.SRLiveSearchSelectCubit>().process(
+                              apiRequest: services.SRApiRequest(
                                 path: 'blog-category',
                                 queryParameters: {
                                   'filter[name]': value,
@@ -140,7 +142,7 @@ class _BlogForm extends StatelessWidget {
                             );
                       },
                     ),
-                    widgets.LiveSearchSelect(
+                    widgets.SRLiveSearchSelect(
                       valuePath: 'id',
                       textPath: 'name',
                       isLocalized: true,
@@ -158,13 +160,13 @@ class _BlogForm extends StatelessWidget {
                         scrollDirection: Axis.horizontal,
                         child: Row(
                           children: images.map((element) {
-                            return widgets.Replacer(
+                            return widgets.SRReplacer(
                               builder: (context, replacerState) {
                                 return Row(
                                   children: [
                                     Stack(
                                       children: [
-                                        services.Image(
+                                        services.SRImage(
                                           height: 200,
                                         ).renderNetwork(
                                           url: element,
@@ -179,13 +181,13 @@ class _BlogForm extends StatelessWidget {
                                             child: MaterialButton(
                                               padding: EdgeInsets.zero,
                                               onPressed: () async {
-                                                await services.ApiRequest(
-                                                  path: 'blog/file-delete/${model.fields['id']}',
+                                                await services.SRApiRequest(
+                                                  path: 'blog/file-delete/${model.getValue('id')}',
                                                   queryParameters: {
                                                     'attr': 'iamges',
                                                   },
                                                 ).sendJson({
-                                                  'key': services.Image.trimApiUrl(url: element),
+                                                  'key': services.SRImage.trimApiUrl(url: element),
                                                 });
 
                                                 replacerState.process();

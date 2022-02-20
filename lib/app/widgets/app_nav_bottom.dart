@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
 import '/libraries/base.dart' as base;
+import '/libraries/services.dart' as services;
 import '/libraries/views.dart' as views;
 
 class AppNavBottom extends StatelessWidget {
   String currentName;
   late final int currentIndex;
 
-  Map<String, Map<_NavKeys, dynamic>> nav = {};
+  Map<String, Map<String, dynamic>> nav = {};
 
   AppNavBottom({
     Key? key,
@@ -16,39 +17,48 @@ class AppNavBottom extends StatelessWidget {
     if (base.User.isAuthorized) {
       nav = {
         'home': {
-          _NavKeys.label: 'Home',
-          _NavKeys.icon: Icons.home,
+          'label': 'Home',
+          'icon': Icons.home,
         },
         'blog': {
-          _NavKeys.label: 'Blogs',
-          _NavKeys.icon: Icons.list_alt,
+          'label': 'Blogs',
+          'icon': Icons.list_alt,
+        },
+        'product': {
+          'label': 'Products',
+          'icon': Icons.shopping_bag_outlined,
+        },
+        'cart': {
+          'label': 'Cart',
+          'icon': services.AppIcons.cart,
+          'iconBadge': services.Cart.quantity.toString(),
         },
         'profile': {
-          _NavKeys.label: 'Profile',
-          _NavKeys.icon: Icons.person,
+          'label': 'Profile',
+          'icon': Icons.person,
         },
       };
     } else {
       nav = {
         'home': {
-          _NavKeys.label: 'Home',
-          _NavKeys.icon: Icons.home,
+          'label': 'Home',
+          'icon': Icons.home,
         },
         'blog': {
-          _NavKeys.label: 'Blogs',
-          _NavKeys.icon: Icons.list_alt,
+          'label': 'Blogs',
+          'icon': Icons.list_alt,
         },
         'login': {
-          _NavKeys.label: 'Login',
-          _NavKeys.icon: Icons.login,
+          'label': 'Login',
+          'icon': Icons.login,
         },
         'register': {
-          _NavKeys.label: 'Registration',
-          _NavKeys.icon: Icons.app_registration,
+          'label': 'Registration',
+          'icon': Icons.app_registration,
         },
         'reset_password_request': {
-          _NavKeys.label: 'Reset password request',
-          _NavKeys.icon: Icons.restore_page,
+          'label': 'Reset password request',
+          'icon': Icons.restore_page,
         },
       };
     }
@@ -63,10 +73,35 @@ class AppNavBottom extends StatelessWidget {
       showSelectedLabels: true,
       showUnselectedLabels: true,
       currentIndex: currentIndex,
+      iconSize: 40,
       items: nav.values.map((e) {
         return BottomNavigationBarItem(
-          label: e[_NavKeys.label],
-          icon: Icon(e[_NavKeys.icon]),
+          label: e['label'],
+          icon: Stack(
+            children: [
+              Icon(e['icon']),
+              e['iconBadge'] != null
+                  ? Positioned(
+                      top: 0,
+                      right: 0,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 7),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: Text(
+                          e['iconBadge'],
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                    )
+                  : SizedBox.shrink(),
+            ],
+          ),
         );
       }).toList(),
       onTap: (value) {
@@ -75,14 +110,20 @@ class AppNavBottom extends StatelessWidget {
         Widget? view;
 
         switch (nav.keys.toList()[value]) {
-          case 'home':
-            view = views.AppHome();
-            break;
           case 'blog':
             view = views.BlogList();
             break;
+          case 'home':
+            view = views.AppHome();
+            break;
           case 'login':
             view = views.AuthLogin();
+            break;
+          case 'product':
+            view = views.ProductList();
+            break;
+          case 'profile':
+            view = views.ProfileView();
             break;
           case 'register':
             view = views.AuthRegister();
@@ -90,20 +131,23 @@ class AppNavBottom extends StatelessWidget {
           case 'reset_password_request':
             view = views.AuthResetPasswordRequest();
             break;
-          case 'profile':
-            view = views.ProfileView();
-            break;
         }
 
         if (view != null) {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => view!),
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) => view!,
+              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                return FadeTransition(
+                  opacity: animation,
+                  child: child,
+                );
+              },
+            ),
           );
         }
       },
     );
   }
 }
-
-enum _NavKeys { label, icon }

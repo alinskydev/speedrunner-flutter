@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_file_picker/form_builder_file_picker.dart';
@@ -18,7 +19,7 @@ class ProfileUpdate extends StatefulWidget {
 }
 
 class _ProfileUpdateState extends State<ProfileUpdate> {
-  Future<Map> profileFuture = services.ApiRequest(
+  Future<Map> profileFuture = services.SRApiRequest(
     path: 'profile/view',
   ).getData().then((value) {
     return value['body'];
@@ -44,17 +45,19 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
 
               return Container(
                 padding: EdgeInsets.all(15),
-                child: widgets.ApiForm(
+                child: widgets.SRApiForm(
                   model: model,
-                  apiRequest: services.ApiRequest(
+                  apiRequest: services.SRApiRequest(
                     path: 'profile/update',
                   ),
                   successMessage: Text('Profile was updated'),
                   onSuccess: (context, response) async {
-                    Navigator.pushAndRemoveUntil(
+                    Navigator.pop(context);
+                    Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => views.ProfileView()),
-                      (route) => false,
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) => views.ProfileView(),
+                      ),
                     );
                   },
                   builder: (context, formState) {
@@ -83,19 +86,19 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
                             labelText: 'Address',
                           ),
                         ),
-                        widgets.Replacer(
+                        widgets.SRReplacer(
                           builder: (context, replacerState) {
-                            return model.fields['image'] != null
+                            return model.getStrictValue('image') != null
                                 ? Column(
                                     children: [
                                       SizedBox(height: 30),
                                       Stack(
                                         children: [
                                           SizedBox(
-                                            child: services.Image(
+                                            child: services.SRImage(
                                               width: MediaQuery.of(context).size.width,
                                             ).renderNetwork(
-                                              url: model.fields['image'],
+                                              url: model.getValue('image'),
                                             ),
                                           ),
                                           Positioned(
@@ -108,13 +111,15 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
                                               child: MaterialButton(
                                                 padding: EdgeInsets.zero,
                                                 onPressed: () async {
-                                                  await services.ApiRequest(
+                                                  await services.SRApiRequest(
                                                     path: 'profile/file-delete',
                                                     queryParameters: {
                                                       'attr': 'image',
                                                     },
                                                   ).sendJson({
-                                                    'key': services.Image.trimApiUrl(url: model.fields['image']),
+                                                    'key': services.SRImage.trimApiUrl(
+                                                      url: model.getValue('image'),
+                                                    ),
                                                   });
 
                                                   replacerState.process();

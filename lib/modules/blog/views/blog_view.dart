@@ -18,7 +18,7 @@ class BlogView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(model.localizedFields['name']),
+        title: Text(model.getValue('name')),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -29,16 +29,16 @@ class BlogView extends StatelessWidget {
             child: Column(
               children: [
                 Hero(
-                  tag: 'hero-blog-${model.fields['id']}',
-                  child: services.Image(
+                  tag: 'hero-blog-${model.getValue('id')}',
+                  child: services.SRImage(
                     width: MediaQuery.of(context).size.width / 2,
                   ).renderNetwork(
-                    url: model.fields['image'],
+                    url: model.getValue('image'),
                   ),
                 ),
-                Text(model.localizedFields['name'], style: Theme.of(context).textTheme.headline4),
+                Text(model.getValue('name'), style: Theme.of(context).textTheme.headline4),
                 SizedBox(height: 30),
-                Text(model.localizedFields['short_description']),
+                Text(model.getValue('short_description')),
               ],
             ),
           ),

@@ -1,3 +1,3 @@
 library app_extensions;
 
-export '/common/extensions/iterable.dart';
+export '/speedrunner/extensions/sr_iterable.dart';

@@ -11,7 +11,7 @@ import '/libraries/services.dart' as services;
 import '/libraries/widgets.dart' as widgets;
 
 class AppHome extends StatelessWidget {
-  Future<Map> blocksFuture = services.ApiRequest(
+  Future<Map> blocksFuture = services.SRApiRequest(
     path: 'staticpage/home',
   ).getData().then((value) {
     return Map.fromIterable(
@@ -21,7 +21,7 @@ class AppHome extends StatelessWidget {
     );
   });
 
-  Future<List> blogsFuture = services.ApiRequest(
+  Future<List> blogsFuture = services.SRApiRequest(
     path: 'blog',
     queryParameters: {
       'per-page': '2',
@@ -64,7 +64,7 @@ class AppHome extends StatelessWidget {
                             builder: (BuildContext context) {
                               return Container(
                                 padding: EdgeInsets.symmetric(horizontal: 5.0),
-                                child: services.Image(
+                                child: services.SRImage(
                                   width: MediaQuery.of(context).size.width,
                                 ).renderNetwork(
                                   url: e['image'],
@@ -110,16 +110,16 @@ class AppHome extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            services.Image(
+                            services.SRImage(
                               width: MediaQuery.of(context).size.width / 2,
                               height: MediaQuery.of(context).size.width / 2,
                             ).renderNetwork(
-                              url: blog.fields['image'],
+                              url: blog.getValue('image'),
                             ),
                             Container(
                               padding: EdgeInsets.all(10),
                               child: Text(
-                                blog.localizedFields['name'] ?? '',
+                                blog.getValue('name'),
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
                               ),
@@ -127,7 +127,7 @@ class AppHome extends StatelessWidget {
                             Container(
                               padding: EdgeInsets.all(10),
                               child: Text(
-                                blog.localizedFields['short_description'] ?? '',
+                                blog.getValue('short_description'),
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 2,
                               ),
@@ -153,7 +153,7 @@ class AppHome extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Divider(height: 30, color: Colors.black),
-                      services.Image(
+                      services.SRImage(
                         width: MediaQuery.of(context).size.width,
                       ).renderNetwork(
                         url: blocks['banner'],

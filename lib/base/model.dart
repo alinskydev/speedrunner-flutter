@@ -30,19 +30,23 @@ abstract class Model {
     localizedFields = {for (String element in availableFields[ModelFieldType.localized]!) element: null};
   }
 
-  dynamic getField(String key) {
-    if (fields.containsKey(key)) {
-      return fields[key];
+  String getValue(String field) {
+    if (localizedFields.containsKey(field)) {
+      return (localizedFields[field] ?? '').toString();
+    } else if (fields.containsKey(field)) {
+      return (fields[field] ?? '').toString();
     } else {
-      throw Exception('Key $key not found');
+      throw Exception('Field $field not found');
     }
   }
 
-  void setField(String key, dynamic value) {
-    if (fields.containsKey(key)) {
-      fields[key] = value;
+  dynamic getStrictValue(String field) {
+    if (localizedFields.containsKey(field)) {
+      return localizedFields[field];
+    } else if (fields.containsKey(field)) {
+      return fields[field];
     } else {
-      throw Exception('Key $key not found');
+      throw Exception('Field $field not found');
     }
   }
 

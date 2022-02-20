@@ -7,10 +7,10 @@ import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 import '/libraries/base.dart' as base;
 import '/libraries/views.dart' as views;
 
-class Notificator {
+class SRNotificator {
   BuildContext context;
 
-  Notificator(this.context);
+  SRNotificator(this.context);
 
   void sendMessage({
     required Widget message,

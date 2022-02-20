@@ -7,29 +7,34 @@ import '/libraries/extensions.dart';
 import '/libraries/services.dart' as services;
 import '/libraries/widgets.dart' as widgets;
 
-class Replacer extends StatefulWidget {
-  Widget Function(BuildContext context, _ReplacerState replacerState) builder;
+class SRReplacer extends StatefulWidget {
+  Widget Function(BuildContext context, _SRReplacerState replacerState) builder;
 
-  Replacer({
+  SRReplacer({
     Key? key,
     required this.builder,
   }) : super(key: key);
 
   @override
-  State<Replacer> createState() => _ReplacerState();
+  State<SRReplacer> createState() => _SRReplacerState();
 }
 
-class _ReplacerState extends State<Replacer> {
+class _SRReplacerState extends State<SRReplacer> {
   Widget? deletedWidget;
 
   @override
   Widget build(BuildContext context) {
-    return deletedWidget ?? widget.builder(context, this);
+    return AnimatedSwitcher(
+      duration: Duration(milliseconds: 300),
+      child: deletedWidget ?? widget.builder(context, this),
+    );
   }
 
   void process({
     Widget replacer = const SizedBox.shrink(),
   }) async {
-    setState(() => deletedWidget = replacer);
+    setState(() {
+      deletedWidget = replacer;
+    });
   }
 }

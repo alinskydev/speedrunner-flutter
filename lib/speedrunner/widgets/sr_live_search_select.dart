@@ -7,14 +7,14 @@ import '/libraries/extensions.dart';
 import '/libraries/services.dart' as services;
 import '/libraries/widgets.dart' as widgets;
 
-class LiveSearchSelect extends StatelessWidget {
+class SRLiveSearchSelect extends StatelessWidget {
   String valuePath;
   String textPath;
   bool isLocalized;
 
   Widget Function(BuildContext context, List<FormBuilderFieldOption> options) builder;
 
-  LiveSearchSelect({
+  SRLiveSearchSelect({
     Key? key,
     required this.valuePath,
     required this.textPath,
@@ -26,7 +26,7 @@ class LiveSearchSelect extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LiveSearchSelectCubit, List<Map>>(
+    return BlocBuilder<SRLiveSearchSelectCubit, List<Map>>(
       builder: (context, state) {
         List<FormBuilderFieldOption> options = state.map((e) {
           String text = e.getValueFromPath(textPath) as String? ?? '';
@@ -47,7 +47,7 @@ class LiveSearchSelect extends StatelessWidget {
             !state.isEmpty
                 ? IconButton(
                     onPressed: () {
-                      context.read<widgets.LiveSearchSelectCubit>().clear();
+                      context.read<widgets.SRLiveSearchSelectCubit>().clear();
                     },
                     icon: Icon(Icons.close),
                   )
@@ -60,11 +60,11 @@ class LiveSearchSelect extends StatelessWidget {
   }
 }
 
-class LiveSearchSelectCubit extends Cubit<List<Map>> {
-  LiveSearchSelectCubit() : super([]);
+class SRLiveSearchSelectCubit extends Cubit<List<Map>> {
+  SRLiveSearchSelectCubit() : super([]);
 
   Future<void> process({
-    required services.ApiRequest apiRequest,
+    required services.SRApiRequest apiRequest,
   }) async {
     List<Map> data = await apiRequest.getData().then((value) {
       return List<Map>.from(value['body']['data']);

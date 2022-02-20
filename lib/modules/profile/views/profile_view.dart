@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
@@ -10,7 +11,7 @@ import '/libraries/widgets.dart' as widgets;
 class ProfileView extends StatelessWidget {
   ProfileView({Key? key}) : super(key: key);
 
-  Future<Map> profileFuture = services.ApiRequest(
+  Future<Map> profileFuture = services.SRApiRequest(
     path: 'profile/view',
   ).getData().then((value) {
     return value['body'];
@@ -27,7 +28,7 @@ class ProfileView extends StatelessWidget {
             onPressed: () async {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => views.ProfileUpdate()),
+                CupertinoPageRoute(builder: (context) => views.ProfileUpdate()),
               );
             },
             icon: Icon(Icons.edit),
@@ -38,7 +39,9 @@ class ProfileView extends StatelessWidget {
 
               Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (context) => views.AppHome()),
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) => views.AppHome(),
+                ),
                 (route) => false,
               );
             },
@@ -53,13 +56,12 @@ class ProfileView extends StatelessWidget {
             if (snapshot.data == null) return SizedBox.shrink();
 
             Map<String, dynamic> profile = snapshot.data as Map<String, dynamic>;
-            var zzz = null;
 
             return Container(
               padding: EdgeInsets.all(15),
               child: Column(
                 children: [
-                  services.Image(
+                  services.SRImage(
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.width,
                   ).renderNetwork(

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
@@ -27,9 +28,9 @@ class _AuthLoginState extends State<AuthLogin> {
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.all(15),
-          child: widgets.ApiForm(
+          child: widgets.SRApiForm(
             model: models.AuthLogin(),
-            apiRequest: services.ApiRequest(
+            apiRequest: services.SRApiRequest(
               path: 'auth/login',
             ),
             onSuccess: (context, response) async {
@@ -37,7 +38,7 @@ class _AuthLoginState extends State<AuthLogin> {
 
               Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (context) => views.ProfileView()),
+                CupertinoPageRoute(builder: (context) => views.ProfileView()),
                 (route) => false,
               );
             },

@@ -1,24 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/image.dart' as material_image;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:mime/mime.dart' as mime;
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '/libraries/base.dart' as base;
 
-class Image {
+class SRImage {
   double? width;
   double? height;
   BoxFit fit;
 
   late Widget placeholder;
 
-  Image({
+  SRImage({
     this.width,
     this.height,
     this.fit = BoxFit.cover,
   }) {
-    placeholder = material_image.Image.asset(
+    placeholder = Image.asset(
       'assets/images/placeholder.png',
       width: width,
       height: height,
@@ -40,7 +39,7 @@ class Image {
       case 'image/jpeg':
       case 'image/png':
       case 'image/webp':
-        return material_image.Image.network(
+        return Image.network(
           url,
           width: width,
           height: height,

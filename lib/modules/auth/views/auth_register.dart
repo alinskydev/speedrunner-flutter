@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
@@ -28,9 +29,9 @@ class _AuthRegisterState extends State<AuthRegister> {
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.all(15),
-          child: widgets.ApiForm(
+          child: widgets.SRApiForm(
             model: models.AuthRegister(),
-            apiRequest: services.ApiRequest(
+            apiRequest: services.SRApiRequest(
               path: 'auth/signup',
             ),
             successMessage: Text('You have been registered'),
@@ -39,7 +40,7 @@ class _AuthRegisterState extends State<AuthRegister> {
 
               Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (context) => views.ProfileView()),
+                CupertinoPageRoute(builder: (context) => views.ProfileView()),
                 (route) => false,
               );
             },

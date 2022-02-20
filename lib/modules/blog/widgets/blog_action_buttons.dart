@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -50,7 +51,7 @@ class _BlogActionButtonsState extends State<BlogActionButtons> with SingleTicker
   Widget build(BuildContext context) {
     return BlocBuilder<bloc.BlogActionButtonsAnimationCubit, int?>(
       builder: (context, state) {
-        state == widget.model.fields['id'] ? animationController.forward() : animationController.reverse();
+        state == widget.model.getStrictValue('id') ? animationController.forward() : animationController.reverse();
 
         return AnimatedBuilder(
           animation: animationController,
@@ -91,7 +92,7 @@ class _BlogActionButtonsState extends State<BlogActionButtons> with SingleTicker
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => views.BlogUpdate(model: widget.model)),
+                            CupertinoPageRoute(builder: (context) => views.BlogUpdate(model: widget.model)),
                           );
                         },
                         icon: Icon(Icons.edit),
@@ -99,8 +100,8 @@ class _BlogActionButtonsState extends State<BlogActionButtons> with SingleTicker
                       IconButton(
                         color: Colors.red,
                         onPressed: () async {
-                          // await services.ApiRequest(
-                          //   path: 'blog/delete/${widget.model.fields['id']}',
+                          // await services.SRApiRequest(
+                          //   path: 'blog/delete/${widget.model.getValue('id')}',
                           // ).sendJson();
 
                           widget.replacerState.process();

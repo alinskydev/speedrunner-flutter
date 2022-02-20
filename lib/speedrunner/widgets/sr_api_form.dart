@@ -10,15 +10,15 @@ import '/libraries/widgets.dart' as widgets;
 
 import '/libraries/base.dart' as base;
 
-class ApiForm extends StatefulWidget {
+class SRApiForm extends StatefulWidget {
   Model model;
-  services.ApiRequest apiRequest;
+  services.SRApiRequest apiRequest;
   Widget? successMessage;
 
-  Widget Function(BuildContext context, _ApiFormState formState) builder;
+  Widget Function(BuildContext context, _SRApiFormState formState) builder;
   void Function(BuildContext context, Map<String, dynamic> response)? onSuccess;
 
-  ApiForm({
+  SRApiForm({
     Key? key,
     required this.model,
     required this.apiRequest,
@@ -28,10 +28,10 @@ class ApiForm extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _ApiFormState createState() => _ApiFormState();
+  _SRApiFormState createState() => _SRApiFormState();
 }
 
-class _ApiFormState extends State<ApiForm> {
+class _SRApiFormState extends State<SRApiForm> {
   final GlobalKey<FormBuilderState> formKey = GlobalKey();
 
   @override
@@ -111,7 +111,7 @@ class _ApiFormState extends State<ApiForm> {
 
     if (fieldsErrors.isEmpty) {
       if (widget.successMessage != null) {
-        services.Notificator(context).sendMessage(
+        services.SRNotificator(context).sendMessage(
           message: widget.successMessage!,
         );
       }
@@ -120,7 +120,7 @@ class _ApiFormState extends State<ApiForm> {
         widget.onSuccess!(context, response);
       }
     } else {
-      services.Notificator(context).sendMessage(
+      services.SRNotificator(context).sendMessage(
         message: Text(fieldsErrors.values.join('\n')),
         backgroundColor: Theme.of(context).colorScheme.error,
       );

@@ -1,8 +1,10 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SharedStorage {
+class SRSharedStorage {
+  final Future<SharedPreferences> sharedPreferences = SharedPreferences.getInstance();
+
   Future<dynamic> getData(String key, Type type) async {
-    final prefs = await SharedPreferences.getInstance();
+    final SharedPreferences prefs = await sharedPreferences;
 
     switch (type) {
       case bool:
@@ -21,7 +23,7 @@ class SharedStorage {
   }
 
   Future<bool> setData(String key, dynamic value) async {
-    final prefs = await SharedPreferences.getInstance();
+    final SharedPreferences prefs = await sharedPreferences;
 
     switch (value.runtimeType) {
       case bool:
@@ -40,7 +42,7 @@ class SharedStorage {
   }
 
   Future<bool> remove(String key) async {
-    final prefs = await SharedPreferences.getInstance();
+    final SharedPreferences prefs = await sharedPreferences;
     return prefs.remove(key);
   }
 }

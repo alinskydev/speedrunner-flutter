@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -21,7 +22,7 @@ class BlogList extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => views.BlogCreate()),
+                CupertinoPageRoute(builder: (context) => views.BlogCreate()),
               );
             },
             icon: Icon(Icons.add),
@@ -30,18 +31,11 @@ class BlogList extends StatelessWidget {
       ),
       body: MultiBlocProvider(
         providers: [
-          BlocProvider(create: (context) => widgets.LazyLoadCubit()),
+          BlocProvider(create: (context) => bloc.SRLazyLoadCubit()),
           BlocProvider(create: (context) => bloc.BlogActionButtonsAnimationCubit()),
         ],
-        child: widgets.LazyLoad(
-          apiRequest: services.ApiRequest(
-            path: 'blog',
-            queryParameters: {
-              'sort': 'id',
-              'per-page': '2',
-            },
-          ),
-          type: widgets.LazyLoadType.gridView,
+        child: widgets.SRLazyLoad(
+          type: widgets.SRLazyLoadType.gridView,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 1,
             childAspectRatio: 0.7,
@@ -51,15 +45,26 @@ class BlogList extends StatelessWidget {
               Text('Blogs page', style: Theme.of(context).textTheme.headline2),
             ],
           ),
+          emptyChild: Text(
+            'Nothing found zzz',
+            style: Theme.of(context).textTheme.headline1,
+          ),
+          apiRequest: services.SRApiRequest(
+            path: 'blog',
+            queryParameters: {
+              'sort': 'id',
+              'per-page': '2',
+            },
+          ),
           builder: (context, records) {
             return records.map((e) {
               models.Blog blog = models.Blog(e);
 
               return GestureDetector(
                 onTap: () {
-                  context.read<bloc.BlogActionButtonsAnimationCubit>().process(blog.fields['id']);
+                  context.read<bloc.BlogActionButtonsAnimationCubit>().process(blog.getStrictValue('id'));
                 },
-                child: widgets.Replacer(
+                child: widgets.SRReplacer(
                   builder: (context, replacerState) {
                     return Container(
                       padding: EdgeInsets.symmetric(vertical: 10),
@@ -71,12 +76,12 @@ class BlogList extends StatelessWidget {
                             Stack(
                               children: [
                                 Hero(
-                                  tag: 'hero-blog-${blog.fields['id']}',
-                                  child: services.Image(
+                                  tag: 'hero-blog-${blog.getValue('id')}',
+                                  child: services.SRImage(
                                     width: MediaQuery.of(context).size.width,
                                     height: MediaQuery.of(context).size.width,
                                   ).renderNetwork(
-                                    url: blog.fields['image'],
+                                    url: blog.getValue('image'),
                                   ),
                                 ),
                                 widgets.BlogActionButtons(
@@ -88,7 +93,7 @@ class BlogList extends StatelessWidget {
                             Container(
                               padding: EdgeInsets.all(10),
                               child: Text(
-                                blog.localizedFields['name'] ?? '',
+                                blog.getValue('name'),
                                 style: Theme.of(context).textTheme.headline4,
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
@@ -97,7 +102,7 @@ class BlogList extends StatelessWidget {
                             Container(
                               padding: EdgeInsets.all(10),
                               child: Text(
-                                blog.fields['slug'] ?? '',
+                                blog.getValue('slug'),
                                 style: Theme.of(context).textTheme.headline6,
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
