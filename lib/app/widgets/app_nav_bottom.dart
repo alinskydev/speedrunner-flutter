@@ -31,7 +31,7 @@ class AppNavBottom extends StatelessWidget {
         'cart': {
           'label': 'Cart',
           'icon': services.AppIcons.cart,
-          'iconBadge': services.Cart.quantity.toString(),
+          'iconBadge': services.Cart.quantity > 0 ? services.Cart.quantity.toString() : null,
         },
         'profile': {
           'label': 'Profile',

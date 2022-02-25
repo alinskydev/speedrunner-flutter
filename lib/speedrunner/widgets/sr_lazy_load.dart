@@ -82,9 +82,7 @@ class _SRLazyLoadState extends State<SRLazyLoad> {
           hasMore = false;
         }
 
-        late Widget list = SliverToBoxAdapter(
-          child: widget.emptyChild,
-        );
+        late Widget list = SliverToBoxAdapter();
 
         if (children.isNotEmpty) {
           switch (widget.type) {
@@ -106,6 +104,10 @@ class _SRLazyLoadState extends State<SRLazyLoad> {
               );
               break;
           }
+        } else if (state.isEmpty) {
+          list = SliverToBoxAdapter(
+            child: widget.emptyChild,
+          );
         }
 
         return CustomScrollView(

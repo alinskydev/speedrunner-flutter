@@ -9,6 +9,7 @@ class Product extends Model {
       'id',
       'name',
       'slug',
+      'price',
     ],
     ModelFieldType.localized: [
       'name',
@@ -18,6 +19,6 @@ class Product extends Model {
   int cartQuantity = 0;
 
   Product([Map<String, dynamic> map = const {}]) : super(map) {
-    cartQuantity = services.Cart.getQuantity(product: this);
+    cartQuantity = services.Cart.getProductQuantity(product: this);
   }
 }

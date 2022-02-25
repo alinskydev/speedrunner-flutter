@@ -52,6 +52,8 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
                   ),
                   successMessage: Text('Profile was updated'),
                   onSuccess: (context, response) async {
+                    await base.User.login(response['body']['access_token']);
+
                     Navigator.pop(context);
                     Navigator.pushReplacement(
                       context,
