@@ -6,6 +6,4 @@ export '/speedrunner/services/sr_file_storage.dart';
 export '/speedrunner/services/sr_notification.dart';
 export '/speedrunner/services/sr_shared_storage.dart';
 
-export '/app/services/app_icons.dart';
-
 export '/modules/cart/services/cart.dart';

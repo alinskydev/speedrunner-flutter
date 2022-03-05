@@ -11,6 +11,8 @@ export '/modules/blog/views/blog_form.dart';
 export '/modules/blog/views/blog_list.dart';
 export '/modules/blog/views/blog_view.dart';
 
+export '/modules/cart/views/cart.dart';
+
 export '/modules/product/views/product_list.dart';
 
 export '/modules/profile/views/profile_update.dart';

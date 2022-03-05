@@ -2,16 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 
-import '/base/model.dart';
-import '/libraries/bloc.dart' as bloc;
+import '/libraries/base.dart' as base;
+import '/libraries/config.dart' as config;
 import '/libraries/models.dart' as models;
 import '/libraries/services.dart' as services;
 import '/libraries/widgets.dart' as widgets;
 
-import '/libraries/base.dart' as base;
-
 class SRApiForm extends StatefulWidget {
-  Model model;
+  base.Model model;
   services.SRApiRequest apiRequest;
   Widget? successMessage;
 
@@ -47,12 +45,10 @@ class _SRApiFormState extends State<SRApiForm> {
 
           switch (value.widget.runtimeType) {
             case FormBuilderDateTimePicker:
-              initialValue = initialValue != null ? base.Config.dateFormat.parse(initialValue) : null;
+              initialValue = initialValue != null ? config.AppSettings.dateFormat.parse(initialValue) : null;
               break;
             case FormBuilderFilePicker:
               initialValue = List<PlatformFile>.from([]);
-              break;
-            default:
               break;
           }
 
@@ -77,7 +73,7 @@ class _SRApiFormState extends State<SRApiForm> {
       if (initialValue != null) {
         switch (value.widget.runtimeType) {
           case FormBuilderDateTimePicker:
-            initialValue = base.Config.dateFormat.format(initialValue);
+            initialValue = config.AppSettings.dateFormat.format(initialValue);
             break;
           case FormBuilderFilePicker:
             FormBuilderFilePicker filePicker = value.widget as FormBuilderFilePicker;

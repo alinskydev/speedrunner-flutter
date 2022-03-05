@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
 
+import '/libraries/config.dart' as config;
+
 class AppTheme {
   static ThemeData? data = ThemeData(
     fontFamily: 'Oswald',
     colorScheme: ColorScheme(
+      brightness: Brightness.light,
       background: Colors.white,
       onBackground: Colors.black,
-      brightness: Brightness.light,
       error: Colors.red,
       onError: Colors.white,
-      primary: Colors.cyan,
+      primary: config.AppStyle.getColor('primary'),
       onPrimary: Colors.white,
-      secondary: Color(0xff5c6c87),
+      secondary: config.AppStyle.getColor('secondary'),
       secondaryVariant: Color(0xffa1a1a1),
       onSecondary: Colors.white,
       primaryVariant: Colors.black,
       surface: Color(0xff1c1f1f),
-      onSurface: Colors.white,
+      onSurface: Colors.black,
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(

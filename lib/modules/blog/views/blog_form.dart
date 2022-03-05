@@ -3,13 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 
-import '/libraries/bloc.dart' as bloc;
+import '/libraries/config.dart' as config;
 import '/libraries/models.dart' as models;
 import '/libraries/services.dart' as services;
 import '/libraries/views.dart' as views;
 import '/libraries/widgets.dart' as widgets;
-
-import '/libraries/base.dart' as base;
 
 class BlogCreate extends StatelessWidget {
   models.Blog model = models.Blog();
@@ -114,7 +112,7 @@ class _BlogForm extends StatelessWidget {
                         hintText: DateTime.now().toString(),
                         prefixIcon: Icon(Icons.calendar_today),
                       ),
-                      format: base.Config.dateFormat,
+                      format: config.AppSettings.dateFormat,
                       alwaysUse24HourFormat: true,
                       inputType: InputType.both,
                     ),

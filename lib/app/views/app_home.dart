@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 import '/libraries/base.dart' as base;
@@ -59,7 +58,7 @@ class AppHome extends StatelessWidget {
                           height: 200,
                           viewportFraction: 0.9,
                         ),
-                        items: List<Map>.from(blocks['slider']).map((e) {
+                        items: List<String>.from(blocks['slider']).map((e) {
                           return Builder(
                             builder: (BuildContext context) {
                               return Container(
@@ -67,8 +66,7 @@ class AppHome extends StatelessWidget {
                                 child: services.SRImage(
                                   width: MediaQuery.of(context).size.width,
                                 ).renderNetwork(
-                                  url: e['image'],
-                                  isAbsolute: false,
+                                  url: e,
                                 ),
                               );
                             },
@@ -76,9 +74,9 @@ class AppHome extends StatelessWidget {
                         }).toList(),
                       ),
                       Divider(height: 30, color: Colors.black),
-                      Text(blocks['about_title'], style: Theme.of(context).textTheme.headline2),
+                      Text(blocks['about_title'] ?? '', style: Theme.of(context).textTheme.headline2),
                       SizedBox(height: 10),
-                      Text(blocks['about_description'], style: Theme.of(context).textTheme.subtitle1),
+                      Text(blocks['about_description'] ?? '', style: Theme.of(context).textTheme.subtitle1),
                       Divider(height: 30, color: Colors.black),
                     ],
                   ),

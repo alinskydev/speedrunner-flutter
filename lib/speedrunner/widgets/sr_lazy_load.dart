@@ -11,7 +11,7 @@ class SRLazyLoad extends StatefulWidget {
   SRLazyLoadType type;
   SliverGridDelegate? gridDelegate;
   Widget? prepend;
-  Widget emptyChild;
+  Widget noDataChild;
 
   List<Widget> Function(BuildContext context, List records) builder;
   services.SRApiRequest apiRequest;
@@ -22,7 +22,7 @@ class SRLazyLoad extends StatefulWidget {
     required this.type,
     this.gridDelegate,
     this.prepend,
-    this.emptyChild = const SizedBox.shrink(),
+    this.noDataChild = const SizedBox.shrink(),
     required this.builder,
     required this.apiRequest,
     this.page = 1,
@@ -106,7 +106,7 @@ class _SRLazyLoadState extends State<SRLazyLoad> {
           }
         } else if (state.isEmpty) {
           list = SliverToBoxAdapter(
-            child: widget.emptyChild,
+            child: widget.noDataChild,
           );
         }
 

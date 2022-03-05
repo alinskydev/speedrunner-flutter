@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 
 import '/libraries/base.dart' as base;
+import '/libraries/config.dart' as config;
 import '/libraries/views.dart' as views;
 
 class SRApiRequest {
@@ -92,8 +93,8 @@ class SRApiRequest {
   }
 
   Uri _prepareUri() {
-    return Uri.parse(base.Config.api['url']).replace(
-      path: '/api/$path',
+    return Uri.parse(config.AppSettings.api['url']).replace(
+      path: '/api/${base.I18N.language}/$path',
       queryParameters: queryParameters,
     );
   }
@@ -102,7 +103,7 @@ class SRApiRequest {
     try {
       return await responseFuture;
     } catch (e) {
-      await base.Config.navigatorKey.currentState?.push(
+      await config.AppSettings.navigatorKey.currentState?.push(
         PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) => views.AppError(
             code: -1,
@@ -138,7 +139,7 @@ class SRApiRequest {
 
       case 401:
         await base.User.logout();
-        await base.Config.navigatorKey.currentState?.pushAndRemoveUntil(
+        await config.AppSettings.navigatorKey.currentState?.pushAndRemoveUntil(
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) => views.AuthLogin(),
           ),
@@ -148,7 +149,7 @@ class SRApiRequest {
         break;
 
       case 403:
-        await base.Config.navigatorKey.currentState?.push(
+        await config.AppSettings.navigatorKey.currentState?.push(
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) => views.AppError(
               code: 403,
@@ -160,7 +161,7 @@ class SRApiRequest {
         break;
 
       default:
-        await base.Config.navigatorKey.currentState?.push(
+        await config.AppSettings.navigatorKey.currentState?.push(
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) => views.AppError(
               code: 500,

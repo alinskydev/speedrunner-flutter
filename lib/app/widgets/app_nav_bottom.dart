@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '/libraries/base.dart' as base;
 import '/libraries/services.dart' as services;
 import '/libraries/views.dart' as views;
+import '/libraries/widgets.dart' as widgets;
 
 class AppNavBottom extends StatelessWidget {
   String currentName;
@@ -30,8 +31,37 @@ class AppNavBottom extends StatelessWidget {
         },
         'cart': {
           'label': 'Cart',
-          'icon': services.AppIcons.cart,
-          'iconBadge': services.Cart.quantity > 0 ? services.Cart.quantity.toString() : null,
+          'icon': widgets.AppIcons.cart,
+          'badge': StreamBuilder(
+            stream: services.Cart.controller.stream,
+            initialData: services.Cart.getData(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) return SizedBox.shrink();
+
+              Map<String, dynamic> cartData = snapshot.data as Map<String, dynamic>;
+
+              return cartData['quantity'] > 0
+                  ? Positioned(
+                      top: 0,
+                      right: 0,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 7),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: Text(
+                          cartData['quantity'].toString(),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                    )
+                  : SizedBox.shrink();
+            },
+          ),
         },
         'profile': {
           'label': 'Profile',
@@ -80,26 +110,7 @@ class AppNavBottom extends StatelessWidget {
           icon: Stack(
             children: [
               Icon(e['icon']),
-              e['iconBadge'] != null
-                  ? Positioned(
-                      top: 0,
-                      right: 0,
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 7),
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                        child: Text(
-                          e['iconBadge'],
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ),
-                    )
-                  : SizedBox.shrink(),
+              e['badge'] ?? SizedBox.shrink(),
             ],
           ),
         );
@@ -112,6 +123,9 @@ class AppNavBottom extends StatelessWidget {
         switch (nav.keys.toList()[value]) {
           case 'blog':
             view = views.BlogList();
+            break;
+          case 'cart':
+            view = views.Cart();
             break;
           case 'home':
             view = views.AppHome();

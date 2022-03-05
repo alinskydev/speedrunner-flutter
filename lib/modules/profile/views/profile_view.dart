@@ -8,6 +8,8 @@ import '/libraries/services.dart' as services;
 import '/libraries/views.dart' as views;
 import '/libraries/widgets.dart' as widgets;
 
+import '/main.dart';
+
 class ProfileView extends StatelessWidget {
   ProfileView({Key? key}) : super(key: key);
 
@@ -24,8 +26,34 @@ class ProfileView extends StatelessWidget {
         title: Text('Profile'),
         centerTitle: true,
         actions: [
+          PopupMenuButton<String>(
+            icon: Icon(Icons.language),
+            onSelected: (value) async {
+              await base.I18N.setLanguage(value);
+
+              services.SRNotificator(context).sendMessage(
+                message: Text('Language has been changed'),
+              );
+
+              Navigator.pushAndRemoveUntil(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) => views.ProfileView(),
+                ),
+                (route) => false,
+              );
+            },
+            itemBuilder: (BuildContext context) {
+              return base.I18N.availableLanguages.values.map((e) {
+                return PopupMenuItem<String>(
+                  value: e['code'],
+                  child: Text(e['label']),
+                );
+              }).toList();
+            },
+          ),
           IconButton(
-            onPressed: () async {
+            onPressed: () {
               Navigator.push(
                 context,
                 CupertinoPageRoute(builder: (context) => views.ProfileUpdate()),

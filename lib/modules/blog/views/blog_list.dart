@@ -32,7 +32,6 @@ class BlogList extends StatelessWidget {
       body: MultiBlocProvider(
         providers: [
           BlocProvider(create: (context) => bloc.SRLazyLoadCubit()),
-          BlocProvider(create: (context) => bloc.BlogActionButtonsAnimationCubit()),
         ],
         child: widgets.SRLazyLoad(
           type: widgets.SRLazyLoadType.gridView,
@@ -45,9 +44,8 @@ class BlogList extends StatelessWidget {
               Text('Blogs page', style: Theme.of(context).textTheme.headline2),
             ],
           ),
-          emptyChild: Text(
-            'Nothing found zzz',
-            style: Theme.of(context).textTheme.headline1,
+          noDataChild: widgets.AppNoData(
+            type: widgets.AppNoDataTypes.blog,
           ),
           apiRequest: services.SRApiRequest(
             path: 'blog',
@@ -58,62 +56,8 @@ class BlogList extends StatelessWidget {
           ),
           builder: (context, records) {
             return records.map((e) {
-              models.Blog blog = models.Blog(e);
-
-              return GestureDetector(
-                onTap: () {
-                  context.read<bloc.BlogActionButtonsAnimationCubit>().process(blog.getStrictValue('id'));
-                },
-                child: widgets.SRReplacer(
-                  builder: (context, replacerState) {
-                    return Container(
-                      padding: EdgeInsets.symmetric(vertical: 10),
-                      child: Card(
-                        clipBehavior: Clip.hardEdge,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Stack(
-                              children: [
-                                Hero(
-                                  tag: 'hero-blog-${blog.getValue('id')}',
-                                  child: services.SRImage(
-                                    width: MediaQuery.of(context).size.width,
-                                    height: MediaQuery.of(context).size.width,
-                                  ).renderNetwork(
-                                    url: blog.getValue('image'),
-                                  ),
-                                ),
-                                widgets.BlogActionButtons(
-                                  model: blog,
-                                  replacerState: replacerState,
-                                ),
-                              ],
-                            ),
-                            Container(
-                              padding: EdgeInsets.all(10),
-                              child: Text(
-                                blog.getValue('name'),
-                                style: Theme.of(context).textTheme.headline4,
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                              ),
-                            ),
-                            Container(
-                              padding: EdgeInsets.all(10),
-                              child: Text(
-                                blog.getValue('slug'),
-                                style: Theme.of(context).textTheme.headline6,
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
+              return widgets.BlogListItem(
+                model: models.Blog(e),
               );
             }).toList();
           },
