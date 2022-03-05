@@ -28,9 +28,9 @@ class _AuthLoginState extends State<AuthLogin> {
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.all(15),
-          child: widgets.SRApiForm(
+          child: widgets.AppHttpForm(
             model: models.AuthLogin(),
-            apiRequest: services.SRApiRequest(
+            apiRequest: services.AppHttp(
               path: 'auth/login',
             ),
             onSuccess: (context, response) async {

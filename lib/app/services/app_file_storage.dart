@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
 
-class SRFileStorage {
+class AppFileStorage {
   Future<String> rootDir() async {
     var dir = await getApplicationDocumentsDirectory();
     return dir.path;

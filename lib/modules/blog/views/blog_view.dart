@@ -30,7 +30,7 @@ class BlogView extends StatelessWidget {
               children: [
                 Hero(
                   tag: 'hero-blog-${model.getValue('id')}',
-                  child: services.SRImage(
+                  child: services.AppImage(
                     width: MediaQuery.of(context).size.width / 2,
                   ).renderNetwork(
                     url: model.getValue('image'),

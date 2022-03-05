@@ -8,12 +8,12 @@ import '/libraries/base.dart' as base;
 import '/libraries/config.dart' as config;
 import '/libraries/views.dart' as views;
 
-class SRApiRequest {
+class AppHttp {
   String path;
   Map<String, dynamic>? queryParameters;
   Map<String, String> headers = {};
 
-  SRApiRequest({
+  AppHttp({
     required this.path,
     this.queryParameters,
   }) {
@@ -94,7 +94,7 @@ class SRApiRequest {
 
   Uri _prepareUri() {
     return Uri.parse(config.AppSettings.api['url']).replace(
-      path: '/api/${base.I18N.language}/$path',
+      path: '/api/${base.Intl.language}/$path',
       queryParameters: queryParameters,
     );
   }
@@ -103,14 +103,18 @@ class SRApiRequest {
     try {
       return await responseFuture;
     } catch (e) {
-      await config.AppSettings.navigatorKey.currentState?.push(
-        PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) => views.AppError(
-            code: -1,
+      if (config.AppSettings.navigatorKey.currentState != null) {
+        await config.AppSettings.navigatorKey.currentState?.push(
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) => views.AppError(
+              code: -1,
+            ),
+            transitionDuration: Duration.zero,
           ),
-          transitionDuration: Duration.zero,
-        ),
-      );
+        );
+      } else {
+        throw (Exception('No connection'));
+      }
 
       return _checkConnection(responseFuture);
     }

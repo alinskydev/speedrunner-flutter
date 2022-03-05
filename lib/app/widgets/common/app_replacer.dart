@@ -3,23 +3,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import '/libraries/bloc.dart' as bloc;
-import '/libraries/extensions.dart';
 import '/libraries/services.dart' as services;
 import '/libraries/widgets.dart' as widgets;
 
-class SRReplacer extends StatefulWidget {
-  Widget Function(BuildContext context, _SRReplacerState replacerState) builder;
+class AppReplacer extends StatefulWidget {
+  Widget Function(BuildContext context, _AppReplacerState replacerState) builder;
 
-  SRReplacer({
+  AppReplacer({
     Key? key,
     required this.builder,
   }) : super(key: key);
 
   @override
-  State<SRReplacer> createState() => _SRReplacerState();
+  State<AppReplacer> createState() => _AppReplacerState();
 }
 
-class _SRReplacerState extends State<SRReplacer> {
+class _AppReplacerState extends State<AppReplacer> {
   Widget? deletedWidget;
 
   @override

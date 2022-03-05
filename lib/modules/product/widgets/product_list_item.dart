@@ -58,7 +58,7 @@ class _ProductListIemState extends State<ProductListIem> {
             ),
           ],
         ),
-        child: widgets.SRSlidableChecker(
+        child: widgets.AppSlidableChecker(
           tag: 'productList',
           child: Container(
             height: 100,

@@ -31,10 +31,10 @@ class BlogList extends StatelessWidget {
       ),
       body: MultiBlocProvider(
         providers: [
-          BlocProvider(create: (context) => bloc.SRLazyLoadCubit()),
+          BlocProvider(create: (context) => bloc.AppLazyLoadCubit()),
         ],
-        child: widgets.SRLazyLoad(
-          type: widgets.SRLazyLoadType.gridView,
+        child: widgets.AppLazyLoad(
+          type: widgets.AppLazyLoadType.gridView,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 1,
             childAspectRatio: 0.7,
@@ -47,7 +47,7 @@ class BlogList extends StatelessWidget {
           noDataChild: widgets.AppNoData(
             type: widgets.AppNoDataTypes.blog,
           ),
-          apiRequest: services.SRApiRequest(
+          apiRequest: services.AppHttp(
             path: 'blog',
             queryParameters: {
               'sort': 'id',

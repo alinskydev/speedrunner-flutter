@@ -2,31 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
-import '/libraries/bloc.dart' as bloc;
-import '/libraries/extensions.dart';
+import '/libraries/base.dart' as base;
 import '/libraries/services.dart' as services;
 import '/libraries/widgets.dart' as widgets;
 
-class SRLiveSearchSelect extends StatelessWidget {
+class AppLiveSearchSelect extends StatelessWidget {
   String valuePath;
   String textPath;
   bool isLocalized;
 
   Widget Function(BuildContext context, List<FormBuilderFieldOption> options) builder;
 
-  SRLiveSearchSelect({
+  AppLiveSearchSelect({
     Key? key,
     required this.valuePath,
     required this.textPath,
     this.isLocalized = false,
     required this.builder,
   }) : super(key: key) {
-    textPath += isLocalized ? '.en' : '';
+    textPath += isLocalized ? '.${base.Intl.language}' : '';
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SRLiveSearchSelectCubit, List<Map>>(
+    return BlocBuilder<AppLiveSearchSelectCubit, List<Map>>(
       builder: (context, state) {
         List<FormBuilderFieldOption> options = state.map((e) {
           String text = e.getValueFromPath(textPath) as String? ?? '';
@@ -47,7 +46,7 @@ class SRLiveSearchSelect extends StatelessWidget {
             !state.isEmpty
                 ? IconButton(
                     onPressed: () {
-                      context.read<widgets.SRLiveSearchSelectCubit>().clear();
+                      context.read<widgets.AppLiveSearchSelectCubit>().clear();
                     },
                     icon: Icon(Icons.close),
                   )
@@ -60,11 +59,11 @@ class SRLiveSearchSelect extends StatelessWidget {
   }
 }
 
-class SRLiveSearchSelectCubit extends Cubit<List<Map>> {
-  SRLiveSearchSelectCubit() : super([]);
+class AppLiveSearchSelectCubit extends Cubit<List<Map>> {
+  AppLiveSearchSelectCubit() : super([]);
 
   Future<void> process({
-    required services.SRApiRequest apiRequest,
+    required services.AppHttp apiRequest,
   }) async {
     List<Map> data = await apiRequest.getData().then((value) {
       return List<Map>.from(value['body']['data']);

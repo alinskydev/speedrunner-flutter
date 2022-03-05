@@ -5,14 +5,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '/libraries/config.dart' as config;
 
-class SRImage {
+class AppImage {
   double? width;
   double? height;
   BoxFit fit;
 
   late Widget placeholder;
 
-  SRImage({
+  AppImage({
     this.width,
     this.height,
     this.fit = BoxFit.cover,

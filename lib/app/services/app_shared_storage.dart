@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SRSharedStorage {
+class AppSharedStorage {
   final Future<SharedPreferences> sharedPreferences = SharedPreferences.getInstance();
 
   Future<dynamic> getData(String key, Type type) async {

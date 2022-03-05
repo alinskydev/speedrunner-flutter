@@ -9,21 +9,21 @@ import '/libraries/models.dart' as models;
 import '/libraries/services.dart' as services;
 import '/libraries/widgets.dart' as widgets;
 
-class SRSlidableChecker extends StatefulWidget {
+class AppSlidableChecker extends StatefulWidget {
   Widget child;
   String tag;
 
-  SRSlidableChecker({
+  AppSlidableChecker({
     Key? key,
     required this.child,
     required this.tag,
   }) : super(key: key);
 
   @override
-  State<SRSlidableChecker> createState() => _SRSlidableCheckerState();
+  State<AppSlidableChecker> createState() => _AppSlidableCheckerState();
 }
 
-class _SRSlidableCheckerState extends State<SRSlidableChecker> {
+class _AppSlidableCheckerState extends State<AppSlidableChecker> {
   static List<String> _checkedTags = [];
 
   @override

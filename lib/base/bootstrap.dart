@@ -1,3 +1,5 @@
+library app_bootstrap;
+
 import 'dart:async';
 import 'dart:convert';
 
@@ -6,22 +8,24 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '/libraries/base.dart' as base;
 import '/libraries/services.dart' as services;
 
+part 'extensions.dart';
+
 class Bootstrap {
   static Map<String, String> secureStorage = {};
 
   static Future<void> init() async {
     secureStorage = await FlutterSecureStorage().readAll();
 
-    await initI18N();
+    await initIntl();
     await initUser();
     await initCart();
   }
 
-  static Future<void> initI18N() async {
-    String? language = await services.SRSharedStorage().getData('language', String);
-    await base.I18N.setLanguage(language);
+  static Future<void> initIntl() async {
+    String? language = await services.AppSharedStorage().getData('language', String);
+    await base.Intl.setLanguage(language);
 
-    base.I18N.messages = await services.SRApiRequest(
+    base.Intl.messages = await services.AppHttp(
       path: 'information/translations',
     ).getData().then((value) {
       if (value['body'] is Map) {
@@ -38,7 +42,7 @@ class Bootstrap {
   }
 
   static Future<void> initCart() async {
-    Map<String, dynamic> data = await services.SRSharedStorage().getData('cart', String).then((value) {
+    Map<String, dynamic> data = await services.AppSharedStorage().getData('cart', String).then((value) {
       return value != null ? jsonDecode(value) : {};
     });
 

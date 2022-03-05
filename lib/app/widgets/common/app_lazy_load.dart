@@ -7,17 +7,17 @@ import '/libraries/models.dart' as models;
 import '/libraries/services.dart' as services;
 import '/libraries/widgets.dart' as widgets;
 
-class SRLazyLoad extends StatefulWidget {
-  SRLazyLoadType type;
+class AppLazyLoad extends StatefulWidget {
+  AppLazyLoadType type;
   SliverGridDelegate? gridDelegate;
   Widget? prepend;
   Widget noDataChild;
 
   List<Widget> Function(BuildContext context, List records) builder;
-  services.SRApiRequest apiRequest;
+  services.AppHttp apiRequest;
   int page;
 
-  SRLazyLoad({
+  AppLazyLoad({
     Key? key,
     required this.type,
     this.gridDelegate,
@@ -27,16 +27,16 @@ class SRLazyLoad extends StatefulWidget {
     required this.apiRequest,
     this.page = 1,
   }) : super(key: key) {
-    if (type == SRLazyLoadType.gridView && gridDelegate == null) {
+    if (type == AppLazyLoadType.gridView && gridDelegate == null) {
       throw '"gridDelegate" is required for this type';
     }
   }
 
   @override
-  _SRLazyLoadState createState() => _SRLazyLoadState();
+  _AppLazyLoadState createState() => _AppLazyLoadState();
 }
 
-class _SRLazyLoadState extends State<SRLazyLoad> {
+class _AppLazyLoadState extends State<AppLazyLoad> {
   List<Widget> children = [];
   ScrollController scrollController = ScrollController();
   bool hasMore = true;
@@ -45,7 +45,7 @@ class _SRLazyLoadState extends State<SRLazyLoad> {
   void initState() {
     scrollController.addListener(() {
       if (scrollController.position.atEdge && scrollController.position.pixels > 0 && hasMore) {
-        context.read<bloc.SRLazyLoadCubit>().process(
+        context.read<bloc.AppLazyLoadCubit>().process(
               context: context,
               builder: widget.builder,
               apiRequest: widget.apiRequest,
@@ -54,7 +54,7 @@ class _SRLazyLoadState extends State<SRLazyLoad> {
       }
     });
 
-    context.read<bloc.SRLazyLoadCubit>().process(
+    context.read<bloc.AppLazyLoadCubit>().process(
           context: context,
           builder: widget.builder,
           apiRequest: widget.apiRequest,
@@ -72,7 +72,7 @@ class _SRLazyLoadState extends State<SRLazyLoad> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<bloc.SRLazyLoadCubit, Map<String, dynamic>>(
+    return BlocBuilder<bloc.AppLazyLoadCubit, Map<String, dynamic>>(
       builder: (context, state) {
         if (state['records'] != null) {
           children.addAll(state['records']);
@@ -86,7 +86,7 @@ class _SRLazyLoadState extends State<SRLazyLoad> {
 
         if (children.isNotEmpty) {
           switch (widget.type) {
-            case SRLazyLoadType.listView:
+            case AppLazyLoadType.listView:
               list = SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) => children[index],
@@ -94,7 +94,7 @@ class _SRLazyLoadState extends State<SRLazyLoad> {
                 ),
               );
               break;
-            case SRLazyLoadType.gridView:
+            case AppLazyLoadType.gridView:
               list = SliverGrid(
                 gridDelegate: widget.gridDelegate!,
                 delegate: SliverChildBuilderDelegate(
@@ -127,4 +127,4 @@ class _SRLazyLoadState extends State<SRLazyLoad> {
   }
 }
 
-enum SRLazyLoadType { gridView, listView }
+enum AppLazyLoadType { gridView, listView }

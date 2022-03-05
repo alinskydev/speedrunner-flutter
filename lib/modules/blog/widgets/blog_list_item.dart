@@ -62,7 +62,7 @@ class _BlogListItemState extends State<BlogListItem> with SingleTickerProviderSt
                 children: [
                   Hero(
                     tag: 'hero-blog-${widget.model.getValue('id')}',
-                    child: services.SRImage(
+                    child: services.AppImage(
                       width: MediaQuery.of(context).size.width,
                       height: MediaQuery.of(context).size.width,
                     ).renderNetwork(

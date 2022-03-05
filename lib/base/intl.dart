@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import '/libraries/services.dart' as services;
 
-class I18N {
+class Intl {
   static String defaultLanguage = 'en';
   static String language = defaultLanguage;
 
@@ -32,7 +32,7 @@ class I18N {
 
   static Future<void> setLanguage(String? newLanguage) async {
     language = newLanguage ?? defaultLanguage;
-    await services.SRSharedStorage().setData('language', language);
+    await services.AppSharedStorage().setData('language', language);
 
     controller.add(language);
   }

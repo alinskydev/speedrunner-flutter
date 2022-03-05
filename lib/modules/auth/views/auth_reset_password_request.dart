@@ -25,9 +25,9 @@ class _AuthResetPasswordRequestState extends State<AuthResetPasswordRequest> {
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.all(15),
-          child: widgets.SRApiForm(
+          child: widgets.AppHttpForm(
             model: models.AuthResetPasswordRequest(),
-            apiRequest: services.SRApiRequest(
+            apiRequest: services.AppHttp(
               path: 'auth/reset-password-request',
             ),
             successMessage: Text('Message was sent to your email'),

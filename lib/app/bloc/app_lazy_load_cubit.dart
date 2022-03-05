@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '/base/model.dart';
 import '/libraries/bloc.dart' as bloc;
 import '/libraries/models.dart' as models;
 import '/libraries/services.dart' as services;
 import '/libraries/widgets.dart' as widgets;
 
-class SRLazyLoadCubit extends Cubit<Map<String, dynamic>> {
-  SRLazyLoadCubit() : super({});
+class AppLazyLoadCubit extends Cubit<Map<String, dynamic>> {
+  AppLazyLoadCubit() : super({});
 
   Future<void> process({
     required BuildContext context,
     required List<Widget> Function(BuildContext context, List records) builder,
-    required services.SRApiRequest apiRequest,
+    required services.AppHttp apiRequest,
     required int page,
   }) async {
     emit({

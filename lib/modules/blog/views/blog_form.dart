@@ -19,7 +19,7 @@ class BlogCreate extends StatelessWidget {
     return _BlogForm(
       title: 'Create',
       model: model,
-      apiRequest: services.SRApiRequest(
+      apiRequest: services.AppHttp(
         path: 'blog/create',
       ),
     );
@@ -39,7 +39,7 @@ class BlogUpdate extends StatelessWidget {
     return _BlogForm(
       title: 'Update: ${model.getValue('name')}',
       model: model,
-      apiRequest: services.SRApiRequest(
+      apiRequest: services.AppHttp(
         path: 'blog/update/${model.getValue('id')}',
       ),
     );
@@ -49,7 +49,7 @@ class BlogUpdate extends StatelessWidget {
 class _BlogForm extends StatelessWidget {
   String title;
   models.Blog model;
-  services.SRApiRequest apiRequest;
+  services.AppHttp apiRequest;
 
   late List<String> images;
 
@@ -71,12 +71,12 @@ class _BlogForm extends StatelessWidget {
       ),
       body: MultiBlocProvider(
         providers: [
-          BlocProvider(create: (context) => widgets.SRLiveSearchSelectCubit()),
+          BlocProvider(create: (context) => widgets.AppLiveSearchSelectCubit()),
         ],
         child: SingleChildScrollView(
           child: Container(
             padding: EdgeInsets.all(15),
-            child: widgets.SRApiForm(
+            child: widgets.AppHttpForm(
               model: model,
               apiRequest: apiRequest,
               successMessage: Text('Successfully saved'),
@@ -125,13 +125,13 @@ class _BlogForm extends StatelessWidget {
                         prefixIcon: Icon(Icons.search),
                       ),
                       onTap: () {
-                        context.read<widgets.SRLiveSearchSelectCubit>().process(
-                              apiRequest: services.SRApiRequest(path: 'blog-category'),
+                        context.read<widgets.AppLiveSearchSelectCubit>().process(
+                              apiRequest: services.AppHttp(path: 'blog-category'),
                             );
                       },
                       onChanged: (value) {
-                        context.read<widgets.SRLiveSearchSelectCubit>().process(
-                              apiRequest: services.SRApiRequest(
+                        context.read<widgets.AppLiveSearchSelectCubit>().process(
+                              apiRequest: services.AppHttp(
                                 path: 'blog-category',
                                 queryParameters: {
                                   'filter[name]': value,
@@ -140,7 +140,7 @@ class _BlogForm extends StatelessWidget {
                             );
                       },
                     ),
-                    widgets.SRLiveSearchSelect(
+                    widgets.AppLiveSearchSelect(
                       valuePath: 'id',
                       textPath: 'name',
                       isLocalized: true,
@@ -158,13 +158,13 @@ class _BlogForm extends StatelessWidget {
                         scrollDirection: Axis.horizontal,
                         child: Row(
                           children: images.map((element) {
-                            return widgets.SRReplacer(
+                            return widgets.AppReplacer(
                               builder: (context, replacerState) {
                                 return Row(
                                   children: [
                                     Stack(
                                       children: [
-                                        services.SRImage(
+                                        services.AppImage(
                                           height: 200,
                                         ).renderNetwork(
                                           url: element,
@@ -179,13 +179,13 @@ class _BlogForm extends StatelessWidget {
                                             child: MaterialButton(
                                               padding: EdgeInsets.zero,
                                               onPressed: () async {
-                                                await services.SRApiRequest(
+                                                await services.AppHttp(
                                                   path: 'blog/file-delete/${model.getValue('id')}',
                                                   queryParameters: {
                                                     'attr': 'iamges',
                                                   },
                                                 ).sendJson({
-                                                  'key': services.SRImage.trimApiUrl(url: element),
+                                                  'key': services.AppImage.trimApiUrl(url: element),
                                                 });
 
                                                 replacerState.process();

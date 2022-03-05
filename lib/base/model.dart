@@ -19,7 +19,7 @@ abstract class Model {
     localizedFields = localizedFields.map(
       (key, value) => MapEntry(
         key,
-        map.containsKey(key) ? (map[key] != null ? map[key][base.I18N.language] : null) : value,
+        map.containsKey(key) ? (map[key] != null ? map[key][base.Intl.language] : null) : value,
       ),
     );
   }

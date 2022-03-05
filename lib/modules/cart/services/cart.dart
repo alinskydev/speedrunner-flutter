@@ -65,6 +65,6 @@ class Cart {
 
     controller.add(data);
 
-    await services.SRSharedStorage().setData('cart', jsonEncode(data));
+    await services.AppSharedStorage().setData('cart', jsonEncode(data));
   }
 }

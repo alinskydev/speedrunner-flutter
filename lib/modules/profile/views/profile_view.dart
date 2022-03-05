@@ -13,7 +13,7 @@ import '/main.dart';
 class ProfileView extends StatelessWidget {
   ProfileView({Key? key}) : super(key: key);
 
-  Future<Map> profileFuture = services.SRApiRequest(
+  Future<Map> profileFuture = services.AppHttp(
     path: 'profile/view',
   ).getData().then((value) {
     return value['body'];
@@ -29,9 +29,9 @@ class ProfileView extends StatelessWidget {
           PopupMenuButton<String>(
             icon: Icon(Icons.language),
             onSelected: (value) async {
-              await base.I18N.setLanguage(value);
+              await base.Intl.setLanguage(value);
 
-              services.SRNotificator(context).sendMessage(
+              services.AppNotificator(context).sendMessage(
                 message: Text('Language has been changed'),
               );
 
@@ -44,7 +44,7 @@ class ProfileView extends StatelessWidget {
               );
             },
             itemBuilder: (BuildContext context) {
-              return base.I18N.availableLanguages.values.map((e) {
+              return base.Intl.availableLanguages.values.map((e) {
                 return PopupMenuItem<String>(
                   value: e['code'],
                   child: Text(e['label']),
@@ -89,7 +89,7 @@ class ProfileView extends StatelessWidget {
               padding: EdgeInsets.all(15),
               child: Column(
                 children: [
-                  services.SRImage(
+                  services.AppImage(
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.width,
                   ).renderNetwork(

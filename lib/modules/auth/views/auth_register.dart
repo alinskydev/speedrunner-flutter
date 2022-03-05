@@ -29,9 +29,9 @@ class _AuthRegisterState extends State<AuthRegister> {
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.all(15),
-          child: widgets.SRApiForm(
+          child: widgets.AppHttpForm(
             model: models.AuthRegister(),
-            apiRequest: services.SRApiRequest(
+            apiRequest: services.AppHttp(
               path: 'auth/signup',
             ),
             successMessage: Text('You have been registered'),

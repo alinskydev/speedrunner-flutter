@@ -19,7 +19,7 @@ class ProfileUpdate extends StatefulWidget {
 }
 
 class _ProfileUpdateState extends State<ProfileUpdate> {
-  Future<Map> profileFuture = services.SRApiRequest(
+  Future<Map> profileFuture = services.AppHttp(
     path: 'profile/view',
   ).getData().then((value) {
     return value['body'];
@@ -45,9 +45,9 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
 
               return Container(
                 padding: EdgeInsets.all(15),
-                child: widgets.SRApiForm(
+                child: widgets.AppHttpForm(
                   model: model,
-                  apiRequest: services.SRApiRequest(
+                  apiRequest: services.AppHttp(
                     path: 'profile/update',
                   ),
                   successMessage: Text('Profile was updated'),
@@ -88,7 +88,7 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
                             labelText: 'Address',
                           ),
                         ),
-                        widgets.SRReplacer(
+                        widgets.AppReplacer(
                           builder: (context, replacerState) {
                             return model.getStrictValue('image') != null
                                 ? Column(
@@ -97,7 +97,7 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
                                       Stack(
                                         children: [
                                           SizedBox(
-                                            child: services.SRImage(
+                                            child: services.AppImage(
                                               width: MediaQuery.of(context).size.width,
                                             ).renderNetwork(
                                               url: model.getValue('image'),
@@ -113,13 +113,13 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
                                               child: MaterialButton(
                                                 padding: EdgeInsets.zero,
                                                 onPressed: () async {
-                                                  await services.SRApiRequest(
+                                                  await services.AppHttp(
                                                     path: 'profile/file-delete',
                                                     queryParameters: {
                                                       'attr': 'image',
                                                     },
                                                   ).sendJson({
-                                                    'key': services.SRImage.trimApiUrl(
+                                                    'key': services.AppImage.trimApiUrl(
                                                       url: model.getValue('image'),
                                                     ),
                                                   });
