@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '/base/model.dart';
 import '/libraries/bloc.dart' as bloc;
 import '/libraries/models.dart' as models;
 import '/libraries/services.dart' as services;
 import '/libraries/widgets.dart' as widgets;
+
+enum AppLazyLoadType { gridView, listView }
 
 class AppLazyLoad extends StatefulWidget {
   AppLazyLoadType type;
@@ -14,7 +15,7 @@ class AppLazyLoad extends StatefulWidget {
   Widget noDataChild;
 
   List<Widget> Function(BuildContext context, List records) builder;
-  services.AppHttp apiRequest;
+  services.AppNetwork apiRequest;
   int page;
 
   AppLazyLoad({
@@ -126,5 +127,3 @@ class _AppLazyLoadState extends State<AppLazyLoad> {
     );
   }
 }
-
-enum AppLazyLoadType { gridView, listView }

@@ -2,13 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '/libraries/base.dart' as base;
 import '/libraries/bloc.dart' as bloc;
 import '/libraries/models.dart' as models;
 import '/libraries/services.dart' as services;
 import '/libraries/views.dart' as views;
 import '/libraries/widgets.dart' as widgets;
 
-class BlogList extends StatelessWidget {
+class BlogList extends base.StatelessView {
   BlogList({Key? key}) : super(key: key);
 
   @override
@@ -41,13 +42,13 @@ class BlogList extends StatelessWidget {
           ),
           prepend: Column(
             children: [
-              Text('Blogs page', style: Theme.of(context).textTheme.headline2),
+              Text('Blogs page', style: Theme.of(context).textTheme.headlineMedium),
             ],
           ),
           noDataChild: widgets.AppNoData(
             type: widgets.AppNoDataTypes.blog,
           ),
-          apiRequest: services.AppHttp(
+          apiRequest: services.AppNetwork(
             path: 'blog',
             queryParameters: {
               'sort': 'id',

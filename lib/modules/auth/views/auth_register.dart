@@ -8,7 +8,7 @@ import '/libraries/services.dart' as services;
 import '/libraries/views.dart' as views;
 import '/libraries/widgets.dart' as widgets;
 
-class AuthRegister extends StatefulWidget {
+class AuthRegister extends base.StatefulView {
   AuthRegister({Key? key}) : super(key: key);
 
   @override
@@ -29,9 +29,9 @@ class _AuthRegisterState extends State<AuthRegister> {
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.all(15),
-          child: widgets.AppHttpForm(
+          child: widgets.AppNetworkForm(
             model: models.AuthRegister(),
-            apiRequest: services.AppHttp(
+            apiRequest: services.AppNetwork(
               path: 'auth/signup',
             ),
             successMessage: Text('You have been registered'),

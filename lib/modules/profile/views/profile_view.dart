@@ -8,12 +8,10 @@ import '/libraries/services.dart' as services;
 import '/libraries/views.dart' as views;
 import '/libraries/widgets.dart' as widgets;
 
-import '/main.dart';
-
-class ProfileView extends StatelessWidget {
+class ProfileView extends base.StatelessView {
   ProfileView({Key? key}) : super(key: key);
 
-  Future<Map> profileFuture = services.AppHttp(
+  Future<Map> profileFuture = services.AppNetwork(
     path: 'profile/view',
   ).getData().then((value) {
     return value['body'];
@@ -44,7 +42,7 @@ class ProfileView extends StatelessWidget {
               );
             },
             itemBuilder: (BuildContext context) {
-              return base.Intl.availableLanguages.values.map((e) {
+              return base.Intl.availableLanguages.map((e) {
                 return PopupMenuItem<String>(
                   value: e['code'],
                   child: Text(e['label']),

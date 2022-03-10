@@ -7,7 +7,7 @@ import '/libraries/services.dart' as services;
 import '/libraries/views.dart' as views;
 import '/libraries/widgets.dart' as widgets;
 
-class AuthResetPasswordRequest extends StatefulWidget {
+class AuthResetPasswordRequest extends base.StatefulView {
   AuthResetPasswordRequest({Key? key}) : super(key: key);
 
   @override
@@ -25,9 +25,9 @@ class _AuthResetPasswordRequestState extends State<AuthResetPasswordRequest> {
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.all(15),
-          child: widgets.AppHttpForm(
+          child: widgets.AppNetworkForm(
             model: models.AuthResetPasswordRequest(),
-            apiRequest: services.AppHttp(
+            apiRequest: services.AppNetwork(
               path: 'auth/reset-password-request',
             ),
             successMessage: Text('Message was sent to your email'),

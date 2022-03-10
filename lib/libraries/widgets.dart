@@ -1,8 +1,8 @@
 library app_widgets;
 
-export '/app/widgets/common/app_http_form.dart';
 export '/app/widgets/common/app_lazy_load.dart';
 export '/app/widgets/common/app_live_search_select.dart';
+export '/app/widgets/common/app_network_form.dart';
 export '/app/widgets/common/app_replacer.dart';
 export '/app/widgets/common/app_slidable_checker.dart';
 

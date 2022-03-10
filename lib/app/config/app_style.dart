@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 
 class AppStyle {
-  static Map<String, Color> colors = {
-    'primary': Color(0xFF00BCD4),
-    'secondary': Color(0xff5c6c87),
-  };
+  static _AppColors colors = _AppColors();
+  static _AppFontSizes fontSizes = _AppFontSizes();
+}
 
-  static Map<String, double> fontSizes = {
-    'default': 16,
-    'cart': 20,
-  };
+class _AppColors {
+  final Color primary = Color(0xFF00BCD4);
+  final Color secondary = Color(0xff5c6c87);
+}
 
-  static Color getColor(String key) => colors[key] ?? colors['primary']!;
-  static double getFontSize(String key) => fontSizes[key] ?? fontSizes['default']!;
+class _AppFontSizes {
+  final double bodyMedium = 16;
+  final double headlineMedium = 30;
+  final double labelMedium = 16;
 }

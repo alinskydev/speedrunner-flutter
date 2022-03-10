@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '/libraries/bloc.dart' as bloc;
+import '/libraries/base.dart' as base;
 import '/libraries/models.dart' as models;
 import '/libraries/services.dart' as services;
 import '/libraries/widgets.dart' as widgets;
 
-class BlogView extends StatelessWidget {
+class BlogView extends base.StatelessView {
   models.Blog model;
 
   BlogView({
@@ -36,7 +35,7 @@ class BlogView extends StatelessWidget {
                     url: model.getValue('image'),
                   ),
                 ),
-                Text(model.getValue('name'), style: Theme.of(context).textTheme.headline4),
+                Text(model.getValue('name'), style: Theme.of(context).textTheme.headlineMedium),
                 SizedBox(height: 30),
                 Text(model.getValue('short_description')),
               ],

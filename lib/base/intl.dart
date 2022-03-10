@@ -1,43 +1,36 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
-
 import '/libraries/services.dart' as services;
 
 class Intl {
-  static String defaultLanguage = 'en';
-  static String language = defaultLanguage;
+  static const String _defaultLanguage = 'en';
+  static String language = _defaultLanguage;
 
-  static StreamController<String> controller = StreamController<String>.broadcast();
+  static StreamController<String> controller = StreamController.broadcast();
 
-  static Map<String, Map> availableLanguages = {
-    'en': {
+  static List<Map> availableLanguages = [
+    {
       'code': 'en',
       'label': 'English',
-      'locale': Locale('en', ''),
     },
-    'ru': {
+    {
       'code': 'ru',
       'label': 'Russian',
-      'locale': Locale('ru', ''),
     },
-    'de': {
+    {
       'code': 'de',
       'label': 'German',
-      'locale': Locale('de', ''),
     },
-  };
+  ];
 
   static Map<String, Map> messages = {};
 
-  static Future<void> setLanguage(String? newLanguage) async {
-    language = newLanguage ?? defaultLanguage;
-    await services.AppSharedStorage().setData('language', language);
-
-    controller.add(language);
+  static Future<void> setLanguage(String newLanguage) async {
+    await services.AppSharedStorage().setData('language', newLanguage);
+    controller.add(newLanguage);
   }
 
-  static String getMessage(String key, [Map<String, dynamic>? params = null]) {
+  static String getMessage(String key, [Map<String, dynamic>? params]) {
     String message = messages[key]?[language] ?? '';
 
     if (params != null) {

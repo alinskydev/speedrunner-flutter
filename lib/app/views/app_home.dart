@@ -9,8 +9,8 @@ import '/libraries/models.dart' as models;
 import '/libraries/services.dart' as services;
 import '/libraries/widgets.dart' as widgets;
 
-class AppHome extends StatelessWidget {
-  Future<Map> blocksFuture = services.AppHttp(
+class AppHome extends base.StatelessView {
+  Future<Map> blocksFuture = services.AppNetwork(
     path: 'staticpage/home',
   ).getData().then((value) {
     return Map.fromIterable(
@@ -20,7 +20,7 @@ class AppHome extends StatelessWidget {
     );
   });
 
-  Future<List> blogsFuture = services.AppHttp(
+  Future<List> blogsFuture = services.AppNetwork(
     path: 'blog',
     queryParameters: {
       'per-page': '2',
@@ -74,9 +74,12 @@ class AppHome extends StatelessWidget {
                         }).toList(),
                       ),
                       Divider(height: 30, color: Colors.black),
-                      Text(blocks['about_title'] ?? '', style: Theme.of(context).textTheme.headline2),
+                      DefaultTextStyle(
+                        style: Theme.of(context).textTheme.headlineMedium!,
+                        child: Text(blocks['about_title'] ?? ''),
+                      ),
                       SizedBox(height: 10),
-                      Text(blocks['about_description'] ?? '', style: Theme.of(context).textTheme.subtitle1),
+                      Text(blocks['about_description'] ?? ''),
                       Divider(height: 30, color: Colors.black),
                     ],
                   ),

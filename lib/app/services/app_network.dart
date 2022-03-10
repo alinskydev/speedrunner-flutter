@@ -6,14 +6,15 @@ import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 
 import '/libraries/base.dart' as base;
 import '/libraries/config.dart' as config;
+import '/libraries/services.dart' as services;
 import '/libraries/views.dart' as views;
 
-class AppHttp {
+class AppNetwork {
   String path;
   Map<String, dynamic>? queryParameters;
   Map<String, String> headers = {};
 
-  AppHttp({
+  AppNetwork({
     required this.path,
     this.queryParameters,
   }) {
@@ -93,7 +94,7 @@ class AppHttp {
   }
 
   Uri _prepareUri() {
-    return Uri.parse(config.AppSettings.api['url']).replace(
+    return config.AppSettings.apiUri.replace(
       path: '/api/${base.Intl.language}/$path',
       queryParameters: queryParameters,
     );
@@ -107,16 +108,14 @@ class AppHttp {
         await config.AppSettings.navigatorKey.currentState?.push(
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) => views.AppError(
-              code: -1,
+              exception: services.AppExceptionNoConnection(),
             ),
             transitionDuration: Duration.zero,
           ),
         );
-      } else {
-        throw (Exception('No connection'));
       }
 
-      return _checkConnection(responseFuture);
+      throw services.AppExceptionNoConnection();
     }
   }
 
@@ -156,7 +155,7 @@ class AppHttp {
         await config.AppSettings.navigatorKey.currentState?.push(
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) => views.AppError(
-              code: 403,
+              exception: services.AppExceptionNotAllowed(),
             ),
             transitionDuration: Duration.zero,
           ),
@@ -168,7 +167,7 @@ class AppHttp {
         await config.AppSettings.navigatorKey.currentState?.push(
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) => views.AppError(
-              code: 500,
+              exception: services.AppExceptionInternalError(),
             ),
             transitionDuration: Duration.zero,
           ),

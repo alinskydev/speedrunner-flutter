@@ -85,8 +85,8 @@ class _BlogListItemState extends State<BlogListItem> with SingleTickerProviderSt
               Container(
                 padding: EdgeInsets.all(10),
                 child: Text(
-                  widget.model.getValue('name'),
-                  style: Theme.of(context).textTheme.headline4,
+                  widget.model.getValue('slug'),
+                  style: Theme.of(context).textTheme.headlineMedium,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
                 ),
@@ -94,10 +94,9 @@ class _BlogListItemState extends State<BlogListItem> with SingleTickerProviderSt
               Container(
                 padding: EdgeInsets.all(10),
                 child: Text(
-                  widget.model.getValue('slug'),
-                  style: Theme.of(context).textTheme.headline6,
+                  widget.model.getValue('short_description'),
                   overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
+                  maxLines: 2,
                 ),
               ),
             ],

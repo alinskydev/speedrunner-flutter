@@ -10,7 +10,6 @@ class Blog extends Model {
       'name',
       'slug',
       'category_id',
-      'category',
       'short_description',
       'image',
       'images',
@@ -20,11 +19,16 @@ class Blog extends Model {
       'name',
       'short_description',
     ],
+    ModelFieldType.relational: [
+      'category',
+    ],
   };
 
   models.BlogCategory? category;
 
   Blog([Map<String, dynamic> map = const {}]) : super(map) {
-    if (fields['category'] != null) category = models.BlogCategory(fields['category']);
+    Map<String, dynamic> relations = fields[ModelFieldType.relational]!;
+
+    if (relations['category'] != null) category = models.BlogCategory(relations['category']);
   }
 }

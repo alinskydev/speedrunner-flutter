@@ -4,19 +4,17 @@ import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 
 import '/libraries/base.dart' as base;
 import '/libraries/config.dart' as config;
-import '/libraries/models.dart' as models;
 import '/libraries/services.dart' as services;
-import '/libraries/widgets.dart' as widgets;
 
-class AppHttpForm extends StatefulWidget {
+class AppNetworkForm extends StatefulWidget {
   base.Model model;
-  services.AppHttp apiRequest;
+  services.AppNetwork apiRequest;
   Widget? successMessage;
 
-  Widget Function(BuildContext context, _AppHttpFormState formState) builder;
+  Widget Function(BuildContext context, _AppNetworkFormState formState) builder;
   void Function(BuildContext context, Map<String, dynamic> response)? onSuccess;
 
-  AppHttpForm({
+  AppNetworkForm({
     Key? key,
     required this.model,
     required this.apiRequest,
@@ -26,10 +24,10 @@ class AppHttpForm extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _AppHttpFormState createState() => _AppHttpFormState();
+  _AppNetworkFormState createState() => _AppNetworkFormState();
 }
 
-class _AppHttpFormState extends State<AppHttpForm> {
+class _AppNetworkFormState extends State<AppNetworkForm> {
   final GlobalKey<FormBuilderState> formKey = GlobalKey();
 
   @override
@@ -41,7 +39,7 @@ class _AppHttpFormState extends State<AppHttpForm> {
 
       formBuilderState.patchValue(
         formBuilderState.fields.map((key, value) {
-          var initialValue = widget.model.fields[key];
+          var initialValue = widget.model.getValue(key);
 
           switch (value.widget.runtimeType) {
             case FormBuilderDateTimePicker:

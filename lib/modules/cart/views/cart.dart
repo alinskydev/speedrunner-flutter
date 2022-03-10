@@ -5,7 +5,7 @@ import '/libraries/models.dart' as models;
 import '/libraries/services.dart' as services;
 import '/libraries/widgets.dart' as widgets;
 
-class Cart extends StatelessWidget {
+class Cart extends base.StatelessView {
   Cart({Key? key}) : super(key: key);
 
   @override

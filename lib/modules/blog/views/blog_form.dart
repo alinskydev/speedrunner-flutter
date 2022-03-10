@@ -3,13 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 
+import '/libraries/base.dart' as base;
 import '/libraries/config.dart' as config;
 import '/libraries/models.dart' as models;
 import '/libraries/services.dart' as services;
 import '/libraries/views.dart' as views;
 import '/libraries/widgets.dart' as widgets;
 
-class BlogCreate extends StatelessWidget {
+class BlogCreate extends base.StatelessView {
   models.Blog model = models.Blog();
 
   BlogCreate({Key? key}) : super(key: key);
@@ -19,14 +20,14 @@ class BlogCreate extends StatelessWidget {
     return _BlogForm(
       title: 'Create',
       model: model,
-      apiRequest: services.AppHttp(
+      apiRequest: services.AppNetwork(
         path: 'blog/create',
       ),
     );
   }
 }
 
-class BlogUpdate extends StatelessWidget {
+class BlogUpdate extends base.StatelessView {
   models.Blog model;
 
   BlogUpdate({
@@ -39,7 +40,7 @@ class BlogUpdate extends StatelessWidget {
     return _BlogForm(
       title: 'Update: ${model.getValue('name')}',
       model: model,
-      apiRequest: services.AppHttp(
+      apiRequest: services.AppNetwork(
         path: 'blog/update/${model.getValue('id')}',
       ),
     );
@@ -49,9 +50,9 @@ class BlogUpdate extends StatelessWidget {
 class _BlogForm extends StatelessWidget {
   String title;
   models.Blog model;
-  services.AppHttp apiRequest;
+  services.AppNetwork apiRequest;
 
-  late List<String> images;
+  List<String> images = [];
 
   _BlogForm({
     Key? key,
@@ -59,7 +60,9 @@ class _BlogForm extends StatelessWidget {
     required this.model,
     required this.apiRequest,
   }) : super(key: key) {
-    images = model.getStrictValue('images') != null ? List<String>.from(model.getStrictValue('images')) : [];
+    if (model.getValue('images', asString: false) != null) {
+      images = List<String>.from(model.getValue('images', asString: false));
+    }
   }
 
   @override
@@ -76,7 +79,7 @@ class _BlogForm extends StatelessWidget {
         child: SingleChildScrollView(
           child: Container(
             padding: EdgeInsets.all(15),
-            child: widgets.AppHttpForm(
+            child: widgets.AppNetworkForm(
               model: model,
               apiRequest: apiRequest,
               successMessage: Text('Successfully saved'),
@@ -126,12 +129,12 @@ class _BlogForm extends StatelessWidget {
                       ),
                       onTap: () {
                         context.read<widgets.AppLiveSearchSelectCubit>().process(
-                              apiRequest: services.AppHttp(path: 'blog-category'),
+                              apiRequest: services.AppNetwork(path: 'blog-category'),
                             );
                       },
                       onChanged: (value) {
                         context.read<widgets.AppLiveSearchSelectCubit>().process(
-                              apiRequest: services.AppHttp(
+                              apiRequest: services.AppNetwork(
                                 path: 'blog-category',
                                 queryParameters: {
                                   'filter[name]': value,
@@ -179,10 +182,10 @@ class _BlogForm extends StatelessWidget {
                                             child: MaterialButton(
                                               padding: EdgeInsets.zero,
                                               onPressed: () async {
-                                                await services.AppHttp(
+                                                await services.AppNetwork(
                                                   path: 'blog/file-delete/${model.getValue('id')}',
                                                   queryParameters: {
-                                                    'attr': 'iamges',
+                                                    'attr': 'images',
                                                   },
                                                 ).sendJson({
                                                   'key': services.AppImage.trimApiUrl(url: element),

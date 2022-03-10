@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '/libraries/base.dart' as base;
-import '/libraries/bloc.dart' as bloc;
 import '/libraries/models.dart' as models;
 import '/libraries/services.dart' as services;
 import '/libraries/widgets.dart' as widgets;
 
-class ProductList extends StatelessWidget {
+class ProductList extends base.StatelessView {
   List<models.Product> products = [
     models.Product({
       'id': 1,

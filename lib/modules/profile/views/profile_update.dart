@@ -11,7 +11,7 @@ import '/libraries/services.dart' as services;
 import '/libraries/views.dart' as views;
 import '/libraries/widgets.dart' as widgets;
 
-class ProfileUpdate extends StatefulWidget {
+class ProfileUpdate extends base.StatefulView {
   ProfileUpdate({Key? key}) : super(key: key);
 
   @override
@@ -19,7 +19,7 @@ class ProfileUpdate extends StatefulWidget {
 }
 
 class _ProfileUpdateState extends State<ProfileUpdate> {
-  Future<Map> profileFuture = services.AppHttp(
+  Future<Map> profileFuture = services.AppNetwork(
     path: 'profile/view',
   ).getData().then((value) {
     return value['body'];
@@ -45,9 +45,9 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
 
               return Container(
                 padding: EdgeInsets.all(15),
-                child: widgets.AppHttpForm(
+                child: widgets.AppNetworkForm(
                   model: model,
-                  apiRequest: services.AppHttp(
+                  apiRequest: services.AppNetwork(
                     path: 'profile/update',
                   ),
                   successMessage: Text('Profile was updated'),
@@ -90,7 +90,7 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
                         ),
                         widgets.AppReplacer(
                           builder: (context, replacerState) {
-                            return model.getStrictValue('image') != null
+                            return model.getValue('image', asString: false) != null
                                 ? Column(
                                     children: [
                                       SizedBox(height: 30),
@@ -113,7 +113,7 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
                                               child: MaterialButton(
                                                 padding: EdgeInsets.zero,
                                                 onPressed: () async {
-                                                  await services.AppHttp(
+                                                  await services.AppNetwork(
                                                     path: 'profile/file-delete',
                                                     queryParameters: {
                                                       'attr': 'image',

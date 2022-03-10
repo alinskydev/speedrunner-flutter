@@ -2,30 +2,39 @@ library app_bootstrap;
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '/libraries/base.dart' as base;
+import '/libraries/config.dart' as config;
 import '/libraries/services.dart' as services;
 
 part 'extensions.dart';
 
 class Bootstrap {
-  static Map<String, String> secureStorage = {};
-
   static Future<void> init() async {
-    secureStorage = await FlutterSecureStorage().readAll();
-
+    await initBase();
     await initIntl();
     await initUser();
     await initCart();
   }
 
+  static Future<void> initBase() async {
+    if (!config.AppSettings.isDebug) {
+      FlutterError.onError = (details) {
+        FlutterError.presentError(details);
+        exit(1);
+      };
+    }
+  }
+
   static Future<void> initIntl() async {
     String? language = await services.AppSharedStorage().getData('language', String);
-    await base.Intl.setLanguage(language);
+    if (language != null) await base.Intl.setLanguage(language);
 
-    base.Intl.messages = await services.AppHttp(
+    base.Intl.messages = await services.AppNetwork(
       path: 'information/translations',
     ).getData().then((value) {
       if (value['body'] is Map) {
@@ -37,14 +46,13 @@ class Bootstrap {
   }
 
   static Future<void> initUser() async {
-    base.User.authToken = secureStorage['authToken'];
+    base.User.authToken = await FlutterSecureStorage().read(key: 'authToken');
     base.User.isAuthorized = base.User.authToken != null;
   }
 
   static Future<void> initCart() async {
-    Map<String, dynamic> data = await services.AppSharedStorage().getData('cart', String).then((value) {
-      return value != null ? jsonDecode(value) : {};
-    });
+    String? cart = await services.AppSharedStorage().getData('cart', String);
+    Map<String, dynamic> data = cart != null ? jsonDecode(cart) : {};
 
     if (data.isNotEmpty) services.Cart.changeAll(data);
   }

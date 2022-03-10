@@ -1,58 +1,43 @@
+// ignore_for_file: prefer_for_elements_to_map_fromiterable
+
 import '/libraries/base.dart' as base;
+
+enum ModelFieldType { all, localized, relational }
 
 abstract class Model {
   abstract Map<ModelFieldType, List> availableFields;
 
-  Map<String, dynamic> fields = {};
-  Map<String, dynamic> localizedFields = {};
+  Map<ModelFieldType, Map<String, dynamic>> fields = {};
 
   Model(Map<String, dynamic> map) {
-    prepare();
-
-    fields = fields.map((key, value) {
-      return MapEntry(
-        key,
-        map.containsKey(key) ? map[key] : value,
-      );
-    });
-
-    localizedFields = localizedFields.map(
-      (key, value) => MapEntry(
-        key,
-        map.containsKey(key) ? (map[key] != null ? map[key][base.Intl.language] : null) : value,
+    fields = {
+      ModelFieldType.all: Map.fromIterable(
+        availableFields[ModelFieldType.all] ?? [],
+        key: (element) => element,
+        value: (element) => map[element],
       ),
-    );
+      ModelFieldType.localized: Map.fromIterable(
+        availableFields[ModelFieldType.localized] ?? [],
+        key: (element) => element,
+        value: (element) => map[element] != null ? map[element][base.Intl.language] : null,
+      ),
+      ModelFieldType.relational: Map.fromIterable(
+        availableFields[ModelFieldType.relational] ?? [],
+        key: (element) => element,
+        value: (element) => map[element],
+      ),
+    };
   }
 
-  void prepare() {
-    availableFields[ModelFieldType.all] ??= [];
-    availableFields[ModelFieldType.localized] ??= [];
+  dynamic getValue(String field, {bool asString = true}) {
+    dynamic value;
 
-    fields = {for (String element in availableFields[ModelFieldType.all]!) element: null};
-    localizedFields = {for (String element in availableFields[ModelFieldType.localized]!) element: null};
-  }
-
-  String getValue(String field) {
-    if (localizedFields.containsKey(field)) {
-      return (localizedFields[field] ?? '').toString();
-    } else if (fields.containsKey(field)) {
-      return (fields[field] ?? '').toString();
+    if (asString && fields[ModelFieldType.localized]!.containsKey(field)) {
+      value = fields[ModelFieldType.localized]![field];
     } else {
-      throw Exception('Field $field not found');
+      value = fields[ModelFieldType.all]![field];
     }
-  }
 
-  dynamic getStrictValue(String field) {
-    if (localizedFields.containsKey(field)) {
-      return localizedFields[field];
-    } else if (fields.containsKey(field)) {
-      return fields[field];
-    } else {
-      throw Exception('Field $field not found');
-    }
+    return asString ? (value ?? '').toString() : value;
   }
-
-  void assignRelation(Model model, Model relation) {}
 }
-
-enum ModelFieldType { all, localized }

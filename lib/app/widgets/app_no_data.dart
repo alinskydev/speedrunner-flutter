@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+enum AppNoDataTypes { blog, cart }
+
 class AppNoData extends StatelessWidget {
   AppNoDataTypes type;
 
@@ -31,5 +33,3 @@ class AppNoData extends StatelessWidget {
     }
   }
 }
-
-enum AppNoDataTypes { blog, cart }

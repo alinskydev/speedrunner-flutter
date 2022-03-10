@@ -8,7 +8,7 @@ import '/libraries/services.dart' as services;
 import '/libraries/views.dart' as views;
 import '/libraries/widgets.dart' as widgets;
 
-class AuthLogin extends StatefulWidget {
+class AuthLogin extends base.StatefulView {
   AuthLogin({Key? key}) : super(key: key);
 
   @override
@@ -28,9 +28,9 @@ class _AuthLoginState extends State<AuthLogin> {
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.all(15),
-          child: widgets.AppHttpForm(
+          child: widgets.AppNetworkForm(
             model: models.AuthLogin(),
-            apiRequest: services.AppHttp(
+            apiRequest: services.AppNetwork(
               path: 'auth/login',
             ),
             onSuccess: (context, response) async {

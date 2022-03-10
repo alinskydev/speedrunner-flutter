@@ -63,7 +63,7 @@ class AppLiveSearchSelectCubit extends Cubit<List<Map>> {
   AppLiveSearchSelectCubit() : super([]);
 
   Future<void> process({
-    required services.AppHttp apiRequest,
+    required services.AppNetwork apiRequest,
   }) async {
     List<Map> data = await apiRequest.getData().then((value) {
       return List<Map>.from(value['body']['data']);

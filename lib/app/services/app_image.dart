@@ -33,7 +33,7 @@ class AppImage {
       return placeholder;
     }
 
-    url = isAbsolute ? url : '${config.AppSettings.api['url']}/$url';
+    url = isAbsolute ? url : '${config.AppSettings.apiUri.toString()}/$url';
 
     switch (mime.lookupMimeType(url)) {
       case 'image/jpeg':
@@ -62,6 +62,6 @@ class AppImage {
   static String trimApiUrl({
     required String url,
   }) {
-    return url.replaceFirst(config.AppSettings.api['url'], '');
+    return url.replaceFirst(config.AppSettings.apiUri.toString(), '');
   }
 }

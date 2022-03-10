@@ -12,7 +12,7 @@ class AppLazyLoadCubit extends Cubit<Map<String, dynamic>> {
   Future<void> process({
     required BuildContext context,
     required List<Widget> Function(BuildContext context, List records) builder,
-    required services.AppHttp apiRequest,
+    required services.AppNetwork apiRequest,
     required int page,
   }) async {
     emit({

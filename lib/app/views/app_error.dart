@@ -1,33 +1,16 @@
 import 'package:flutter/material.dart';
 
+import '/libraries/config.dart' as config;
+import '/libraries/services.dart' as services;
 import '/libraries/views.dart' as views;
-import '/libraries/widgets.dart' as widgets;
 
 class AppError extends StatelessWidget {
-  Map<int, Map<String, dynamic>> types = {
-    -1: {
-      'title': 'No connection',
-      'image': 'no_connection',
-    },
-    403: {
-      'title': '403',
-      'image': '403',
-    },
-    500: {
-      'title': '500',
-      'image': '500',
-    },
-  };
-
-  int code;
-  late Map<String, dynamic> currentType;
+  services.AppException exception;
 
   AppError({
     Key? key,
-    required this.code,
-  }) : super(key: key) {
-    currentType = types[code] ?? types[-1]!;
-  }
+    required this.exception,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -41,9 +24,9 @@ class AppError extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(currentType['title']),
+                  Text(exception.label),
                   Image.asset(
-                    'assets/images/errors/${currentType['image']}.png',
+                    'assets/images/errors/${exception.image}.png',
                     width: double.infinity,
                   ),
                 ],
@@ -66,9 +49,8 @@ class AppError extends StatelessWidget {
   }
 
   Widget _button(BuildContext context) {
-    switch (code) {
-      case 403:
-      case 500:
+    switch (exception.buttonRoute) {
+      case services.AppExceptionButtonRoutes.home:
         return ElevatedButton.icon(
           onPressed: () {
             Navigator.pushAndRemoveUntil(
@@ -82,13 +64,13 @@ class AppError extends StatelessWidget {
           icon: Icon(Icons.home),
           label: Text('Go home'),
         );
-      case -1:
+      case services.AppExceptionButtonRoutes.refresh:
         return ElevatedButton.icon(
           onPressed: () {
             Navigator.pushAndRemoveUntil(
               context,
               PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) => views.AppHome(),
+                pageBuilder: (context, animation, secondaryAnimation) => config.AppSettings.currentView,
               ),
               (route) => false,
             );
@@ -96,8 +78,6 @@ class AppError extends StatelessWidget {
           icon: Icon(Icons.refresh),
           label: Text('Refresh'),
         );
-      default:
-        return SizedBox.shrink();
     }
   }
 }
