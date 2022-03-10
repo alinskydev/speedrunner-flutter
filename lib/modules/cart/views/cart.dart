@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '/libraries/base.dart' as base;
 import '/libraries/models.dart' as models;
-import '/libraries/services.dart' as services;
 import '/libraries/widgets.dart' as widgets;
 
 class Cart extends base.StatelessView {
@@ -16,8 +15,8 @@ class Cart extends base.StatelessView {
         centerTitle: true,
       ),
       body: StreamBuilder(
-        stream: services.Cart.controller.stream,
-        initialData: services.Cart.getData(),
+        stream: base.Singletons.cart.controller.stream,
+        initialData: base.Singletons.cart.data,
         builder: (context, snapshot) {
           if (!snapshot.hasData) return SizedBox.shrink();
 
@@ -30,7 +29,7 @@ class Cart extends base.StatelessView {
                 cartData['quantity'] > 0
                     ? ElevatedButton(
                         onPressed: () {
-                          services.Cart.clear();
+                          base.Singletons.cart.clear();
                         },
                         child: Text('Clear'),
                       )

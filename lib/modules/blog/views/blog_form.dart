@@ -82,7 +82,7 @@ class _BlogForm extends StatelessWidget {
             child: widgets.AppNetworkForm(
               model: model,
               apiRequest: apiRequest,
-              successMessage: Text('Successfully saved'),
+              successMessage: 'Successfully saved',
               onSuccess: (context, response) {
                 Navigator.pop(context);
                 Navigator.pushReplacement(
@@ -188,7 +188,7 @@ class _BlogForm extends StatelessWidget {
                                                     'attr': 'images',
                                                   },
                                                 ).sendJson({
-                                                  'key': services.AppImage.trimApiUrl(url: element),
+                                                  'key': services.AppImage.trimApiUrl(element),
                                                 });
 
                                                 replacerState.process();

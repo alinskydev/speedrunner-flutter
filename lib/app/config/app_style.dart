@@ -7,7 +7,9 @@ class AppStyle {
 
 class _AppColors {
   final Color primary = Color(0xFF00BCD4);
+  final Color success = Color(0xFF00FF37);
   final Color secondary = Color(0xff5c6c87);
+  final Color error = Color(0xFFAF0808);
 }
 
 class _AppFontSizes {

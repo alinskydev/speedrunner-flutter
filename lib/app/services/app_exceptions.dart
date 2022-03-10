@@ -1,10 +1,10 @@
-enum AppExceptionButtonRoutes { home, refresh }
+enum AppExceptionButtonActions { goHome, refresh }
 
 abstract class AppException implements Exception {
   abstract int code;
   abstract String label;
   abstract String image;
-  abstract AppExceptionButtonRoutes buttonRoute;
+  abstract AppExceptionButtonActions buttonRoute;
 }
 
 class AppExceptionNoConnection extends AppException {
@@ -13,29 +13,29 @@ class AppExceptionNoConnection extends AppException {
   @override
   String label = 'No connection';
   @override
-  String image = 'no_connection';
+  String image = 'assets/images/errors/no_connection.png';
   @override
-  AppExceptionButtonRoutes buttonRoute = AppExceptionButtonRoutes.refresh;
+  AppExceptionButtonActions buttonRoute = AppExceptionButtonActions.refresh;
 }
 
 class AppExceptionNotAllowed extends AppException {
   @override
   int code = 403;
   @override
-  String label = '403';
+  String label = 'Access denied';
   @override
-  String image = '403';
+  String image = 'assets/images/errors/403.png';
   @override
-  AppExceptionButtonRoutes buttonRoute = AppExceptionButtonRoutes.home;
+  AppExceptionButtonActions buttonRoute = AppExceptionButtonActions.goHome;
 }
 
 class AppExceptionInternalError extends AppException {
   @override
   int code = 500;
   @override
-  String label = '500';
+  String label = 'Internal error';
   @override
-  String image = '500';
+  String image = 'assets/images/errors/500.png';
   @override
-  AppExceptionButtonRoutes buttonRoute = AppExceptionButtonRoutes.home;
+  AppExceptionButtonActions buttonRoute = AppExceptionButtonActions.goHome;
 }

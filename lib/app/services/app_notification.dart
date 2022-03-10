@@ -1,11 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 
-import '/libraries/base.dart' as base;
-import '/libraries/views.dart' as views;
+import '/libraries/config.dart' as config;
+
+enum AppNotificatorTypes { primary, success, error }
 
 class AppNotificator {
   BuildContext context;
@@ -13,17 +10,29 @@ class AppNotificator {
   AppNotificator(this.context);
 
   void sendMessage({
-    required Widget message,
-    Color? backgroundColor,
+    required String message,
+    AppNotificatorTypes type = AppNotificatorTypes.primary,
   }) {
-    backgroundColor ??= Theme.of(context).colorScheme.primary;
+    Color backgroundColor;
+
+    switch (type) {
+      case AppNotificatorTypes.primary:
+        backgroundColor = config.AppStyle.colors.primary;
+        break;
+      case AppNotificatorTypes.success:
+        backgroundColor = config.AppStyle.colors.success;
+        break;
+      case AppNotificatorTypes.error:
+        backgroundColor = config.AppStyle.colors.error;
+        break;
+    }
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         padding: EdgeInsets.all(15),
         backgroundColor: backgroundColor,
         content: Container(
-          child: message,
+          child: Text(message),
         ),
       ),
     );

@@ -5,8 +5,6 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '/libraries/base.dart' as base;
 import '/libraries/models.dart' as models;
-import '/libraries/services.dart' as services;
-import '/libraries/widgets.dart' as widgets;
 
 class CartActionButtons extends StatefulWidget {
   models.Product model;
@@ -35,7 +33,7 @@ class _CartActionButtonsState extends State<CartActionButtons> {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      services.Cart.change(
+                      base.Singletons.cart.change(
                         product: widget.model,
                         quantity: widget.model.cartQuantity + 1,
                       );
@@ -57,7 +55,7 @@ class _CartActionButtonsState extends State<CartActionButtons> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      services.Cart.change(
+                      base.Singletons.cart.change(
                         product: widget.model,
                         quantity: widget.model.cartQuantity - 1,
                       );
@@ -73,7 +71,7 @@ class _CartActionButtonsState extends State<CartActionButtons> {
               fit: FlexFit.tight,
               child: ElevatedButton(
                 onPressed: () {
-                  services.Cart.change(
+                  base.Singletons.cart.change(
                     product: widget.model,
                     quantity: 0,
                   );
@@ -94,7 +92,7 @@ class _CartActionButtonsState extends State<CartActionButtons> {
         fit: FlexFit.tight,
         child: ElevatedButton(
           onPressed: () {
-            services.Cart.change(
+            base.Singletons.cart.change(
               product: widget.model,
               quantity: 1,
             );

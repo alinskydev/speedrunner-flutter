@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '/libraries/base.dart' as base;
-import '/libraries/services.dart' as services;
 import '/libraries/views.dart' as views;
 import '/libraries/widgets.dart' as widgets;
 
@@ -33,8 +32,8 @@ class AppNavBottom extends StatelessWidget {
           'label': 'Cart',
           'icon': widgets.AppIcons.cart,
           'badge': StreamBuilder(
-            stream: services.Cart.controller.stream,
-            initialData: services.Cart.getData(),
+            stream: base.Singletons.cart.controller.stream,
+            initialData: base.Singletons.cart.data,
             builder: (context, snapshot) {
               if (!snapshot.hasData) return SizedBox.shrink();
 

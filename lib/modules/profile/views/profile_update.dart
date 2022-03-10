@@ -50,7 +50,7 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
                   apiRequest: services.AppNetwork(
                     path: 'profile/update',
                   ),
-                  successMessage: Text('Profile was updated'),
+                  successMessage: 'Profile was updated',
                   onSuccess: (context, response) async {
                     await base.User.login(response['body']['access_token']);
 
@@ -119,9 +119,7 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
                                                       'attr': 'image',
                                                     },
                                                   ).sendJson({
-                                                    'key': services.AppImage.trimApiUrl(
-                                                      url: model.getValue('image'),
-                                                    ),
+                                                    'key': services.AppImage.trimApiUrl(model.getValue('image')),
                                                   });
 
                                                   replacerState.process();

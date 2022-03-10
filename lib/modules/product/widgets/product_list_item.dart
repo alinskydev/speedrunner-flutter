@@ -5,7 +5,6 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '/libraries/base.dart' as base;
 import '/libraries/models.dart' as models;
-import '/libraries/services.dart' as services;
 import '/libraries/widgets.dart' as widgets;
 
 class ProductListIem extends StatefulWidget {
@@ -30,7 +29,7 @@ class _ProductListIemState extends State<ProductListIem> {
         fit: FlexFit.tight,
         child: ElevatedButton(
           onPressed: () {
-            services.Cart.clear();
+            base.Singletons.cart.clear();
           },
           child: Text('View'),
           style: ButtonStyle(

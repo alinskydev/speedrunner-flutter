@@ -23,9 +23,16 @@ class AppNetwork {
     }
   }
 
+  Uri get uri {
+    return config.AppSettings.apiUri.replace(
+      path: '/api/${base.Intl.language}/$path',
+      queryParameters: queryParameters,
+    );
+  }
+
   Future<Map<String, dynamic>> getData() async {
     Future<http.Response> responseFuture = http.get(
-      _prepareUri(),
+      uri,
       headers: headers,
     );
 
@@ -34,12 +41,10 @@ class AppNetwork {
   }
 
   Future<Map<String, dynamic>> sendJson([Map body = const {}]) async {
-    headers.addAll({
-      'Content-Type': 'application/json',
-    });
+    headers['Content-Type'] = 'application/json';
 
     Future<http.Response> responseFuture = http.post(
-      _prepareUri(),
+      uri,
       headers: headers,
       body: jsonEncode(body),
     );
@@ -49,7 +54,7 @@ class AppNetwork {
   }
 
   Future<Map<String, dynamic>> sendFormData([Map<String, dynamic> fields = const {}]) async {
-    http.MultipartRequest request = http.MultipartRequest('POST', _prepareUri());
+    http.MultipartRequest request = http.MultipartRequest('POST', uri);
 
     headers.forEach((key, value) {
       request.headers[key] = value;
@@ -91,13 +96,6 @@ class AppNetwork {
 
     http.StreamedResponse response = await _checkConnection(request.send()) as http.StreamedResponse;
     return await _prepareResponse(response);
-  }
-
-  Uri _prepareUri() {
-    return config.AppSettings.apiUri.replace(
-      path: '/api/${base.Intl.language}/$path',
-      queryParameters: queryParameters,
-    );
   }
 
   Future<http.BaseResponse> _checkConnection(Future<http.BaseResponse> responseFuture) async {

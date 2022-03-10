@@ -30,7 +30,7 @@ class _AuthResetPasswordRequestState extends State<AuthResetPasswordRequest> {
             apiRequest: services.AppNetwork(
               path: 'auth/reset-password-request',
             ),
-            successMessage: Text('Message was sent to your email'),
+            successMessage: 'Message was sent to your email',
             onSuccess: (context, response) async {
               Navigator.pop(context);
             },

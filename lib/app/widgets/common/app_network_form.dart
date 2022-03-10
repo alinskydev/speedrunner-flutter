@@ -9,7 +9,7 @@ import '/libraries/services.dart' as services;
 class AppNetworkForm extends StatefulWidget {
   base.Model model;
   services.AppNetwork apiRequest;
-  Widget? successMessage;
+  String? successMessage;
 
   Widget Function(BuildContext context, _AppNetworkFormState formState) builder;
   void Function(BuildContext context, Map<String, dynamic> response)? onSuccess;
@@ -39,7 +39,7 @@ class _AppNetworkFormState extends State<AppNetworkForm> {
 
       formBuilderState.patchValue(
         formBuilderState.fields.map((key, value) {
-          var initialValue = widget.model.getValue(key);
+          var initialValue = widget.model.getValue(key, asString: false);
 
           switch (value.widget.runtimeType) {
             case FormBuilderDateTimePicker:
@@ -115,8 +115,8 @@ class _AppNetworkFormState extends State<AppNetworkForm> {
       }
     } else {
       services.AppNotificator(context).sendMessage(
-        message: Text(fieldsErrors.values.join('\n')),
-        backgroundColor: Theme.of(context).colorScheme.error,
+        message: fieldsErrors.values.join('\n'),
+        type: services.AppNotificatorTypes.error,
       );
     }
   }

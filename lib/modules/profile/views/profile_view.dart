@@ -30,7 +30,7 @@ class ProfileView extends base.StatelessView {
               await base.Intl.setLanguage(value);
 
               services.AppNotificator(context).sendMessage(
-                message: Text('Language has been changed'),
+                message: 'Language has been changed',
               );
 
               Navigator.pushAndRemoveUntil(

@@ -34,7 +34,7 @@ class _AuthRegisterState extends State<AuthRegister> {
             apiRequest: services.AppNetwork(
               path: 'auth/signup',
             ),
-            successMessage: Text('You have been registered'),
+            successMessage: 'You have been registered',
             onSuccess: (context, response) async {
               await base.User.login(response['body']['access_token']);
 

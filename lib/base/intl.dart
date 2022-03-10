@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import '/libraries/services.dart' as services;
+import '/libraries/base.dart' as base;
 
 class Intl {
   static const String _defaultLanguage = 'en';
@@ -26,7 +26,7 @@ class Intl {
   static Map<String, Map> messages = {};
 
   static Future<void> setLanguage(String newLanguage) async {
-    await services.AppSharedStorage().setData('language', newLanguage);
+    await base.Singletons.sharedStorage.setData('language', newLanguage);
     controller.add(newLanguage);
   }
 

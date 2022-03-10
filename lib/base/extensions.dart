@@ -1,7 +1,7 @@
 part of 'bootstrap.dart';
 
 extension MapExtension on Map {
-  Object? getValueFromPath(String path, [Object? map]) {
+  dynamic getValueFromPath(String path, [Object? map]) {
     map ??= this;
     if (map is! Map<String, dynamic>) return null;
 

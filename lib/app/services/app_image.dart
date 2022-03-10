@@ -29,9 +29,7 @@ class AppImage {
     required String? url,
     bool isAbsolute = true,
   }) {
-    if (url == null) {
-      return placeholder;
-    }
+    if (url == null) return placeholder;
 
     url = isAbsolute ? url : '${config.AppSettings.apiUri.toString()}/$url';
 
@@ -59,9 +57,7 @@ class AppImage {
     }
   }
 
-  static String trimApiUrl({
-    required String url,
-  }) {
+  static String trimApiUrl(String url) {
     return url.replaceFirst(config.AppSettings.apiUri.toString(), '');
   }
 }

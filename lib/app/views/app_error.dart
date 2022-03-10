@@ -26,7 +26,7 @@ class AppError extends StatelessWidget {
                 children: [
                   Text(exception.label),
                   Image.asset(
-                    'assets/images/errors/${exception.image}.png',
+                    exception.image,
                     width: double.infinity,
                   ),
                 ],
@@ -50,7 +50,7 @@ class AppError extends StatelessWidget {
 
   Widget _button(BuildContext context) {
     switch (exception.buttonRoute) {
-      case services.AppExceptionButtonRoutes.home:
+      case services.AppExceptionButtonActions.goHome:
         return ElevatedButton.icon(
           onPressed: () {
             Navigator.pushAndRemoveUntil(
@@ -64,7 +64,7 @@ class AppError extends StatelessWidget {
           icon: Icon(Icons.home),
           label: Text('Go home'),
         );
-      case services.AppExceptionButtonRoutes.refresh:
+      case services.AppExceptionButtonActions.refresh:
         return ElevatedButton.icon(
           onPressed: () {
             Navigator.pushAndRemoveUntil(
