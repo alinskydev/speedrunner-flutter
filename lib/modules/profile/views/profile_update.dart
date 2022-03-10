@@ -21,7 +21,7 @@ class ProfileUpdate extends base.StatefulView {
 class _ProfileUpdateState extends State<ProfileUpdate> {
   Future<Map> profileFuture = services.AppNetwork(
     path: 'profile/view',
-  ).getData().then((value) {
+  ).sendRequest().then((value) {
     return value['body'];
   });
 
@@ -118,9 +118,12 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
                                                     queryParameters: {
                                                       'attr': 'image',
                                                     },
-                                                  ).sendJson({
-                                                    'key': services.AppImage.trimApiUrl(model.getValue('image')),
-                                                  });
+                                                  ).sendRequest(
+                                                    method: services.AppNetworkMethods.post,
+                                                    data: {
+                                                      'key': services.AppImage.trimApiUrl(model.getValue('image')),
+                                                    },
+                                                  );
 
                                                   replacerState.process();
                                                 },

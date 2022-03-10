@@ -1,7 +1,7 @@
-import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart' as dio;
 import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 
 import '/libraries/base.dart' as base;
@@ -9,7 +9,11 @@ import '/libraries/config.dart' as config;
 import '/libraries/services.dart' as services;
 import '/libraries/views.dart' as views;
 
+enum AppNetworkMethods { get, post, put, patch, delete }
+
 class AppNetwork {
+  static const _allowPayloadMethods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'];
+
   String path;
   Map<String, dynamic>? queryParameters;
   Map<String, String> headers = {};
@@ -30,146 +34,143 @@ class AppNetwork {
     );
   }
 
-  Future<Map<String, dynamic>> getData() async {
-    Future<http.Response> responseFuture = http.get(
-      uri,
-      headers: headers,
-    );
+  Future<Map<String, dynamic>> sendRequest({
+    AppNetworkMethods method = AppNetworkMethods.get,
+    Map<String, dynamic> data = const {},
+    bool isMultipart = false,
+  }) async {
+    // headers['Content-Type'] = 'application/json';
 
-    http.Response response = await _checkConnection(responseFuture) as http.Response;
-    return await _prepareResponse(response);
-  }
+    var fields;
 
-  Future<Map<String, dynamic>> sendJson([Map body = const {}]) async {
-    headers['Content-Type'] = 'application/json';
+    if (isMultipart) {
+      fields ??= <String, dynamic>{};
 
-    Future<http.Response> responseFuture = http.post(
-      uri,
-      headers: headers,
-      body: jsonEncode(body),
-    );
+      for (var entry in data.entries) {
+        String key = entry.key;
+        var value = entry.value;
 
-    http.Response response = await _checkConnection(responseFuture) as http.Response;
-    return await _prepareResponse(response);
-  }
+        if (value is List) {
+          key += '[]';
+          List listValue = [];
 
-  Future<Map<String, dynamic>> sendFormData([Map<String, dynamic> fields = const {}]) async {
-    http.MultipartRequest request = http.MultipartRequest('POST', uri);
+          for (int i = 0; i < value.length; i++) {
+            switch (value[i].runtimeType) {
+              case PlatformFile:
+                if (value[i].path != null) {
+                  listValue.add(await dio.MultipartFile.fromFile(value[i].path!));
+                }
+                break;
+              default:
+                listValue.add(value[i] != null ? '${value[i]}' : '');
+                break;
+            }
+          }
 
-    headers.forEach((key, value) {
-      request.headers[key] = value;
-    });
-
-    fields.forEach((key, value) async {
-      if (value is List) {
-        value.forEach((element) async {
-          switch (element.runtimeType) {
+          fields[key] = listValue;
+        } else {
+          switch (value.runtimeType) {
             case PlatformFile:
-              element = element as PlatformFile;
+              value = value as PlatformFile;
 
-              if (element.path != null) {
-                http.MultipartFile file = await http.MultipartFile.fromPath('$key[]', element.path ?? '');
-                request.files.add(file);
+              if (value.path != null) {
+                fields[key] = await dio.MultipartFile.fromFile(value.path!);
               }
               break;
             default:
-              request.fields[key] = element == null ? '$element' : '';
+              fields[key] = value != null ? '$value' : '';
               break;
           }
-        });
-      } else {
-        switch (value.runtimeType) {
-          case PlatformFile:
-            value = value as PlatformFile;
-
-            if (value.path != null) {
-              http.MultipartFile file = await http.MultipartFile.fromPath(key, value.path ?? '');
-              request.files.add(file);
-            }
-            break;
-          default:
-            request.fields[key] = value != null ? '$value' : '';
-            break;
         }
       }
-    });
 
-    http.StreamedResponse response = await _checkConnection(request.send()) as http.StreamedResponse;
-    return await _prepareResponse(response);
-  }
-
-  Future<http.BaseResponse> _checkConnection(Future<http.BaseResponse> responseFuture) async {
-    try {
-      return await responseFuture;
-    } catch (e) {
-      if (config.AppSettings.navigatorKey.currentState != null) {
-        await config.AppSettings.navigatorKey.currentState?.push(
-          PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) => views.AppError(
-              exception: services.AppExceptionNoConnection(),
-            ),
-            transitionDuration: Duration.zero,
-          ),
-        );
-      }
-
-      throw services.AppExceptionNoConnection();
+      fields = dio.FormData.fromMap(fields);
+    } else {
+      fields = data;
     }
+
+    Future<dio.Response> responseFuture = dio.Dio().requestUri(
+      uri,
+      data: fields,
+      options: dio.Options(
+        method: method.name.toUpperCase(),
+        headers: headers,
+        followRedirects: false,
+        validateStatus: (status) {
+          return [200, 422].contains(status);
+        },
+      ),
+    );
+
+    return await _prepareResponse(responseFuture);
   }
 
-  Future<Map<String, dynamic>> _prepareResponse(http.BaseResponse response) async {
-    switch (response.statusCode) {
-      case 200:
-      case 422:
-        String body = '';
+  Future<Map<String, dynamic>> _prepareResponse(Future<dio.Response> responseFuture) async {
+    print(000);
+    try {
+      dio.Response response = await responseFuture;
 
-        switch (response.runtimeType) {
-          case http.Response:
-            body = (response as http.Response).body;
-            break;
-          case http.StreamedResponse:
-            body = await (response as http.StreamedResponse).stream.bytesToString();
-            break;
+      return {
+        'headers': response.headers,
+        'body': response.data,
+        'statusCode': response.statusCode,
+      };
+    } catch (e) {
+      dio.DioError exception = e as dio.DioError;
+      print(111);
+
+      if (exception.error is SocketException) {
+        print(222);
+
+        if (config.AppSettings.navigatorKey.currentState != null) {
+          await config.AppSettings.navigatorKey.currentState?.pushAndRemoveUntil(
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) => views.AppError(
+                exception: services.AppExceptionNoConnection(),
+              ),
+              transitionDuration: Duration.zero,
+            ),
+            (value) => false,
+          );
         }
 
-        return {
-          'headers': response.headers,
-          'body': json.decode(body),
-          'statusCode': response.statusCode,
-        };
+        print(333);
 
-      case 401:
-        await base.User.logout();
-        await config.AppSettings.navigatorKey.currentState?.pushAndRemoveUntil(
-          PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) => views.AuthLogin(),
-          ),
-          (value) => false,
-        );
+        throw services.AppExceptionNoConnection();
+      }
 
-        break;
-
-      case 403:
-        await config.AppSettings.navigatorKey.currentState?.push(
-          PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) => views.AppError(
-              exception: services.AppExceptionNotAllowed(),
+      switch (exception.response?.statusCode) {
+        case 401:
+          await base.User.logout();
+          await config.AppSettings.navigatorKey.currentState?.pushAndRemoveUntil(
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) => views.AuthLogin(),
             ),
-            transitionDuration: Duration.zero,
-          ),
-        );
+            (value) => false,
+          );
+          break;
 
-        break;
-
-      default:
-        await config.AppSettings.navigatorKey.currentState?.push(
-          PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) => views.AppError(
-              exception: services.AppExceptionInternalError(),
+        case 403:
+          await config.AppSettings.navigatorKey.currentState?.push(
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) => views.AppError(
+                exception: services.AppExceptionNotAllowed(),
+              ),
+              transitionDuration: Duration.zero,
             ),
-            transitionDuration: Duration.zero,
-          ),
-        );
+          );
+          break;
+
+        default:
+          await config.AppSettings.navigatorKey.currentState?.push(
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) => views.AppError(
+                exception: services.AppExceptionInternalError(),
+              ),
+              transitionDuration: Duration.zero,
+            ),
+          );
+      }
     }
 
     return {};

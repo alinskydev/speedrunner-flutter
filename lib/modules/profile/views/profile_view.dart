@@ -13,7 +13,7 @@ class ProfileView extends base.StatelessView {
 
   Future<Map> profileFuture = services.AppNetwork(
     path: 'profile/view',
-  ).getData().then((value) {
+  ).sendRequest().then((value) {
     return value['body'];
   });
 

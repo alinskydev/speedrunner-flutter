@@ -23,9 +23,9 @@ class AppLazyLoadCubit extends Cubit<Map<String, dynamic>> {
     apiRequest.queryParameters ??= {};
     apiRequest.queryParameters!['page'] = '$page';
 
-    Map data = await apiRequest.getData();
+    Map data = await apiRequest.sendRequest();
 
-    int realCurrentPage = int.parse(data['headers']['x-pagination-current-page']);
+    int realCurrentPage = int.parse(data['headers']['x-pagination-current-page'][0]);
 
     if (page == realCurrentPage) {
       List records = data['body']['data'];

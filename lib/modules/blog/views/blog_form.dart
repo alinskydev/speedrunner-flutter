@@ -187,9 +187,12 @@ class _BlogForm extends StatelessWidget {
                                                   queryParameters: {
                                                     'attr': 'images',
                                                   },
-                                                ).sendJson({
-                                                  'key': services.AppImage.trimApiUrl(element),
-                                                });
+                                                ).sendRequest(
+                                                  method: services.AppNetworkMethods.post,
+                                                  data: {
+                                                    'key': services.AppImage.trimApiUrl(element),
+                                                  },
+                                                );
 
                                                 replacerState.process();
                                               },

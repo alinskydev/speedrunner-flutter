@@ -57,6 +57,7 @@ class AppError extends StatelessWidget {
               context,
               PageRouteBuilder(
                 pageBuilder: (context, animation, secondaryAnimation) => views.AppHome(),
+                transitionDuration: Duration.zero,
               ),
               (route) => false,
             );
@@ -70,7 +71,9 @@ class AppError extends StatelessWidget {
             Navigator.pushAndRemoveUntil(
               context,
               PageRouteBuilder(
+                // pageBuilder: (context, animation, secondaryAnimation) => views.AppHome(),
                 pageBuilder: (context, animation, secondaryAnimation) => config.AppSettings.currentView,
+                transitionDuration: Duration.zero,
               ),
               (route) => false,
             );

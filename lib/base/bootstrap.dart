@@ -42,7 +42,7 @@ class Bootstrap {
 
     base.Intl.messages = await services.AppNetwork(
       path: 'information/translations',
-    ).getData().then((value) {
+    ).sendRequest().then((value) {
       if (value['body'] is Map) {
         return Map<String, Map>.from(value['body']);
       } else {

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 import '/libraries/base.dart' as base;
-import '/libraries/bloc.dart' as bloc;
 import '/libraries/models.dart' as models;
 import '/libraries/services.dart' as services;
 import '/libraries/widgets.dart' as widgets;
@@ -12,7 +11,7 @@ import '/libraries/widgets.dart' as widgets;
 class AppHome extends base.StatelessView {
   Future<Map> blocksFuture = services.AppNetwork(
     path: 'staticpage/home',
-  ).getData().then((value) {
+  ).sendRequest().then((value) {
     return Map.fromIterable(
       value['body']['blocks'],
       key: (element) => element['name'],
@@ -25,7 +24,7 @@ class AppHome extends base.StatelessView {
     queryParameters: {
       'per-page': '2',
     },
-  ).getData().then((value) {
+  ).sendRequest().then((value) {
     return value['body']['data'];
   });
 

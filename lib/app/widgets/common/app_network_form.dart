@@ -87,7 +87,12 @@ class _AppNetworkFormState extends State<AppNetworkForm> {
       return MapEntry(key, initialValue);
     });
 
-    Map<String, dynamic> response = await widget.apiRequest.sendFormData(formData);
+    Map<String, dynamic> response = await widget.apiRequest.sendRequest(
+      method: services.AppNetworkMethods.post,
+      data: formData,
+      isMultipart: true,
+    );
+
     Map<String, String> fieldsErrors = {};
 
     switch (response['statusCode']) {
