@@ -20,7 +20,7 @@ class AppLiveSearchSelect extends StatelessWidget {
     this.isLocalized = false,
     required this.builder,
   }) : super(key: key) {
-    textPath += isLocalized ? '.${base.Intl.language}' : '';
+    textPath += isLocalized ? '.${base.Singletons.intl.language}' : '';
   }
 
   @override
@@ -66,7 +66,7 @@ class AppLiveSearchSelectCubit extends Cubit<List<Map>> {
     required services.AppNetwork apiRequest,
   }) async {
     List<Map> data = await apiRequest.sendRequest().then((value) {
-      return List<Map>.from(value['body']['data']);
+      return List<Map>.from(value.data['data']);
     });
 
     emit(data);

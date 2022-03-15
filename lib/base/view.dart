@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '/libraries/config.dart' as config;
+import '/libraries/views.dart' as views;
 
-abstract class StatelessView extends StatelessWidget {
-  StatelessView({Key? key}) : super(key: key) {
-    config.AppSettings.currentView = this;
+abstract class View extends StatefulWidget {
+  View({Key? key}) : super(key: key) {
+    current = this;
   }
-}
 
-abstract class StatefulView extends StatefulWidget {
-  StatefulView({Key? key}) : super(key: key) {
-    config.AppSettings.currentView = this;
-  }
+  static View? current;
 }

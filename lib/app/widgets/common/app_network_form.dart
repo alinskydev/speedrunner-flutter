@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_file_picker/form_builder_file_picker.dart';
+import 'package:dio/dio.dart' as dio;
 
 import '/libraries/base.dart' as base;
 import '/libraries/config.dart' as config;
@@ -12,7 +13,7 @@ class AppNetworkForm extends StatefulWidget {
   String? successMessage;
 
   Widget Function(BuildContext context, _AppNetworkFormState formState) builder;
-  void Function(BuildContext context, Map<String, dynamic> response)? onSuccess;
+  void Function(BuildContext context, dio.Response response)? onSuccess;
 
   AppNetworkForm({
     Key? key,
@@ -43,7 +44,7 @@ class _AppNetworkFormState extends State<AppNetworkForm> {
 
           switch (value.widget.runtimeType) {
             case FormBuilderDateTimePicker:
-              initialValue = initialValue != null ? config.AppSettings.dateFormat.parse(initialValue) : null;
+              initialValue = initialValue != null ? base.Singletons.settings.dateFormat.parse(initialValue) : null;
               break;
             case FormBuilderFilePicker:
               initialValue = List<PlatformFile>.from([]);
@@ -71,7 +72,7 @@ class _AppNetworkFormState extends State<AppNetworkForm> {
       if (initialValue != null) {
         switch (value.widget.runtimeType) {
           case FormBuilderDateTimePicker:
-            initialValue = config.AppSettings.dateFormat.format(initialValue);
+            initialValue = base.Singletons.settings.dateFormat.format(initialValue);
             break;
           case FormBuilderFilePicker:
             FormBuilderFilePicker filePicker = value.widget as FormBuilderFilePicker;
@@ -87,7 +88,7 @@ class _AppNetworkFormState extends State<AppNetworkForm> {
       return MapEntry(key, initialValue);
     });
 
-    Map<String, dynamic> response = await widget.apiRequest.sendRequest(
+    dio.Response response = await widget.apiRequest.sendRequest(
       method: services.AppNetworkMethods.post,
       data: formData,
       isMultipart: true,
@@ -95,9 +96,9 @@ class _AppNetworkFormState extends State<AppNetworkForm> {
 
     Map<String, String> fieldsErrors = {};
 
-    switch (response['statusCode']) {
+    switch (response.statusCode) {
       case 422:
-        fieldsErrors = Map.from(response['body']['message']).map((key, value) {
+        fieldsErrors = Map.from(response.data['message']).map((key, value) {
           return MapEntry(key, value[0]);
         });
         break;

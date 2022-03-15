@@ -3,7 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:mime/mime.dart' as mime;
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '/libraries/config.dart' as config;
+import '/libraries/base.dart' as base;
 
 class AppImage {
   double? width;
@@ -31,7 +31,7 @@ class AppImage {
   }) {
     if (url == null) return placeholder;
 
-    url = isAbsolute ? url : '${config.AppSettings.apiUri.toString()}/$url';
+    url = isAbsolute ? url : '${base.Singletons.settings.apiUri.toString()}/$url';
 
     switch (mime.lookupMimeType(url)) {
       case 'image/jpeg':
@@ -58,6 +58,6 @@ class AppImage {
   }
 
   static String trimApiUrl(String url) {
-    return url.replaceFirst(config.AppSettings.apiUri.toString(), '');
+    return url.replaceFirst(base.Singletons.settings.apiUri.toString(), '');
   }
 }

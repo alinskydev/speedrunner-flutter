@@ -9,9 +9,14 @@ import '/libraries/services.dart' as services;
 import '/libraries/views.dart' as views;
 import '/libraries/widgets.dart' as widgets;
 
-class BlogList extends base.StatelessView {
+class BlogList extends base.View {
   BlogList({Key? key}) : super(key: key);
 
+  @override
+  State<BlogList> createState() => _BlogListState();
+}
+
+class _BlogListState extends State<BlogList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

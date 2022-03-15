@@ -1,12 +1,12 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AppSharedStorage {
+class SharedStorage {
   late final SharedPreferences _preferences;
 
-  AppSharedStorage._init();
+  SharedStorage._init();
 
-  static Future<AppSharedStorage> init() async {
-    AppSharedStorage instance = AppSharedStorage._init();
+  static Future<SharedStorage> init() async {
+    SharedStorage instance = SharedStorage._init();
     instance._preferences = await SharedPreferences.getInstance();
 
     return instance;

@@ -5,7 +5,7 @@ import '/libraries/models.dart' as models;
 import '/libraries/services.dart' as services;
 import '/libraries/widgets.dart' as widgets;
 
-class BlogView extends base.StatelessView {
+class BlogView extends base.View {
   models.Blog model;
 
   BlogView({
@@ -14,10 +14,15 @@ class BlogView extends base.StatelessView {
   }) : super(key: key);
 
   @override
+  State<BlogView> createState() => _BlogViewState();
+}
+
+class _BlogViewState extends State<BlogView> {
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(model.getValue('name')),
+        title: Text(widget.model.getValue('name')),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -28,16 +33,16 @@ class BlogView extends base.StatelessView {
             child: Column(
               children: [
                 Hero(
-                  tag: 'hero-blog-${model.getValue('id')}',
+                  tag: 'hero-blog-${widget.model.getValue('id')}',
                   child: services.AppImage(
                     width: MediaQuery.of(context).size.width / 2,
                   ).renderNetwork(
-                    url: model.getValue('image'),
+                    url: widget.model.getValue('image'),
                   ),
                 ),
-                Text(model.getValue('name'), style: Theme.of(context).textTheme.headlineMedium),
+                Text(widget.model.getValue('name'), style: Theme.of(context).textTheme.headlineMedium),
                 SizedBox(height: 30),
-                Text(model.getValue('short_description')),
+                Text(widget.model.getValue('short_description')),
               ],
             ),
           ),

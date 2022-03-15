@@ -2,13 +2,13 @@ import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
 
-class AppFileStorage {
+class FileStorage {
   late final String _rootDir;
 
-  AppFileStorage._init();
+  FileStorage._init();
 
-  static Future<AppFileStorage> init() async {
-    AppFileStorage instance = AppFileStorage._init();
+  static Future<FileStorage> init() async {
+    FileStorage instance = FileStorage._init();
     instance._rootDir = (await getApplicationDocumentsDirectory()).path;
 
     return instance;

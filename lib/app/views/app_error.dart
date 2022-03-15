@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '/libraries/base.dart' as base;
 import '/libraries/config.dart' as config;
 import '/libraries/services.dart' as services;
 import '/libraries/views.dart' as views;
@@ -72,7 +73,7 @@ class AppError extends StatelessWidget {
               context,
               PageRouteBuilder(
                 // pageBuilder: (context, animation, secondaryAnimation) => views.AppHome(),
-                pageBuilder: (context, animation, secondaryAnimation) => config.AppSettings.currentView,
+                pageBuilder: (context, animation, secondaryAnimation) => base.View.current ?? views.AppHome(),
                 transitionDuration: Duration.zero,
               ),
               (route) => false,

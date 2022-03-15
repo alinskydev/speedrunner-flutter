@@ -19,7 +19,7 @@ abstract class Model {
       ModelFieldType.localized: Map.fromIterable(
         availableFields[ModelFieldType.localized] ?? [],
         key: (element) => element,
-        value: (element) => map[element] != null ? map[element][base.Intl.language] : null,
+        value: (element) => map[element] != null ? map[element][base.Singletons.intl.language] : null,
       ),
       ModelFieldType.relational: Map.fromIterable(
         availableFields[ModelFieldType.relational] ?? [],

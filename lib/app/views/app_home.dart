@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_for_elements_to_map_fromiterable
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -8,12 +10,19 @@ import '/libraries/models.dart' as models;
 import '/libraries/services.dart' as services;
 import '/libraries/widgets.dart' as widgets;
 
-class AppHome extends base.StatelessView {
+class AppHome extends base.View {
+  AppHome({Key? key}) : super(key: key);
+
+  @override
+  State<AppHome> createState() => _AppHomeState();
+}
+
+class _AppHomeState extends State<AppHome> {
   Future<Map> blocksFuture = services.AppNetwork(
     path: 'staticpage/home',
   ).sendRequest().then((value) {
     return Map.fromIterable(
-      value['body']['blocks'],
+      value.data['blocks'],
       key: (element) => element['name'],
       value: (element) => element['value'],
     );
@@ -25,10 +34,8 @@ class AppHome extends base.StatelessView {
       'per-page': '2',
     },
   ).sendRequest().then((value) {
-    return value['body']['data'];
+    return value.data['data'];
   });
-
-  AppHome({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -14,7 +14,7 @@ class AppNavBottom extends StatelessWidget {
     Key? key,
     required this.currentName,
   }) : super(key: key) {
-    if (base.User.isAuthorized) {
+    if (base.Singletons.user.isAuthorized) {
       nav = {
         'home': {
           'label': 'Home',
@@ -33,13 +33,9 @@ class AppNavBottom extends StatelessWidget {
           'icon': widgets.AppIcons.cart,
           'badge': StreamBuilder(
             stream: base.Singletons.cart.controller.stream,
-            initialData: base.Singletons.cart.data,
+            initialData: base.Singletons.cart,
             builder: (context, snapshot) {
-              if (!snapshot.hasData) return SizedBox.shrink();
-
-              Map<String, dynamic> cartData = snapshot.data as Map<String, dynamic>;
-
-              return cartData['quantity'] > 0
+              return base.Singletons.cart.quantity > 0
                   ? Positioned(
                       top: 0,
                       right: 0,
@@ -50,7 +46,7 @@ class AppNavBottom extends StatelessWidget {
                           borderRadius: BorderRadius.circular(50),
                         ),
                         child: Text(
-                          cartData['quantity'].toString(),
+                          base.Singletons.cart.quantity.toString(),
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 12,

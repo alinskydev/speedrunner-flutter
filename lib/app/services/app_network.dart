@@ -12,8 +12,6 @@ import '/libraries/views.dart' as views;
 enum AppNetworkMethods { get, post, put, patch, delete }
 
 class AppNetwork {
-  static const _allowPayloadMethods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'];
-
   String path;
   Map<String, dynamic>? queryParameters;
   Map<String, String> headers = {};
@@ -22,19 +20,19 @@ class AppNetwork {
     required this.path,
     this.queryParameters,
   }) {
-    if (base.User.authToken != null) {
-      headers['Authorization'] = base.User.authToken!;
+    if (base.Singletons.user.authToken != null) {
+      headers['Authorization'] = base.Singletons.user.authToken!;
     }
   }
 
   Uri get uri {
-    return config.AppSettings.apiUri.replace(
-      path: '/api/${base.Intl.language}/$path',
+    return base.Singletons.settings.apiUri.replace(
+      path: '/api/${base.Singletons.intl.language}/$path',
       queryParameters: queryParameters,
     );
   }
 
-  Future<Map<String, dynamic>> sendRequest({
+  Future<dio.Response> sendRequest({
     AppNetworkMethods method = AppNetworkMethods.get,
     Map<String, dynamic> data = const {},
     bool isMultipart = false,
@@ -89,7 +87,7 @@ class AppNetwork {
       fields = data;
     }
 
-    Future<dio.Response> responseFuture = dio.Dio().requestUri(
+    Future<dio.Response> request = dio.Dio().requestUri(
       uri,
       data: fields,
       options: dio.Options(
@@ -102,47 +100,33 @@ class AppNetwork {
       ),
     );
 
-    return await _prepareResponse(responseFuture);
+    return await _prepareResponse(request);
   }
 
-  Future<Map<String, dynamic>> _prepareResponse(Future<dio.Response> responseFuture) async {
-    print(000);
+  Future<dio.Response> _prepareResponse(Future<dio.Response> request) async {
     try {
-      dio.Response response = await responseFuture;
-
-      return {
-        'headers': response.headers,
-        'body': response.data,
-        'statusCode': response.statusCode,
-      };
-    } catch (e) {
-      dio.DioError exception = e as dio.DioError;
-      print(111);
-
-      if (exception.error is SocketException) {
-        print(222);
-
-        if (config.AppSettings.navigatorKey.currentState != null) {
-          await config.AppSettings.navigatorKey.currentState?.pushAndRemoveUntil(
+      return await request;
+    } on dio.DioError catch (e) {
+      if (e.error is SocketException) {
+        if (base.Singletons.settings.navigatorKey.currentState != null) {
+          await base.Singletons.settings.navigatorKey.currentState!.pushAndRemoveUntil(
             PageRouteBuilder(
               pageBuilder: (context, animation, secondaryAnimation) => views.AppError(
                 exception: services.AppExceptionNoConnection(),
               ),
               transitionDuration: Duration.zero,
             ),
-            (value) => false,
+            (route) => false,
           );
         }
-
-        print(333);
 
         throw services.AppExceptionNoConnection();
       }
 
-      switch (exception.response?.statusCode) {
+      switch (e.response?.statusCode) {
         case 401:
-          await base.User.logout();
-          await config.AppSettings.navigatorKey.currentState?.pushAndRemoveUntil(
+          await base.Singletons.user.logout();
+          await base.Singletons.settings.navigatorKey.currentState?.pushAndRemoveUntil(
             PageRouteBuilder(
               pageBuilder: (context, animation, secondaryAnimation) => views.AuthLogin(),
             ),
@@ -151,7 +135,7 @@ class AppNetwork {
           break;
 
         case 403:
-          await config.AppSettings.navigatorKey.currentState?.push(
+          await base.Singletons.settings.navigatorKey.currentState?.push(
             PageRouteBuilder(
               pageBuilder: (context, animation, secondaryAnimation) => views.AppError(
                 exception: services.AppExceptionNotAllowed(),
@@ -162,7 +146,7 @@ class AppNetwork {
           break;
 
         default:
-          await config.AppSettings.navigatorKey.currentState?.push(
+          await base.Singletons.settings.navigatorKey.currentState?.push(
             PageRouteBuilder(
               pageBuilder: (context, animation, secondaryAnimation) => views.AppError(
                 exception: services.AppExceptionInternalError(),
@@ -173,6 +157,6 @@ class AppNetwork {
       }
     }
 
-    return {};
+    throw services.AppExceptionInternalError();
   }
 }

@@ -1,6 +1,3 @@
-import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_file_picker/form_builder_file_picker.dart';
@@ -11,7 +8,7 @@ import '/libraries/services.dart' as services;
 import '/libraries/views.dart' as views;
 import '/libraries/widgets.dart' as widgets;
 
-class ProfileUpdate extends base.StatefulView {
+class ProfileUpdate extends base.View {
   ProfileUpdate({Key? key}) : super(key: key);
 
   @override
@@ -22,7 +19,7 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
   Future<Map> profileFuture = services.AppNetwork(
     path: 'profile/view',
   ).sendRequest().then((value) {
-    return value['body'];
+    return value.data;
   });
 
   bool _isPasswordHidden = true;
@@ -52,7 +49,7 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
                   ),
                   successMessage: 'Profile was updated',
                   onSuccess: (context, response) async {
-                    await base.User.login(response['body']['access_token']);
+                    await base.Singletons.user.login(response.data['access_token']);
 
                     Navigator.pop(context);
                     Navigator.pushReplacement(

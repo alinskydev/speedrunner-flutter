@@ -8,7 +8,7 @@ import '/libraries/services.dart' as services;
 import '/libraries/views.dart' as views;
 import '/libraries/widgets.dart' as widgets;
 
-class AuthRegister extends base.StatefulView {
+class AuthRegister extends base.View {
   AuthRegister({Key? key}) : super(key: key);
 
   @override
@@ -36,7 +36,7 @@ class _AuthRegisterState extends State<AuthRegister> {
             ),
             successMessage: 'You have been registered',
             onSuccess: (context, response) async {
-              await base.User.login(response['body']['access_token']);
+              await base.Singletons.user.login(response.data['access_token']);
 
               Navigator.pushAndRemoveUntil(
                 context,

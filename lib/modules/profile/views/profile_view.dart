@@ -1,20 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import '/libraries/base.dart' as base;
-import '/libraries/models.dart' as models;
 import '/libraries/services.dart' as services;
 import '/libraries/views.dart' as views;
 import '/libraries/widgets.dart' as widgets;
 
-class ProfileView extends base.StatelessView {
+class ProfileView extends base.View {
   ProfileView({Key? key}) : super(key: key);
 
+  @override
+  State<ProfileView> createState() => _ProfileViewState();
+}
+
+class _ProfileViewState extends State<ProfileView> {
   Future<Map> profileFuture = services.AppNetwork(
     path: 'profile/view',
   ).sendRequest().then((value) {
-    return value['body'];
+    return value.data;
   });
 
   @override
@@ -27,7 +30,7 @@ class ProfileView extends base.StatelessView {
           PopupMenuButton<String>(
             icon: Icon(Icons.language),
             onSelected: (value) async {
-              await base.Intl.setLanguage(value);
+              await base.Singletons.intl.setLanguage(value);
 
               services.AppNotificator(context).sendMessage(
                 message: 'Language has been changed',
@@ -42,7 +45,7 @@ class ProfileView extends base.StatelessView {
               );
             },
             itemBuilder: (BuildContext context) {
-              return base.Intl.availableLanguages.map((e) {
+              return base.Singletons.intl.availableLanguages.map((e) {
                 return PopupMenuItem<String>(
                   value: e['code'],
                   child: Text(e['label']),
@@ -61,7 +64,7 @@ class ProfileView extends base.StatelessView {
           ),
           IconButton(
             onPressed: () async {
-              await base.User.logout();
+              await base.Singletons.user.logout();
 
               Navigator.pushAndRemoveUntil(
                 context,

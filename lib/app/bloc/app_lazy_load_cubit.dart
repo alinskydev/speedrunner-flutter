@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:dio/dio.dart' as dio;
 
-import '/libraries/bloc.dart' as bloc;
-import '/libraries/models.dart' as models;
 import '/libraries/services.dart' as services;
 import '/libraries/widgets.dart' as widgets;
 
@@ -23,12 +22,12 @@ class AppLazyLoadCubit extends Cubit<Map<String, dynamic>> {
     apiRequest.queryParameters ??= {};
     apiRequest.queryParameters!['page'] = '$page';
 
-    Map data = await apiRequest.sendRequest();
+    dio.Response data = await apiRequest.sendRequest();
 
-    int realCurrentPage = int.parse(data['headers']['x-pagination-current-page'][0]);
+    int realCurrentPage = int.parse(data.headers.value('x-pagination-current-page') ?? '1');
 
     if (page == realCurrentPage) {
-      List records = data['body']['data'];
+      List records = data.data['data'];
 
       emit({
         'records': builder(context, records),

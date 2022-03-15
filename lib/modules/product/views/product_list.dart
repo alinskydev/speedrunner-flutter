@@ -5,7 +5,14 @@ import '/libraries/models.dart' as models;
 import '/libraries/services.dart' as services;
 import '/libraries/widgets.dart' as widgets;
 
-class ProductList extends base.StatelessView {
+class ProductList extends base.View {
+  ProductList({Key? key}) : super(key: key);
+
+  @override
+  State<ProductList> createState() => _ProductListState();
+}
+
+class _ProductListState extends State<ProductList> {
   List<models.Product> products = [
     models.Product({
       'id': 1,
@@ -23,8 +30,6 @@ class ProductList extends base.StatelessView {
       'price': 400,
     }),
   ];
-
-  ProductList({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

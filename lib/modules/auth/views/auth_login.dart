@@ -8,7 +8,7 @@ import '/libraries/services.dart' as services;
 import '/libraries/views.dart' as views;
 import '/libraries/widgets.dart' as widgets;
 
-class AuthLogin extends base.StatefulView {
+class AuthLogin extends base.View {
   AuthLogin({Key? key}) : super(key: key);
 
   @override
@@ -34,7 +34,7 @@ class _AuthLoginState extends State<AuthLogin> {
               path: 'auth/login',
             ),
             onSuccess: (context, response) async {
-              await base.User.login(response['body']['access_token']);
+              await base.Singletons.user.login(response.data['access_token']);
 
               Navigator.pushAndRemoveUntil(
                 context,

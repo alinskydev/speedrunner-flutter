@@ -4,12 +4,12 @@ import 'dart:async';
 import '/libraries/base.dart' as base;
 import '/libraries/models.dart' as models;
 
-class AppCart {
-  Map<String, Map> products = {};
+class Cart {
+  Map<String, Map<String, dynamic>> products = {};
   int quantity = 0;
   int price = 0;
 
-  StreamController<Map> controller = StreamController<Map>.broadcast();
+  StreamController<Cart> controller = StreamController.broadcast();
 
   Map<String, dynamic> get data {
     return {
@@ -19,13 +19,13 @@ class AppCart {
     };
   }
 
-  AppCart._init();
+  Cart._init();
 
-  static Future<AppCart> init() async {
+  static Future<Cart> init() async {
     String? storageDataJson = await base.Singletons.sharedStorage.getData('cart', String);
     Map<String, dynamic> storageDataMap = storageDataJson != null ? jsonDecode(storageDataJson) : {};
 
-    AppCart instance = AppCart._init();
+    Cart instance = Cart._init();
     if (storageDataMap.isNotEmpty) instance.changeAll(storageDataMap);
 
     return instance;
@@ -74,6 +74,6 @@ class AppCart {
 
     await base.Singletons.sharedStorage.setData('cart', jsonEncode(data));
 
-    controller.add(data);
+    controller.add(this);
   }
 }

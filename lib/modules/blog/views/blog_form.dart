@@ -10,10 +10,15 @@ import '/libraries/services.dart' as services;
 import '/libraries/views.dart' as views;
 import '/libraries/widgets.dart' as widgets;
 
-class BlogCreate extends base.StatelessView {
-  models.Blog model = models.Blog();
-
+class BlogCreate extends base.View {
   BlogCreate({Key? key}) : super(key: key);
+
+  @override
+  State<BlogCreate> createState() => _BlogCreateState();
+}
+
+class _BlogCreateState extends State<BlogCreate> {
+  models.Blog model = models.Blog();
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +32,7 @@ class BlogCreate extends base.StatelessView {
   }
 }
 
-class BlogUpdate extends base.StatelessView {
+class BlogUpdate extends base.View {
   models.Blog model;
 
   BlogUpdate({
@@ -36,12 +41,17 @@ class BlogUpdate extends base.StatelessView {
   }) : super(key: key);
 
   @override
+  State<BlogUpdate> createState() => _BlogUpdateState();
+}
+
+class _BlogUpdateState extends State<BlogUpdate> {
+  @override
   Widget build(BuildContext context) {
     return _BlogForm(
-      title: 'Update: ${model.getValue('name')}',
-      model: model,
+      title: 'Update: ${widget.model.getValue('name')}',
+      model: widget.model,
       apiRequest: services.AppNetwork(
-        path: 'blog/update/${model.getValue('id')}',
+        path: 'blog/update/${widget.model.getValue('id')}',
       ),
     );
   }
@@ -115,7 +125,7 @@ class _BlogForm extends StatelessWidget {
                         hintText: DateTime.now().toString(),
                         prefixIcon: Icon(Icons.calendar_today),
                       ),
-                      format: config.AppSettings.dateFormat,
+                      format: base.Singletons.settings.dateFormat,
                       alwaysUse24HourFormat: true,
                       inputType: InputType.both,
                     ),

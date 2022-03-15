@@ -4,9 +4,14 @@ import '/libraries/base.dart' as base;
 import '/libraries/models.dart' as models;
 import '/libraries/widgets.dart' as widgets;
 
-class Cart extends base.StatelessView {
+class Cart extends base.View {
   Cart({Key? key}) : super(key: key);
 
+  @override
+  State<Cart> createState() => _CartState();
+}
+
+class _CartState extends State<Cart> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,17 +21,14 @@ class Cart extends base.StatelessView {
       ),
       body: StreamBuilder(
         stream: base.Singletons.cart.controller.stream,
-        initialData: base.Singletons.cart.data,
+        initialData: base.Singletons.cart,
         builder: (context, snapshot) {
-          if (!snapshot.hasData) return SizedBox.shrink();
-
-          Map<String, dynamic> cartData = snapshot.data as Map<String, dynamic>;
-          List<Map<String, dynamic>> products = cartData['products'].values.toList();
+          List<Map<String, dynamic>> products = base.Singletons.cart.products.values.toList();
 
           return SingleChildScrollView(
             child: Column(
               children: [
-                cartData['quantity'] > 0
+                base.Singletons.cart.quantity > 0
                     ? ElevatedButton(
                         onPressed: () {
                           base.Singletons.cart.clear();
@@ -34,7 +36,7 @@ class Cart extends base.StatelessView {
                         child: Text('Clear'),
                       )
                     : SizedBox.shrink(),
-                cartData['quantity'] > 0
+                base.Singletons.cart.quantity > 0
                     ? ListView.builder(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
@@ -69,7 +71,10 @@ class Cart extends base.StatelessView {
                     : widgets.AppNoData(
                         type: widgets.AppNoDataTypes.cart,
                       ),
-                Text('Total price: ${cartData['price']} (x${cartData['quantity']})', style: TextStyle(fontSize: 30)),
+                Text(
+                  'Total price: ${base.Singletons.cart.price} (x${base.Singletons.cart.quantity})',
+                  style: TextStyle(fontSize: 30),
+                ),
               ],
             ),
           );

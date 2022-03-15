@@ -36,17 +36,15 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: base.Intl.controller.stream,
-      initialData: base.Intl.language,
+      stream: base.Singletons.intl.controller.stream,
+      initialData: base.Singletons.intl,
       builder: (context, snapshot) {
-        String language = snapshot.data as String;
-
         return MaterialApp(
           title: 'Speedrunner',
-          navigatorKey: config.AppSettings.navigatorKey,
+          navigatorKey: base.Singletons.settings.navigatorKey,
           theme: config.AppTheme.data,
-          locale: Locale(language, ''),
-          supportedLocales: base.Intl.availableLanguages.map((e) => Locale(e['code'], '')),
+          locale: Locale(base.Singletons.intl.language, ''),
+          supportedLocales: base.Singletons.intl.availableLanguages.map((e) => Locale(e['code'], '')),
           localizationsDelegates: const [
             GlobalMaterialLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
