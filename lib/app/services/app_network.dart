@@ -5,7 +5,6 @@ import 'package:dio/dio.dart' as dio;
 import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 
 import '/libraries/base.dart' as base;
-import '/libraries/config.dart' as config;
 import '/libraries/services.dart' as services;
 import '/libraries/views.dart' as views;
 

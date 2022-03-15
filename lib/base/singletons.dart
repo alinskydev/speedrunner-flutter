@@ -7,6 +7,7 @@ class Singletons {
   static late singletons.Intl intl;
   static late singletons.Settings settings;
   static late singletons.SharedStorage sharedStorage;
+  static late singletons.Style style;
   static late singletons.User user;
 
   static Future<void> init() async {
@@ -16,6 +17,7 @@ class Singletons {
     settings = await singletons.Settings.init();
     cart = await singletons.Cart.init();
     user = await singletons.User.init();
+    style = await singletons.Style.init();
 
     intl = await singletons.Intl.init();
     intl.messages = await services.AppNetwork(

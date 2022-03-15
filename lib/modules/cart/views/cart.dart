@@ -59,8 +59,13 @@ class _CartState extends State<Cart> {
                                 SizedBox(
                                   width: MediaQuery.of(context).size.width / 3,
                                   height: 100,
-                                  child: widgets.CartActionButtons(
-                                    model: product,
+                                  child: Flex(
+                                    direction: Axis.horizontal,
+                                    children: [
+                                      widgets.CartActionButtons(
+                                        model: product,
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],

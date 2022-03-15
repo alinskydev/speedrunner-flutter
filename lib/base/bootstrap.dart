@@ -3,7 +3,7 @@ library app_bootstrap;
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import '/libraries/base.dart' as base;
 
@@ -16,9 +16,9 @@ class Bootstrap {
   }
 
   static Future<void> _initBase() async {
-    // FlutterError.onError = (details) {
-    //   FlutterError.presentError(details);
-    //   exit(1);
-    // };
+    FlutterError.onError = (details) {
+      FlutterError.presentError(details);
+      // exit(1);
+    };
   }
 }

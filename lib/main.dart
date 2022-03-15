@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import '/libraries/base.dart' as base;
-import '/libraries/config.dart' as config;
 import '/libraries/services.dart' as services;
 import '/libraries/views.dart' as views;
 
@@ -42,7 +41,7 @@ class App extends StatelessWidget {
         return MaterialApp(
           title: 'Speedrunner',
           navigatorKey: base.Singletons.settings.navigatorKey,
-          theme: config.AppTheme.data,
+          theme: base.Singletons.style.theme,
           locale: Locale(base.Singletons.intl.language, ''),
           supportedLocales: base.Singletons.intl.availableLanguages.map((e) => Locale(e['code'], '')),
           localizationsDelegates: const [

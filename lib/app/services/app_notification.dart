@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '/libraries/config.dart' as config;
+import '/libraries/base.dart' as base;
 
 enum AppNotificatorTypes { primary, success, error }
 
@@ -17,13 +17,13 @@ class AppNotificator {
 
     switch (type) {
       case AppNotificatorTypes.primary:
-        backgroundColor = config.AppStyle.colors.primary;
+        backgroundColor = base.Singletons.style.colors.primary;
         break;
       case AppNotificatorTypes.success:
-        backgroundColor = config.AppStyle.colors.success;
+        backgroundColor = base.Singletons.style.colors.success;
         break;
       case AppNotificatorTypes.error:
-        backgroundColor = config.AppStyle.colors.error;
+        backgroundColor = base.Singletons.style.colors.error;
         break;
     }
 

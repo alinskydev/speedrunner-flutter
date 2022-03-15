@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '/libraries/base.dart' as base;
-import '/libraries/config.dart' as config;
 import '/libraries/services.dart' as services;
 import '/libraries/views.dart' as views;
 
