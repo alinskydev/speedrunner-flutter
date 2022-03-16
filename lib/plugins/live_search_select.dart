@@ -3,32 +3,32 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import '/libraries/base.dart' as base;
+import '/libraries/plugins.dart' as plugins;
 import '/libraries/services.dart' as services;
-import '/libraries/widgets.dart' as widgets;
 
-class AppLiveSearchSelect extends StatelessWidget {
+class LiveSearchSelect extends StatelessWidget {
+  Widget Function(BuildContext context, List<FormBuilderFieldOption> options) builder;
+
   String valuePath;
   String textPath;
   bool isLocalized;
 
-  Widget Function(BuildContext context, List<FormBuilderFieldOption> options) builder;
-
-  AppLiveSearchSelect({
+  LiveSearchSelect({
     Key? key,
+    required this.builder,
     required this.valuePath,
     required this.textPath,
     this.isLocalized = false,
-    required this.builder,
   }) : super(key: key) {
     textPath += isLocalized ? '.${base.Singletons.intl.language}' : '';
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AppLiveSearchSelectCubit, List<Map>>(
+    return BlocBuilder<LiveSearchSelectCubit, List<Map>>(
       builder: (context, state) {
         List<FormBuilderFieldOption> options = state.map((e) {
-          String text = e.getValueFromPath(textPath) as String? ?? '';
+          String text = (e.getValueFromPath(textPath) ?? '').toString();
 
           return FormBuilderFieldOption(
             value: e.getValueFromPath(valuePath),
@@ -46,7 +46,7 @@ class AppLiveSearchSelect extends StatelessWidget {
             !state.isEmpty
                 ? IconButton(
                     onPressed: () {
-                      context.read<widgets.AppLiveSearchSelectCubit>().clear();
+                      context.read<plugins.LiveSearchSelectCubit>().clear();
                     },
                     icon: Icon(Icons.close),
                   )
@@ -59,13 +59,13 @@ class AppLiveSearchSelect extends StatelessWidget {
   }
 }
 
-class AppLiveSearchSelectCubit extends Cubit<List<Map>> {
-  AppLiveSearchSelectCubit() : super([]);
+class LiveSearchSelectCubit extends Cubit<List<Map>> {
+  LiveSearchSelectCubit() : super([]);
 
   Future<void> process({
-    required services.AppNetwork apiRequest,
+    required services.AppNetwork network,
   }) async {
-    List<Map> data = await apiRequest.sendRequest().then((value) {
+    List<Map> data = await network.sendRequest().then((value) {
       return List<Map>.from(value.data['data']);
     });
 

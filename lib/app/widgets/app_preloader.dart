@@ -5,8 +5,7 @@ class AppPreloader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
+    return Center(
       child: CircularProgressIndicator(),
     );
   }

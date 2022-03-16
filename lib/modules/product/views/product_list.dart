@@ -43,7 +43,7 @@ class _ProductListState extends State<ProductList> {
         itemBuilder: (context, index) => widgets.ProductListIem(model: products[index]),
       ),
       bottomNavigationBar: widgets.AppNavBottom(
-        currentName: 'product',
+        current: widgets.AppNavBottomTabs.product,
       ),
     );
   }

@@ -4,6 +4,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import '/libraries/base.dart' as base;
 import '/libraries/models.dart' as models;
+import '/libraries/plugins.dart' as plugins;
 import '/libraries/services.dart' as services;
 import '/libraries/views.dart' as views;
 import '/libraries/widgets.dart' as widgets;
@@ -29,12 +30,11 @@ class _AuthRegisterState extends State<AuthRegister> {
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.all(15),
-          child: widgets.AppNetworkForm(
+          child: plugins.NetworkForm(
             model: models.AuthRegister(),
-            apiRequest: services.AppNetwork(
-              path: 'auth/signup',
+            network: services.AppNetwork(
+              uri: Uri(path: 'auth/signup'),
             ),
-            successMessage: 'You have been registered',
             onSuccess: (context, response) async {
               await base.Singletons.user.login(response.data['access_token']);
 
@@ -43,6 +43,8 @@ class _AuthRegisterState extends State<AuthRegister> {
                 CupertinoPageRoute(builder: (context) => views.ProfileView()),
                 (route) => false,
               );
+
+              services.AppNotificator(context).sendMessage('You have been registered');
             },
             builder: (context, formState) {
               return Column(
@@ -119,7 +121,7 @@ class _AuthRegisterState extends State<AuthRegister> {
         ),
       ),
       bottomNavigationBar: widgets.AppNavBottom(
-        currentName: 'register',
+        current: widgets.AppNavBottomTabs.register,
       ),
     );
   }

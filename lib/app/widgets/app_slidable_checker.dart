@@ -3,12 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
-import '/libraries/base.dart' as base;
-import '/libraries/bloc.dart' as bloc;
-import '/libraries/models.dart' as models;
-import '/libraries/services.dart' as services;
-import '/libraries/widgets.dart' as widgets;
-
 class AppSlidableChecker extends StatefulWidget {
   Widget child;
   String tag;

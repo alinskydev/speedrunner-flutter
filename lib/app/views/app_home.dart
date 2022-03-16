@@ -19,7 +19,7 @@ class AppHome extends base.View {
 
 class _AppHomeState extends State<AppHome> {
   Future<Map> blocksFuture = services.AppNetwork(
-    path: 'staticpage/home',
+    uri: Uri(path: 'staticpage/home'),
   ).sendRequest().then((value) {
     return Map.fromIterable(
       value.data['blocks'],
@@ -29,10 +29,12 @@ class _AppHomeState extends State<AppHome> {
   });
 
   Future<List> blogsFuture = services.AppNetwork(
-    path: 'blog',
-    queryParameters: {
-      'per-page': '2',
-    },
+    uri: Uri(
+      path: 'blog',
+      queryParameters: {
+        'per-page': '2',
+      },
+    ),
   ).sendRequest().then((value) {
     return value.data['data'];
   });
@@ -174,7 +176,7 @@ class _AppHomeState extends State<AppHome> {
         ),
       ),
       bottomNavigationBar: widgets.AppNavBottom(
-        currentName: 'home',
+        current: widgets.AppNavBottomTabs.home,
       ),
     );
   }

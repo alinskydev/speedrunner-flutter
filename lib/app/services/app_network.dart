@@ -11,23 +11,22 @@ import '/libraries/views.dart' as views;
 enum AppNetworkMethods { get, post, put, patch, delete }
 
 class AppNetwork {
-  String path;
-  Map<String, dynamic>? queryParameters;
+  Uri uri;
   Map<String, String> headers = {};
 
   AppNetwork({
-    required this.path,
-    this.queryParameters,
+    required this.uri,
   }) {
     if (base.Singletons.user.authToken != null) {
       headers['Authorization'] = base.Singletons.user.authToken!;
     }
   }
 
-  Uri get uri {
-    return base.Singletons.settings.apiUri.replace(
-      path: '/api/${base.Singletons.intl.language}/$path',
-      queryParameters: queryParameters,
+  Uri get _uri {
+    return uri.replace(
+      scheme: base.Singletons.settings.apiUri.scheme,
+      host: base.Singletons.settings.apiUri.host,
+      path: '/api/${base.Singletons.intl.language}/${uri.path}',
     );
   }
 
@@ -41,7 +40,7 @@ class AppNetwork {
     var fields;
 
     if (isMultipart) {
-      fields ??= <String, dynamic>{};
+      fields = <String, dynamic>{};
 
       for (var entry in data.entries) {
         String key = entry.key;
@@ -87,7 +86,7 @@ class AppNetwork {
     }
 
     Future<dio.Response> request = dio.Dio().requestUri(
-      uri,
+      _uri,
       data: fields,
       options: dio.Options(
         method: method.name.toUpperCase(),

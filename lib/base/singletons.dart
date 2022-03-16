@@ -21,7 +21,7 @@ class Singletons {
 
     intl = await singletons.Intl.init();
     intl.messages = await services.AppNetwork(
-      path: 'information/translations',
+      uri: Uri(path: 'information/translations'),
     ).sendRequest().then((value) {
       if (value.data is Map) {
         return Map<String, Map>.from(value.data);

@@ -86,7 +86,7 @@ class _CartState extends State<Cart> {
         },
       ),
       bottomNavigationBar: widgets.AppNavBottom(
-        currentName: 'cart',
+        current: widgets.AppNavBottomTabs.cart,
       ),
     );
   }

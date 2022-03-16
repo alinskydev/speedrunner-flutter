@@ -49,7 +49,7 @@ class _BlogViewState extends State<BlogView> {
         ),
       ),
       bottomNavigationBar: widgets.AppNavBottom(
-        currentName: 'blog',
+        current: widgets.AppNavBottomTabs.blog,
       ),
     );
   }

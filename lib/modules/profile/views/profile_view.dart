@@ -15,7 +15,9 @@ class ProfileView extends base.View {
 
 class _ProfileViewState extends State<ProfileView> {
   Future<Map> profileFuture = services.AppNetwork(
-    path: 'profile/view',
+    uri: Uri(
+      path: 'profile/view',
+    ),
   ).sendRequest().then((value) {
     return value.data;
   });
@@ -32,10 +34,6 @@ class _ProfileViewState extends State<ProfileView> {
             onSelected: (value) async {
               await base.Singletons.intl.setLanguage(value);
 
-              services.AppNotificator(context).sendMessage(
-                message: 'Language has been changed',
-              );
-
               Navigator.pushAndRemoveUntil(
                 context,
                 PageRouteBuilder(
@@ -43,6 +41,8 @@ class _ProfileViewState extends State<ProfileView> {
                 ),
                 (route) => false,
               );
+
+              services.AppNotificator(context).sendMessage('Language has been changed');
             },
             itemBuilder: (BuildContext context) {
               return base.Singletons.intl.availableLanguages.map((e) {
@@ -149,7 +149,7 @@ class _ProfileViewState extends State<ProfileView> {
         ),
       ),
       bottomNavigationBar: widgets.AppNavBottom(
-        currentName: 'profile',
+        current: widgets.AppNavBottomTabs.profile,
       ),
     );
   }

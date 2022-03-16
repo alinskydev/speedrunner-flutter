@@ -4,6 +4,7 @@ import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 
 import '/libraries/base.dart' as base;
 import '/libraries/models.dart' as models;
+import '/libraries/plugins.dart' as plugins;
 import '/libraries/services.dart' as services;
 import '/libraries/views.dart' as views;
 import '/libraries/widgets.dart' as widgets;
@@ -17,7 +18,9 @@ class ProfileUpdate extends base.View {
 
 class _ProfileUpdateState extends State<ProfileUpdate> {
   Future<Map> profileFuture = services.AppNetwork(
-    path: 'profile/view',
+    uri: Uri(
+      path: 'profile/view',
+    ),
   ).sendRequest().then((value) {
     return value.data;
   });
@@ -42,12 +45,11 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
 
               return Container(
                 padding: EdgeInsets.all(15),
-                child: widgets.AppNetworkForm(
+                child: plugins.NetworkForm(
                   model: model,
-                  apiRequest: services.AppNetwork(
-                    path: 'profile/update',
+                  network: services.AppNetwork(
+                    uri: Uri(path: 'profile/update'),
                   ),
-                  successMessage: 'Profile was updated',
                   onSuccess: (context, response) async {
                     await base.Singletons.user.login(response.data['access_token']);
 
@@ -58,6 +60,8 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
                         pageBuilder: (context, animation, secondaryAnimation) => views.ProfileView(),
                       ),
                     );
+
+                    services.AppNotificator(context).sendMessage('Profile has been updated');
                   },
                   builder: (context, formState) {
                     return Column(
@@ -85,7 +89,7 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
                             labelText: 'Address',
                           ),
                         ),
-                        widgets.AppReplacer(
+                        plugins.Replacer(
                           builder: (context, replacerState) {
                             return model.getValue('image', asString: false) != null
                                 ? Column(
@@ -111,10 +115,12 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
                                                 padding: EdgeInsets.zero,
                                                 onPressed: () async {
                                                   await services.AppNetwork(
-                                                    path: 'profile/file-delete',
-                                                    queryParameters: {
-                                                      'attr': 'image',
-                                                    },
+                                                    uri: Uri(
+                                                      path: 'profile/file-delete',
+                                                      queryParameters: {
+                                                        'attr': 'image',
+                                                      },
+                                                    ),
                                                   ).sendRequest(
                                                     method: services.AppNetworkMethods.post,
                                                     data: {
@@ -207,7 +213,7 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
             }),
       ),
       bottomNavigationBar: widgets.AppNavBottom(
-        currentName: 'profile',
+        current: widgets.AppNavBottomTabs.profile,
       ),
     );
   }

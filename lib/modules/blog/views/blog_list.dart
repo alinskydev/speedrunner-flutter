@@ -1,10 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '/libraries/base.dart' as base;
-import '/libraries/bloc.dart' as bloc;
 import '/libraries/models.dart' as models;
+import '/libraries/plugins.dart' as plugins;
 import '/libraries/services.dart' as services;
 import '/libraries/views.dart' as views;
 import '/libraries/widgets.dart' as widgets;
@@ -35,42 +34,39 @@ class _BlogListState extends State<BlogList> {
           ),
         ],
       ),
-      body: MultiBlocProvider(
-        providers: [
-          BlocProvider(create: (context) => bloc.AppLazyLoadCubit()),
-        ],
-        child: widgets.AppLazyLoad(
-          type: widgets.AppLazyLoadType.gridView,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 1,
-            childAspectRatio: 0.7,
-          ),
-          prepend: Column(
-            children: [
-              Text('Blogs page', style: Theme.of(context).textTheme.headlineMedium),
-            ],
-          ),
-          noDataChild: widgets.AppNoData(
-            type: widgets.AppNoDataTypes.blog,
-          ),
-          apiRequest: services.AppNetwork(
+      body: plugins.InfiniteScroll(
+        type: plugins.InfiniteScrollType.gridView,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 1,
+          childAspectRatio: 0.7,
+        ),
+        prepend: Column(
+          children: [
+            Text('Blogs page', style: Theme.of(context).textTheme.headlineMedium),
+          ],
+        ),
+        noData: widgets.AppNoData(
+          type: widgets.AppNoDataTypes.blog,
+        ),
+        network: services.AppNetwork(
+          uri: Uri(
             path: 'blog',
             queryParameters: {
               'sort': 'id',
               'per-page': '2',
             },
           ),
-          builder: (context, records) {
-            return records.map((e) {
-              return widgets.BlogListItem(
-                model: models.Blog(e),
-              );
-            }).toList();
-          },
         ),
+        builder: (context, records) {
+          return records.map((e) {
+            return widgets.BlogListItem(
+              model: models.Blog(e),
+            );
+          }).toList();
+        },
       ),
       bottomNavigationBar: widgets.AppNavBottom(
-        currentName: 'blog',
+        current: widgets.AppNavBottomTabs.blog,
       ),
     );
   }

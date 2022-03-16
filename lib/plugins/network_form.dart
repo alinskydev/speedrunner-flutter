@@ -6,28 +6,26 @@ import 'package:dio/dio.dart' as dio;
 import '/libraries/base.dart' as base;
 import '/libraries/services.dart' as services;
 
-class AppNetworkForm extends StatefulWidget {
+class NetworkForm extends StatefulWidget {
+  Widget Function(BuildContext context, _NetworkFormState formState) builder;
   base.Model model;
-  services.AppNetwork apiRequest;
-  String? successMessage;
+  services.AppNetwork network;
 
-  Widget Function(BuildContext context, _AppNetworkFormState formState) builder;
   void Function(BuildContext context, dio.Response response)? onSuccess;
 
-  AppNetworkForm({
+  NetworkForm({
     Key? key,
-    required this.model,
-    required this.apiRequest,
     required this.builder,
-    this.successMessage,
+    required this.model,
+    required this.network,
     this.onSuccess,
   }) : super(key: key);
 
   @override
-  _AppNetworkFormState createState() => _AppNetworkFormState();
+  _NetworkFormState createState() => _NetworkFormState();
 }
 
-class _AppNetworkFormState extends State<AppNetworkForm> {
+class _NetworkFormState extends State<NetworkForm> {
   final GlobalKey<FormBuilderState> formKey = GlobalKey();
 
   @override
@@ -65,7 +63,11 @@ class _AppNetworkFormState extends State<AppNetworkForm> {
   }
 
   void validate() async {
-    Map<String, dynamic> formData = formKey.currentState!.fields.map((key, value) {
+    FormBuilderState formBuilderState = formKey.currentState!;
+
+    // Preparing
+
+    Map<String, dynamic> formData = formBuilderState.fields.map((key, value) {
       var initialValue = value.value;
 
       if (initialValue != null) {
@@ -74,9 +76,10 @@ class _AppNetworkFormState extends State<AppNetworkForm> {
             initialValue = base.Singletons.settings.dateFormat.format(initialValue);
             break;
           case FormBuilderFilePicker:
-            FormBuilderFilePicker filePicker = value.widget as FormBuilderFilePicker;
+            bool allowMultiple = (value.widget as FormBuilderFilePicker).allowMultiple;
+            bool isNotEmpty = (initialValue as List).isNotEmpty;
 
-            if (!filePicker.allowMultiple && initialValue.isNotEmpty) {
+            if (!allowMultiple && isNotEmpty) {
               initialValue = initialValue[0];
             }
 
@@ -87,41 +90,40 @@ class _AppNetworkFormState extends State<AppNetworkForm> {
       return MapEntry(key, initialValue);
     });
 
-    dio.Response response = await widget.apiRequest.sendRequest(
+    dio.Response response = await widget.network.sendRequest(
       method: services.AppNetworkMethods.post,
       data: formData,
       isMultipart: true,
     );
 
-    Map<String, String> fieldsErrors = {};
+    // Validation
+
+    Map<String, String> errors = {};
 
     switch (response.statusCode) {
       case 422:
-        fieldsErrors = Map.from(response.data['message']).map((key, value) {
+        errors = Map.from(response.data['message']).map((key, value) {
           return MapEntry(key, value[0]);
         });
         break;
     }
 
-    formKey.currentState!.validate();
-    fieldsErrors.forEach((key, value) {
-      formKey.currentState!.fields[key]?.invalidate(value);
+    formBuilderState.validate();
+
+    errors.forEach((key, value) {
+      formBuilderState.fields[key]?.invalidate(value);
     });
 
-    if (fieldsErrors.isEmpty) {
-      if (widget.successMessage != null) {
-        services.AppNotificator(context).sendMessage(
-          message: widget.successMessage!,
-        );
-      }
+    // Sending notification
 
+    if (errors.isEmpty) {
       if (widget.onSuccess != null) {
         widget.onSuccess!(context, response);
       }
     } else {
       services.AppNotificator(context).sendMessage(
-        message: fieldsErrors.values.join('\n'),
-        type: services.AppNotificatorTypes.error,
+        errors.values.join('\n'),
+        color: base.Singletons.style.colors.primary,
       );
     }
   }

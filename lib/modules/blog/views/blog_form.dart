@@ -5,6 +5,7 @@ import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 
 import '/libraries/base.dart' as base;
 import '/libraries/models.dart' as models;
+import '/libraries/plugins.dart' as plugins;
 import '/libraries/services.dart' as services;
 import '/libraries/views.dart' as views;
 import '/libraries/widgets.dart' as widgets;
@@ -25,7 +26,7 @@ class _BlogCreateState extends State<BlogCreate> {
       title: 'Create',
       model: model,
       apiRequest: services.AppNetwork(
-        path: 'blog/create',
+        uri: Uri(path: 'blog/create'),
       ),
     );
   }
@@ -50,7 +51,12 @@ class _BlogUpdateState extends State<BlogUpdate> {
       title: 'Update: ${widget.model.getValue('name')}',
       model: widget.model,
       apiRequest: services.AppNetwork(
-        path: 'blog/update/${widget.model.getValue('id')}',
+        uri: Uri(
+          path: 'blog/update/${widget.model.getValue('id')}',
+          queryParameters: {
+            'attr': 'images',
+          },
+        ),
       ),
     );
   }
@@ -83,15 +89,14 @@ class _BlogForm extends StatelessWidget {
       ),
       body: MultiBlocProvider(
         providers: [
-          BlocProvider(create: (context) => widgets.AppLiveSearchSelectCubit()),
+          BlocProvider(create: (context) => plugins.LiveSearchSelectCubit()),
         ],
         child: SingleChildScrollView(
           child: Container(
             padding: EdgeInsets.all(15),
-            child: widgets.AppNetworkForm(
+            child: plugins.NetworkForm(
               model: model,
-              apiRequest: apiRequest,
-              successMessage: 'Successfully saved',
+              network: apiRequest,
               onSuccess: (context, response) {
                 Navigator.pop(context);
                 Navigator.pushReplacement(
@@ -100,6 +105,8 @@ class _BlogForm extends StatelessWidget {
                     pageBuilder: (context, animation, secondaryAnimation) => views.BlogList(),
                   ),
                 );
+
+                services.AppNotificator(context).sendMessage('Successfully saved');
               },
               builder: (context, formState) {
                 return Column(
@@ -137,22 +144,26 @@ class _BlogForm extends StatelessWidget {
                         prefixIcon: Icon(Icons.search),
                       ),
                       onTap: () {
-                        context.read<widgets.AppLiveSearchSelectCubit>().process(
-                              apiRequest: services.AppNetwork(path: 'blog-category'),
+                        context.read<plugins.LiveSearchSelectCubit>().process(
+                              network: services.AppNetwork(
+                                uri: Uri(path: 'blog-category'),
+                              ),
                             );
                       },
                       onChanged: (value) {
-                        context.read<widgets.AppLiveSearchSelectCubit>().process(
-                              apiRequest: services.AppNetwork(
-                                path: 'blog-category',
-                                queryParameters: {
-                                  'filter[name]': value,
-                                },
+                        context.read<plugins.LiveSearchSelectCubit>().process(
+                              network: services.AppNetwork(
+                                uri: Uri(
+                                  path: 'blog-category',
+                                  queryParameters: {
+                                    'filter[name]': value,
+                                  },
+                                ),
                               ),
                             );
                       },
                     ),
-                    widgets.AppLiveSearchSelect(
+                    plugins.LiveSearchSelect(
                       valuePath: 'id',
                       textPath: 'name',
                       isLocalized: true,
@@ -170,7 +181,7 @@ class _BlogForm extends StatelessWidget {
                         scrollDirection: Axis.horizontal,
                         child: Row(
                           children: images.map((element) {
-                            return widgets.AppReplacer(
+                            return plugins.Replacer(
                               builder: (context, replacerState) {
                                 return Row(
                                   children: [
@@ -192,10 +203,12 @@ class _BlogForm extends StatelessWidget {
                                               padding: EdgeInsets.zero,
                                               onPressed: () async {
                                                 await services.AppNetwork(
-                                                  path: 'blog/file-delete/${model.getValue('id')}',
-                                                  queryParameters: {
-                                                    'attr': 'images',
-                                                  },
+                                                  uri: Uri(
+                                                    path: 'blog/file-delete/${model.getValue('id')}',
+                                                    queryParameters: {
+                                                      'attr': 'images',
+                                                    },
+                                                  ),
                                                 ).sendRequest(
                                                   method: services.AppNetworkMethods.post,
                                                   data: {
@@ -263,7 +276,7 @@ class _BlogForm extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: widgets.AppNavBottom(
-        currentName: 'blog',
+        current: widgets.AppNavBottomTabs.blog,
       ),
     );
   }

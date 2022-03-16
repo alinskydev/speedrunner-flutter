@@ -3,6 +3,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import '/libraries/base.dart' as base;
 import '/libraries/models.dart' as models;
+import '/libraries/plugins.dart' as plugins;
 import '/libraries/services.dart' as services;
 import '/libraries/widgets.dart' as widgets;
 
@@ -24,14 +25,14 @@ class _AuthResetPasswordRequestState extends State<AuthResetPasswordRequest> {
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.all(15),
-          child: widgets.AppNetworkForm(
+          child: plugins.NetworkForm(
             model: models.AuthResetPasswordRequest(),
-            apiRequest: services.AppNetwork(
-              path: 'auth/reset-password-request',
+            network: services.AppNetwork(
+              uri: Uri(path: 'auth/reset-password-request'),
             ),
-            successMessage: 'Message was sent to your email',
-            onSuccess: (context, response) async {
+            onSuccess: (context, response) {
               Navigator.pop(context);
+              services.AppNotificator(context).sendMessage('Message has been sent to your email');
             },
             builder: (context, formState) {
               return Column(
@@ -58,7 +59,7 @@ class _AuthResetPasswordRequestState extends State<AuthResetPasswordRequest> {
         ),
       ),
       bottomNavigationBar: widgets.AppNavBottom(
-        currentName: 'reset_password_request',
+        current: widgets.AppNavBottomTabs.resetPasswordRequest,
       ),
     );
   }

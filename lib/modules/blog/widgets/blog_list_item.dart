@@ -1,11 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '/libraries/bloc.dart' as bloc;
 import '/libraries/models.dart' as models;
 import '/libraries/services.dart' as services;
-import '/libraries/views.dart' as views;
 import '/libraries/widgets.dart' as widgets;
 
 class BlogListItem extends StatefulWidget {
@@ -26,6 +22,8 @@ class _BlogListItemState extends State<BlogListItem> with SingleTickerProviderSt
 
   @override
   void initState() {
+    super.initState();
+
     animationController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 300),
@@ -35,8 +33,6 @@ class _BlogListItemState extends State<BlogListItem> with SingleTickerProviderSt
       parent: animationController,
       curve: Curves.easeInOut,
     ));
-
-    super.initState();
   }
 
   @override

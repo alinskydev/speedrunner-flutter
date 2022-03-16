@@ -4,6 +4,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import '/libraries/base.dart' as base;
 import '/libraries/models.dart' as models;
+import '/libraries/plugins.dart' as plugins;
 import '/libraries/services.dart' as services;
 import '/libraries/views.dart' as views;
 import '/libraries/widgets.dart' as widgets;
@@ -28,10 +29,10 @@ class _AuthLoginState extends State<AuthLogin> {
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.all(15),
-          child: widgets.AppNetworkForm(
+          child: plugins.NetworkForm(
             model: models.AuthLogin(),
-            apiRequest: services.AppNetwork(
-              path: 'auth/login',
+            network: services.AppNetwork(
+              uri: Uri(path: 'auth/login'),
             ),
             onSuccess: (context, response) async {
               await base.Singletons.user.login(response.data['access_token']);
@@ -80,7 +81,7 @@ class _AuthLoginState extends State<AuthLogin> {
         ),
       ),
       bottomNavigationBar: widgets.AppNavBottom(
-        currentName: 'login',
+        current: widgets.AppNavBottomTabs.login,
       ),
     );
   }
