@@ -17,7 +17,7 @@ class ProfileUpdate extends base.View {
 }
 
 class _ProfileUpdateState extends State<ProfileUpdate> {
-  Future<Map> profileFuture = services.AppNetwork(
+  Future<Map<String, dynamic>> profileFuture = services.AppNetwork(
     uri: Uri(
       path: 'profile/view',
     ),
@@ -36,17 +36,17 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        child: FutureBuilder(
+        child: FutureBuilder<Map<String, dynamic>>(
             future: profileFuture,
             builder: (context, snapshot) {
               if (snapshot.data == null) return SizedBox.shrink();
 
-              models.Profile model = models.Profile(snapshot.data as Map<String, dynamic>);
+              models.Profile profile = models.Profile(snapshot.data!);
 
               return Container(
                 padding: EdgeInsets.all(15),
                 child: plugins.NetworkForm(
-                  model: model,
+                  model: profile,
                   network: services.AppNetwork(
                     uri: Uri(path: 'profile/update'),
                   ),
@@ -91,17 +91,17 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
                         ),
                         plugins.Replacer(
                           builder: (context, replacerState) {
-                            return model.getValue('image', asString: false) != null
+                            return profile.getValue('image', asString: false) != null
                                 ? Column(
                                     children: [
                                       SizedBox(height: 30),
                                       Stack(
                                         children: [
                                           SizedBox(
-                                            child: services.AppImage(
+                                            child: services.Image(
                                               width: MediaQuery.of(context).size.width,
                                             ).renderNetwork(
-                                              url: model.getValue('image'),
+                                              url: profile.getValue('image'),
                                             ),
                                           ),
                                           Positioned(
@@ -124,7 +124,7 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
                                                   ).sendRequest(
                                                     method: services.AppNetworkMethods.post,
                                                     data: {
-                                                      'key': services.AppImage.trimApiUrl(model.getValue('image')),
+                                                      'key': services.Image.trimApiUrl(profile.getValue('image')),
                                                     },
                                                   );
 

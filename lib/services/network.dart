@@ -5,7 +5,6 @@ import 'package:dio/dio.dart' as dio;
 import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 
 import '/libraries/base.dart' as base;
-import '/libraries/services.dart' as services;
 import '/libraries/views.dart' as views;
 
 enum AppNetworkMethods { get, post, put, patch, delete }
@@ -110,7 +109,7 @@ class AppNetwork {
           await base.Singletons.settings.navigatorKey.currentState!.pushAndRemoveUntil(
             PageRouteBuilder(
               pageBuilder: (context, animation, secondaryAnimation) => views.AppError(
-                exception: services.AppExceptionNoConnection(),
+                type: views.AppErrorType.noConnection,
               ),
               transitionDuration: Duration.zero,
             ),
@@ -118,7 +117,11 @@ class AppNetwork {
           );
         }
 
-        throw services.AppExceptionNoConnection();
+        throw Exception(
+          views.AppError(
+            type: views.AppErrorType.noConnection,
+          ),
+        );
       }
 
       switch (e.response?.statusCode) {
@@ -136,7 +139,7 @@ class AppNetwork {
           await base.Singletons.settings.navigatorKey.currentState?.push(
             PageRouteBuilder(
               pageBuilder: (context, animation, secondaryAnimation) => views.AppError(
-                exception: services.AppExceptionNotAllowed(),
+                type: views.AppErrorType.notAllowed,
               ),
               transitionDuration: Duration.zero,
             ),
@@ -146,15 +149,13 @@ class AppNetwork {
         default:
           await base.Singletons.settings.navigatorKey.currentState?.push(
             PageRouteBuilder(
-              pageBuilder: (context, animation, secondaryAnimation) => views.AppError(
-                exception: services.AppExceptionInternalError(),
-              ),
+              pageBuilder: (context, animation, secondaryAnimation) => views.AppError(),
               transitionDuration: Duration.zero,
             ),
           );
       }
     }
 
-    throw services.AppExceptionInternalError();
+    throw Exception('An error occured');
   }
 }

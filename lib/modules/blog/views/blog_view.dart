@@ -34,7 +34,7 @@ class _BlogViewState extends State<BlogView> {
               children: [
                 Hero(
                   tag: 'hero-blog-${widget.model.getValue('id')}',
-                  child: services.AppImage(
+                  child: services.Image(
                     width: MediaQuery.of(context).size.width / 2,
                   ).renderNetwork(
                     url: widget.model.getValue('image'),

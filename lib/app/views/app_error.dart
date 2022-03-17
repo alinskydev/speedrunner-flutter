@@ -1,16 +1,42 @@
 import 'package:flutter/material.dart';
 
 import '/libraries/base.dart' as base;
-import '/libraries/services.dart' as services;
 import '/libraries/views.dart' as views;
 
+enum AppErrorType { noConnection, notAllowed, internal }
+enum _AppErrorAction { goHome, refresh }
+
 class AppError extends StatelessWidget {
-  services.AppException exception;
+  AppErrorType type;
+
+  late Map<String, dynamic> _currentType;
+
+  Map<AppErrorType, Map<String, dynamic>> get _types {
+    return {
+      AppErrorType.noConnection: {
+        'label': 'No connection',
+        'image': 'assets/images/errors/no_connection.png',
+        'action': _AppErrorAction.refresh,
+      },
+      AppErrorType.notAllowed: {
+        'label': 'Access denied',
+        'image': 'assets/images/errors/403.png',
+        'action': _AppErrorAction.goHome,
+      },
+      AppErrorType.internal: {
+        'label': 'Internal error',
+        'image': 'assets/images/errors/500.png',
+        'action': _AppErrorAction.goHome,
+      },
+    };
+  }
 
   AppError({
     Key? key,
-    required this.exception,
-  }) : super(key: key);
+    this.type = AppErrorType.internal,
+  }) : super(key: key) {
+    _currentType = _types[type]!;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,9 +50,9 @@ class AppError extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(exception.label),
+                  Text(_currentType['label']),
                   Image.asset(
-                    exception.image,
+                    _currentType['image'],
                     width: double.infinity,
                   ),
                 ],
@@ -49,8 +75,8 @@ class AppError extends StatelessWidget {
   }
 
   Widget _button(BuildContext context) {
-    switch (exception.buttonRoute) {
-      case services.AppExceptionButtonActions.goHome:
+    switch ((_currentType['action'] as _AppErrorAction)) {
+      case _AppErrorAction.goHome:
         return ElevatedButton.icon(
           onPressed: () {
             Navigator.pushAndRemoveUntil(
@@ -65,13 +91,12 @@ class AppError extends StatelessWidget {
           icon: Icon(Icons.home),
           label: Text('Go home'),
         );
-      case services.AppExceptionButtonActions.refresh:
+      case _AppErrorAction.refresh:
         return ElevatedButton.icon(
           onPressed: () {
             Navigator.pushAndRemoveUntil(
               context,
               PageRouteBuilder(
-                // pageBuilder: (context, animation, secondaryAnimation) => views.AppHome(),
                 pageBuilder: (context, animation, secondaryAnimation) => base.View.current ?? views.AppHome(),
                 transitionDuration: Duration.zero,
               ),

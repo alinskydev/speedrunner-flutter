@@ -117,8 +117,6 @@ class AppNavBottom extends StatelessWidget {
       value: (element) => _allTabs[element]!,
     );
 
-    <Map>[].indexWhere((element) => element['tab']);
-
     _currentIndex = nav.indexOf(current);
   }
 

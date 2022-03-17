@@ -1,23 +1,26 @@
+// ignore_for_file: implementation_imports
+
 import 'package:flutter/material.dart';
+import 'package:flutter/src/widgets/image.dart' as material;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:mime/mime.dart' as mime;
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '/libraries/base.dart' as base;
 
-class AppImage {
+class Image {
   double? width;
   double? height;
   BoxFit fit;
 
   late Widget placeholder;
 
-  AppImage({
+  Image({
     this.width,
     this.height,
     this.fit = BoxFit.cover,
   }) {
-    placeholder = Image.asset(
+    placeholder = material.Image.asset(
       'assets/images/placeholder.png',
       width: width,
       height: height,
@@ -37,7 +40,7 @@ class AppImage {
       case 'image/jpeg':
       case 'image/png':
       case 'image/webp':
-        return Image.network(
+        return material.Image.network(
           url,
           width: width,
           height: height,

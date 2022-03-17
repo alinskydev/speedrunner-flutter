@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '/libraries/base.dart' as base;
 import '/libraries/models.dart' as models;
-import '/libraries/services.dart' as services;
 import '/libraries/widgets.dart' as widgets;
 
 class ProductList extends base.View {

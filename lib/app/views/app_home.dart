@@ -18,7 +18,7 @@ class AppHome extends base.View {
 }
 
 class _AppHomeState extends State<AppHome> {
-  Future<Map> blocksFuture = services.AppNetwork(
+  Future<Map<String, dynamic>> blocksFuture = services.AppNetwork(
     uri: Uri(path: 'staticpage/home'),
   ).sendRequest().then((value) {
     return Map.fromIterable(
@@ -49,12 +49,12 @@ class _AppHomeState extends State<AppHome> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            FutureBuilder(
+            FutureBuilder<Map<String, dynamic>>(
               future: blocksFuture,
               builder: (context, snapshot) {
                 if (snapshot.data == null) return SizedBox.shrink();
 
-                Map blocks = snapshot.data as Map;
+                Map<String, dynamic> blocks = snapshot.data!;
 
                 return Container(
                   padding: EdgeInsets.all(10),
@@ -71,7 +71,7 @@ class _AppHomeState extends State<AppHome> {
                             builder: (BuildContext context) {
                               return Container(
                                 padding: EdgeInsets.symmetric(horizontal: 5.0),
-                                child: services.AppImage(
+                                child: services.Image(
                                   width: MediaQuery.of(context).size.width,
                                 ).renderNetwork(
                                   url: e,
@@ -94,12 +94,12 @@ class _AppHomeState extends State<AppHome> {
                 );
               },
             ),
-            FutureBuilder(
+            FutureBuilder<List>(
               future: blogsFuture,
               builder: (context, snapshot) {
                 if (snapshot.data == null) return SizedBox.shrink();
 
-                List records = snapshot.data as List;
+                List records = snapshot.data!;
 
                 return GridView.builder(
                   physics: NeverScrollableScrollPhysics(),
@@ -119,7 +119,7 @@ class _AppHomeState extends State<AppHome> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            services.AppImage(
+                            services.Image(
                               width: MediaQuery.of(context).size.width / 2,
                               height: MediaQuery.of(context).size.width / 2,
                             ).renderNetwork(
@@ -149,12 +149,12 @@ class _AppHomeState extends State<AppHome> {
                 );
               },
             ),
-            FutureBuilder(
+            FutureBuilder<Map<String, dynamic>>(
               future: blocksFuture,
               builder: (context, snapshot) {
                 if (snapshot.data == null) return SizedBox.shrink();
 
-                Map blocks = snapshot.data as Map;
+                Map<String, dynamic> blocks = snapshot.data!;
 
                 return Container(
                   padding: EdgeInsets.all(10),
@@ -162,7 +162,7 @@ class _AppHomeState extends State<AppHome> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Divider(height: 30, color: Colors.black),
-                      services.AppImage(
+                      services.Image(
                         width: MediaQuery.of(context).size.width,
                       ).renderNetwork(
                         url: blocks['banner'],

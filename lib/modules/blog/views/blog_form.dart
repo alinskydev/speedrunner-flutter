@@ -187,7 +187,7 @@ class _BlogForm extends StatelessWidget {
                                   children: [
                                     Stack(
                                       children: [
-                                        services.AppImage(
+                                        services.Image(
                                           height: 200,
                                         ).renderNetwork(
                                           url: element,
@@ -212,7 +212,7 @@ class _BlogForm extends StatelessWidget {
                                                 ).sendRequest(
                                                   method: services.AppNetworkMethods.post,
                                                   data: {
-                                                    'key': services.AppImage.trimApiUrl(element),
+                                                    'key': services.Image.trimApiUrl(element),
                                                   },
                                                 );
 

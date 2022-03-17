@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '/libraries/base.dart' as base;
+import '/libraries/models.dart' as models;
 import '/libraries/services.dart' as services;
 import '/libraries/views.dart' as views;
 import '/libraries/widgets.dart' as widgets;
@@ -14,7 +15,7 @@ class ProfileView extends base.View {
 }
 
 class _ProfileViewState extends State<ProfileView> {
-  Future<Map> profileFuture = services.AppNetwork(
+  Future<Map<String, dynamic>> profileFuture = services.AppNetwork(
     uri: Uri(
       path: 'profile/view',
     ),
@@ -79,22 +80,22 @@ class _ProfileViewState extends State<ProfileView> {
         ],
       ),
       body: SingleChildScrollView(
-        child: FutureBuilder(
+        child: FutureBuilder<Map<String, dynamic>>(
           future: profileFuture,
           builder: (context, snapshot) {
             if (snapshot.data == null) return SizedBox.shrink();
 
-            Map<String, dynamic> profile = snapshot.data as Map<String, dynamic>;
+            models.Profile profile = models.Profile(snapshot.data!);
 
             return Container(
               padding: EdgeInsets.all(15),
               child: Column(
                 children: [
-                  services.AppImage(
+                  services.Image(
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.width,
                   ).renderNetwork(
-                    url: profile['image'],
+                    url: profile.getValue('image'),
                   ),
                   SizedBox(height: 30),
                   Table(
@@ -106,7 +107,7 @@ class _ProfileViewState extends State<ProfileView> {
                             child: Text('Username'),
                           ),
                           TableCell(
-                            child: Text(profile['username'] ?? ''),
+                            child: Text(profile.getValue('username')),
                           ),
                         ],
                       ),
@@ -116,7 +117,7 @@ class _ProfileViewState extends State<ProfileView> {
                             child: Text('Full name'),
                           ),
                           TableCell(
-                            child: Text(profile['full_name'] ?? ''),
+                            child: Text(profile.getValue('full_name')),
                           ),
                         ],
                       ),
@@ -126,7 +127,7 @@ class _ProfileViewState extends State<ProfileView> {
                             child: Text('Phone'),
                           ),
                           TableCell(
-                            child: Text(profile['phone'] ?? ''),
+                            child: Text(profile.getValue('phone')),
                           ),
                         ],
                       ),
@@ -136,7 +137,7 @@ class _ProfileViewState extends State<ProfileView> {
                             child: Text('Address'),
                           ),
                           TableCell(
-                            child: Text(profile['address'] ?? ''),
+                            child: Text(profile.getValue('address')),
                           ),
                         ],
                       ),

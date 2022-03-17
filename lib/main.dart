@@ -5,32 +5,23 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import '/libraries/base.dart' as base;
-import '/libraries/services.dart' as services;
 import '/libraries/views.dart' as views;
 
 void main() async {
-  runZonedGuarded(() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
+  runZonedGuarded(() async {
     await base.Bootstrap.init();
 
     runApp(App());
   }, (error, stack) {
-    services.AppException exception = services.AppExceptionInternalError();
-    if (error is services.AppException) exception = error;
-
-    runApp(App(home: views.AppError(exception: exception)));
+    runApp(App());
   });
 }
 
 class App extends StatelessWidget {
-  Widget? home;
-
-  App({
-    Key? key,
-    this.home,
-  }) : super(key: key);
+  App({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +43,7 @@ class App extends StatelessWidget {
           builder: (context, child) {
             return child!;
           },
-          home: home ?? views.AppHome(),
+          home: views.AppHome(),
         );
       },
     );
