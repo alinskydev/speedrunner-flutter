@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import '/libraries/base.dart' as base;
-import '/libraries/plugins.dart' as plugins;
 import '/libraries/services.dart' as services;
+import '/libraries/widgets.dart' as widgets;
 
 class LiveSearchSelect extends StatelessWidget {
   Widget Function(BuildContext context, List<FormBuilderFieldOption> options) builder;
@@ -46,7 +46,7 @@ class LiveSearchSelect extends StatelessWidget {
             !state.isEmpty
                 ? IconButton(
                     onPressed: () {
-                      context.read<plugins.LiveSearchSelectCubit>().clear();
+                      context.read<widgets.LiveSearchSelectCubit>().clear();
                     },
                     icon: Icon(Icons.close),
                   )

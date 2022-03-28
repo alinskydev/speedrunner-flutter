@@ -1,6 +1,6 @@
 library app_base;
 
-export '/base/bootstrap.dart';
-export '/base/model.dart';
-export '/base/singletons.dart';
-export '/base/view.dart';
+export '/core/base/bootstrap.dart';
+export '/core/base/model.dart';
+export '/core/base/singletons.dart';
+export '/core/base/view.dart';

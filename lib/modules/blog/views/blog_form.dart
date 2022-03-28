@@ -5,7 +5,6 @@ import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 
 import '/libraries/base.dart' as base;
 import '/libraries/models.dart' as models;
-import '/libraries/plugins.dart' as plugins;
 import '/libraries/services.dart' as services;
 import '/libraries/views.dart' as views;
 import '/libraries/widgets.dart' as widgets;
@@ -89,12 +88,12 @@ class _BlogForm extends StatelessWidget {
       ),
       body: MultiBlocProvider(
         providers: [
-          BlocProvider(create: (context) => plugins.LiveSearchSelectCubit()),
+          BlocProvider(create: (context) => widgets.LiveSearchSelectCubit()),
         ],
         child: SingleChildScrollView(
           child: Container(
             padding: EdgeInsets.all(15),
-            child: plugins.NetworkForm(
+            child: widgets.NetworkForm(
               model: model,
               network: apiRequest,
               onSuccess: (context, response) {
@@ -144,14 +143,14 @@ class _BlogForm extends StatelessWidget {
                         prefixIcon: Icon(Icons.search),
                       ),
                       onTap: () {
-                        context.read<plugins.LiveSearchSelectCubit>().process(
+                        context.read<widgets.LiveSearchSelectCubit>().process(
                               network: services.AppNetwork(
                                 uri: Uri(path: 'blog-category'),
                               ),
                             );
                       },
                       onChanged: (value) {
-                        context.read<plugins.LiveSearchSelectCubit>().process(
+                        context.read<widgets.LiveSearchSelectCubit>().process(
                               network: services.AppNetwork(
                                 uri: Uri(
                                   path: 'blog-category',
@@ -163,7 +162,7 @@ class _BlogForm extends StatelessWidget {
                             );
                       },
                     ),
-                    plugins.LiveSearchSelect(
+                    widgets.LiveSearchSelect(
                       valuePath: 'id',
                       textPath: 'name',
                       isLocalized: true,
@@ -181,7 +180,7 @@ class _BlogForm extends StatelessWidget {
                         scrollDirection: Axis.horizontal,
                         child: Row(
                           children: images.map((element) {
-                            return plugins.Replacer(
+                            return widgets.Replacer(
                               builder: (context, replacerState) {
                                 return Row(
                                   children: [

@@ -4,7 +4,6 @@ import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 
 import '/libraries/base.dart' as base;
 import '/libraries/models.dart' as models;
-import '/libraries/plugins.dart' as plugins;
 import '/libraries/services.dart' as services;
 import '/libraries/views.dart' as views;
 import '/libraries/widgets.dart' as widgets;
@@ -45,7 +44,7 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
 
               return Container(
                 padding: EdgeInsets.all(15),
-                child: plugins.NetworkForm(
+                child: widgets.NetworkForm(
                   model: profile,
                   network: services.AppNetwork(
                     uri: Uri(path: 'profile/update'),
@@ -89,7 +88,7 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
                             labelText: 'Address',
                           ),
                         ),
-                        plugins.Replacer(
+                        widgets.Replacer(
                           builder: (context, replacerState) {
                             return profile.getValue('image', asString: false) != null
                                 ? Column(

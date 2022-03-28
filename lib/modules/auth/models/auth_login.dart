@@ -1,4 +1,4 @@
-import '/base/model.dart';
+import '/core/base/model.dart';
 
 class AuthLogin extends Model {
   @override

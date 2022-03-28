@@ -4,7 +4,6 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import '/libraries/base.dart' as base;
 import '/libraries/models.dart' as models;
-import '/libraries/plugins.dart' as plugins;
 import '/libraries/services.dart' as services;
 import '/libraries/views.dart' as views;
 import '/libraries/widgets.dart' as widgets;
@@ -30,7 +29,7 @@ class _AuthRegisterState extends State<AuthRegister> {
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.all(15),
-          child: plugins.NetworkForm(
+          child: widgets.NetworkForm(
             model: models.AuthRegister(),
             network: services.AppNetwork(
               uri: Uri(path: 'auth/signup'),

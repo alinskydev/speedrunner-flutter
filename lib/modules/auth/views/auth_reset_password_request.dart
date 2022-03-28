@@ -3,7 +3,6 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import '/libraries/base.dart' as base;
 import '/libraries/models.dart' as models;
-import '/libraries/plugins.dart' as plugins;
 import '/libraries/services.dart' as services;
 import '/libraries/widgets.dart' as widgets;
 
@@ -25,7 +24,7 @@ class _AuthResetPasswordRequestState extends State<AuthResetPasswordRequest> {
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.all(15),
-          child: plugins.NetworkForm(
+          child: widgets.NetworkForm(
             model: models.AuthResetPasswordRequest(),
             network: services.AppNetwork(
               uri: Uri(path: 'auth/reset-password-request'),

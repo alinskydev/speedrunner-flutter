@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import '/libraries/base.dart' as base;
 import '/libraries/models.dart' as models;
-import '/libraries/plugins.dart' as plugins;
 import '/libraries/services.dart' as services;
 import '/libraries/views.dart' as views;
 import '/libraries/widgets.dart' as widgets;
@@ -34,8 +33,8 @@ class _BlogListState extends State<BlogList> {
           ),
         ],
       ),
-      body: plugins.InfiniteScroll(
-        type: plugins.InfiniteScrollType.gridView,
+      body: widgets.InfiniteScroll(
+        type: widgets.InfiniteScrollType.gridView,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 1,
           childAspectRatio: 0.7,

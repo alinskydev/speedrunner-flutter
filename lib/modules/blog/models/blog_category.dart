@@ -1,4 +1,4 @@
-import '/base/model.dart';
+import '/core/base/model.dart';
 
 class BlogCategory extends Model {
   @override

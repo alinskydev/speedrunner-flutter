@@ -1,5 +1,5 @@
 library app_services;
 
-export '/services/image.dart';
-export '/services/network.dart';
-export '/services/notification.dart';
+export '/core/services/image.dart';
+export '/core/services/network.dart';
+export '/core/services/notification.dart';

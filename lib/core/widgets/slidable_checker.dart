@@ -3,21 +3,21 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
-class AppSlidableChecker extends StatefulWidget {
+class SlidableChecker extends StatefulWidget {
   Widget child;
   String tag;
 
-  AppSlidableChecker({
+  SlidableChecker({
     Key? key,
     required this.child,
     required this.tag,
   }) : super(key: key);
 
   @override
-  State<AppSlidableChecker> createState() => _AppSlidableCheckerState();
+  State<SlidableChecker> createState() => _SlidableCheckerState();
 }
 
-class _AppSlidableCheckerState extends State<AppSlidableChecker> {
+class _SlidableCheckerState extends State<SlidableChecker> {
   static List<String> _checkedTags = [];
 
   @override

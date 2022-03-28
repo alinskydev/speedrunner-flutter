@@ -1,9 +1,9 @@
 library app_singletons;
 
-export '/singletons/cart.dart';
-export '/singletons/file_storage.dart';
-export '/singletons/intl.dart';
-export '/singletons/settings.dart';
-export '/singletons/shared_storage.dart';
-export '/singletons/style.dart';
-export '/singletons/user.dart';
+export '/core/singletons/cart.dart';
+export '/core/singletons/file_storage.dart';
+export '/core/singletons/intl.dart';
+export '/core/singletons/settings.dart';
+export '/core/singletons/shared_storage.dart';
+export '/core/singletons/style.dart';
+export '/core/singletons/user.dart';

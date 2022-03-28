@@ -106,14 +106,13 @@ class AppNetwork {
     } on dio.DioError catch (e) {
       if (e.error is SocketException) {
         if (base.Singletons.settings.navigatorKey.currentState != null) {
-          await base.Singletons.settings.navigatorKey.currentState!.pushAndRemoveUntil(
+          await base.Singletons.settings.navigatorKey.currentState!.pushReplacement(
             PageRouteBuilder(
               pageBuilder: (context, animation, secondaryAnimation) => views.AppError(
                 type: views.AppErrorType.noConnection,
               ),
               transitionDuration: Duration.zero,
             ),
-            (route) => false,
           );
         }
 
@@ -131,12 +130,12 @@ class AppNetwork {
             PageRouteBuilder(
               pageBuilder: (context, animation, secondaryAnimation) => views.AuthLogin(),
             ),
-            (value) => false,
+            (route) => false,
           );
           break;
 
         case 403:
-          await base.Singletons.settings.navigatorKey.currentState?.push(
+          await base.Singletons.settings.navigatorKey.currentState?.pushReplacement(
             PageRouteBuilder(
               pageBuilder: (context, animation, secondaryAnimation) => views.AppError(
                 type: views.AppErrorType.notAllowed,
@@ -147,9 +146,11 @@ class AppNetwork {
           break;
 
         default:
-          await base.Singletons.settings.navigatorKey.currentState?.push(
+          await base.Singletons.settings.navigatorKey.currentState?.pushReplacement(
             PageRouteBuilder(
-              pageBuilder: (context, animation, secondaryAnimation) => views.AppError(),
+              pageBuilder: (context, animation, secondaryAnimation) => views.AppError(
+                type: views.AppErrorType.internal,
+              ),
               transitionDuration: Duration.zero,
             ),
           );

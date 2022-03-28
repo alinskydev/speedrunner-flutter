@@ -1,4 +1,4 @@
-import '/base/model.dart';
+import '/core/base/model.dart';
 
 import '/libraries/models.dart' as models;
 

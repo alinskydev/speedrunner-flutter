@@ -33,7 +33,7 @@ class AppError extends StatelessWidget {
 
   AppError({
     Key? key,
-    this.type = AppErrorType.internal,
+    required this.type,
   }) : super(key: key) {
     _currentType = _types[type]!;
   }
@@ -75,9 +75,11 @@ class AppError extends StatelessWidget {
   }
 
   Widget _button(BuildContext context) {
-    switch ((_currentType['action'] as _AppErrorAction)) {
+    switch (_currentType['action'] as _AppErrorAction) {
       case _AppErrorAction.goHome:
         return ElevatedButton.icon(
+          label: Text('Go home'),
+          icon: Icon(Icons.home),
           onPressed: () {
             Navigator.pushAndRemoveUntil(
               context,
@@ -88,23 +90,19 @@ class AppError extends StatelessWidget {
               (route) => false,
             );
           },
-          icon: Icon(Icons.home),
-          label: Text('Go home'),
         );
       case _AppErrorAction.refresh:
         return ElevatedButton.icon(
+          label: Text('Refresh'),
+          icon: Icon(Icons.refresh),
           onPressed: () {
-            Navigator.pushAndRemoveUntil(
+            Navigator.pushReplacement(
               context,
               PageRouteBuilder(
                 pageBuilder: (context, animation, secondaryAnimation) => base.View.current ?? views.AppHome(),
-                transitionDuration: Duration.zero,
               ),
-              (route) => false,
             );
           },
-          icon: Icon(Icons.refresh),
-          label: Text('Refresh'),
         );
     }
   }
